@@ -16,5 +16,5 @@ Les murs ont des oreilles
 * Possibilitée de déclencher un scénario à partir du motif :
 ```
 Appel d'un webservice
-Exécution du'un commande rédéfinie sur l'hote (Ex : espeak)
+Exécution du'un commande prédéfinie sur l'hote (Ex : espeak)
 ```
