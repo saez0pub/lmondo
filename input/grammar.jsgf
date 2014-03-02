@@ -1,0 +1,10 @@
+#JSGF V1.0 latin-1;
+grammar robot;
+public <question> = <key> (<commande> | <info>);
+<commande> = <action> <objet>;
+<key> = marvin;
+<action> = ouvre | ferme | ouvrir | fermer | allumer | éteindre | éteint;
+<le> = le | les | lai | l' | du ;
+<lumiere> = <le>* (lumière | lampe | ampoule) ;
+<objet> = <lumiere>* <le>* (volet | cuisine | salon);
+<info> = comment* (sa va|savoir);
