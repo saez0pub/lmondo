@@ -35,7 +35,7 @@ class DemoApp(object):
         asr.connect('result', self.asr_result)
         asr.set_property('hmm', '/usr/local/share/pocketsphinx/model/hmm/fr_FR/french_f2/')
         asr.set_property('dict', '/usr/local/share/pocketsphinx/model/lm/fr_FR/frenchWords62K.dic')
-        asr.set_property('lm', '/usr/local/share/pocketsphinx/model/lm/fr_FR/french3g62K.lm.dmp')
+        #asr.set_property('lm', '/usr/local/share/pocketsphinx/model/lm/fr_FR/french3g62K.lm.dmp')
         asr.set_property('fsg', os.getcwd()+'/grammar.fsg')
         asr.set_property('bestpath', 'yes')
         asr.set_property('configured', True)
