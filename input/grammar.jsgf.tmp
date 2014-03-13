@@ -1,6 +1,3 @@
-#JSGF V1.0 latin-1;
-grammar robot;
-public <question> = <gram0> <gram1> | <gram2> | <gram3> | <gram4> | <gram5> | <gram6> | <gram7> | <gram8> | <gram9> | <gram10> | <gram11> | <gram12> | <gram13> | <gram14> | <gram15> | <gram16> | <gram17> | <gram18> ;
 <gram0> = marvin allume la lumière la cuisine;
 <gram1> = marvin allume la lumière du salon;
 <gram2> = marvin allume la lumière de la salle a manger;
@@ -19,4 +16,3 @@ public <question> = <gram0> <gram1> | <gram2> | <gram3> | <gram4> | <gram5> | <g
 <gram15> = marvin éteint l ampoule la cuisine;
 <gram16> = marvin éteint l ampoule du salon;
 <gram17> = marvin éteint l ampoule de la salle a manger;
-<gram18> = marvin comment ca va;
