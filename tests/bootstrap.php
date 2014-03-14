@@ -28,5 +28,9 @@
 include_once '../lib/base.php';
 
 
-include './testPage.php';
+foreach (scandir('.') as $file) {
+  if (preg_match('/^test.*.php$/', $file)) {
+    include $file;
+  }
+}
 ?>
