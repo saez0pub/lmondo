@@ -29,6 +29,4 @@ $page->addcontent("
         <p class=\"lead\">Page d'accueil.</p>
       </div>
 ");
-echo $page->showPage()
-
-?>
+$page->showPage();

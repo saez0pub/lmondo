@@ -27,16 +27,18 @@ class page {
   private $canShowPage;
   private $returnPage;
 
-  function __construct($returnPage = TRUE) {
+  function __construct($returnPage = FALSE) {
     global $db;
     $this->css = array();
     $this->canShowPage = TRUE;
-    $this->returnPage = TRUE;
+    $this->returnPage = $returnPage;
 
     if ($db->getConnexion() === FALSE) {
       //Vu que l'on a un problème de connexion de Bdd, on affiche la page de maintenance
       $this->showMaintenancePage();
     }
+    $this->prepareHeader();
+    $this->prepareFooter();
   }
 
   public function addcontent($content) {
@@ -45,6 +47,7 @@ class page {
 
   public function addCSS($css) {
     $this->css[] = $css;
+    $this->prepareHeader();
   }
 
   public function showPage($return = NULL) {
@@ -58,7 +61,7 @@ class page {
         echo $this->header . $this->content . $this->footer;
       }
     } else {
-      return $this->showMaintenancePage();
+      return $this->showMaintenancePage(TRUE);
     }
   }
 
@@ -66,27 +69,26 @@ class page {
     if($return === NULL){
       $return = $this->returnPage;
     }
-    $this->content = "<div class='maintenance'>Le site est en maintenance, veuillez réessayer dans quelques minutes</div>";
+    $this->content = "<div class='alert alert-warning maintenance'>Le site est en maintenance, veuillez réessayer dans quelques minutes</div>";
     if ($return) {
-      return $this->header() . $this->content . $this->footer();
+      return $this->prepareHeader() . $this->content . $this->prepareFooter();
     } else {
-      echo $this->header() . $this->conten . $this->footer();
+      echo $this->prepareHeader() . $this->content . $this->prepareFooter();
     }
     $this->canShowPage = FALSE;
   }
 
-  public function header() {
+  public function prepareHeader() {
     $this->header = file_get_contents('../var/templates/header_1.html');
     foreach ($this->css as $css) {
       $this->header.="
-    <link href=\"" . $css . " rel=\"stylesheet\">
- ";
+    <link href=\"" . $css . " rel=\"stylesheet\">\n";
     }
     $this->header.=file_get_contents('../var/templates/header_2.html');
     return $this->header;
   }
 
-  public function footer() {
+  public function prepareFooter() {
     $this->footer = file_get_contents('../var/templates/footer.html');
     return $this->footer;
   }

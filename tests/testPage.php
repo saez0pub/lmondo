@@ -96,7 +96,7 @@ class pageTest extends PHPUnit_Framework_TestCase {
     <div class=\"container\">
 ";
     // Assert
-    $this->assertEquals($page->header(), $result);
+    $this->assertEquals($page->prepareHeader(), $result);
   }
 
   public function testFooterSansParametre() {
@@ -117,7 +117,7 @@ class pageTest extends PHPUnit_Framework_TestCase {
 ";
 
     // Assert
-    $this->assertEquals($page->footer(), $result);
+    $this->assertEquals($page->prepareFooter(), $result);
   }
 
   public function testRetourIndex() {
@@ -140,7 +140,7 @@ class pageTest extends PHPUnit_Framework_TestCase {
     global $config, $db;
     $config['db']['user'] = 'nePeutPasExisterSinonLeTestSeraPlanté';
     $db = new dbLmondo;
-    $page = new page(FALSE);
+    $page = new page(TRUE);
     $result = $page->showPage();
     $template = file_get_contents('templates/maintenance.html');
     $this->assertEquals($template, $result);
