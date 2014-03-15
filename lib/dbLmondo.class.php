@@ -32,13 +32,10 @@ class dbLmondo {
     try {
       $this->dbh = new PDO(
         'mysql:host=' . $config['db']['host'] . ';port=' . $config['db']['port'] .
-        ';dbname=' . $config['db']['name'] . '', 
-        $config['db']['user'], 
-        $config['db']['pass'], 
-        array(
-            PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
+        ';dbname=' . $config['db']['name'] . '', $config['db']['user'], $config['db']['pass'], array(
+          PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
         )
-        );
+      );
     } catch (PDOException $e) {
       $this->dbh = false;
       $this->dbError['code'] = $e->getCode();
@@ -66,6 +63,59 @@ class dbLmondo {
 
   public function getErrorCode() {
     return $this->dbError;
+  }
+
+  public function fetch($sql, $fetchStyle = PDO::FETCH_ASSOC) {
+    $return = array();
+    try {
+      $stmt = $this->dbh->prepare($sql);
+
+      // call the stored procedure
+      $stmt->execute();
+
+      $return = $stmt->fetch($fetchStyle);
+    } catch (PDOException $e) {
+      $return = FALSE;
+    }
+    return $return;
+  }
+
+  public function query($sql) {
+    try {
+      /*
+        $stmt = $this->dbh->prepare($sql);
+        $stmt->execute();
+        $return = $stmt->fetch(PDO::FETCH_OBJ);
+       * 
+       */
+      $return = $this->dbh->query($sql);
+    } catch (PDOException $e) {
+      $return = FALSE;
+      var_dump($e);
+    }
+    return $return;
+  }
+
+  public function prepare($sql) {
+    try {
+      $return = $this->dbh->prepare($sql);
+    } catch (PDOException $e) {
+      $return = FALSE;
+    }
+    return $return;
+  }
+
+  public function checkDB() {
+    global $config;
+    $sql = "select valeur from `" . $config['db']['prefix'] . "config` where cle = 'version';";
+    $res = $this->fetch($sql);
+    $version = $res['valeur'];
+    if ($config['version'] === $version) {
+      $return = TRUE;
+    } else {
+      $resturn = FALSE;
+    }
+    return $return;
   }
 
 }

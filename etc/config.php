@@ -20,6 +20,9 @@
 
 global $config;
 
+//Versionapplicative
+$config['version'] = '0.1';
+
 //DB Connexion
 $config['db']['user']='lmondo';
 $config['db']['pass']='IlVaudraitMieuxLeChanger';

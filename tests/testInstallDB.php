@@ -1,6 +1,6 @@
 <?php
 
-/*
+/* 
  * Copyright (C) 2014 saez0pub
  *
  * This program is free software; you can redistribute it and/or
@@ -19,22 +19,16 @@
  */
 
 /**
- * @author saez0pub
- */
-// TODO: check include path
-//ini_set('include_path', ini_get('include_path'));
-
-
-include_once '../lib/common.php';
-include_once '../lib/dbInstall.function.php';
-
-$config['serverUrl'] = 'http://localhost:8000/';
-$config['db']['prefix'] = 'tests_todelete_' . $config['db']['prefix'];
-dropDB();
-initDB();
-foreach (scandir('.') as $file) {
-  if (preg_match('/^test.*.php$/', $file)) {
-    include $file;
+* @backupGlobals disabled
+* @backupStaticAttributes disabled
+*/
+class dbInstallTest extends PHPUnit_Framework_TestCase {
+  public function testInstallationDB() {
+    global $db;
+    dropDB();
+    $resInit = initDB();
+    $this->assertNotEquals(FALSE, $resInit);
+    $result=$db->checkDB();
+    $this->assertEquals(TRUE, $result);
   }
 }
-?>
