@@ -18,17 +18,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+require '../etc/config.php';
+require '../etc/constants.php';
 
-include_once '../lib/common.php';
-
-$page = new page();
-
-$page->addcontent("
-      <div>
-        <h1>Lmondo Home</h1>
-        <p class=\"lead\">Page d'accueil.</p>
-      </div>
-");
-echo $page->showPage()
-
-?>
+include_once '../lib/dbLmondo.class.php';
+global $db;
+$db = new dbLmondo();
+include_once '../lib/page.class.php';

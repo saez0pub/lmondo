@@ -18,7 +18,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+global $config;
 
-include_once '../lib/page.class.php';
-
-?>
+//DB Connexion
+$config['db']['user']='lmondo';
+$config['db']['pass']='IlVaudraitMieuxLeChanger';
+$config['db']['host']='localhost';
+$config['db']['port']='3306';
+$config['db']['name']='lmondo';
+$config['db']['prefix']='lmondo_';

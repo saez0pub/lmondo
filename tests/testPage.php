@@ -18,11 +18,27 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
+/**
+* @backupGlobals disabled
+* @backupStaticAttributes disabled
+*/
 class pageTest extends PHPUnit_Framework_TestCase {
 
-  // ...
+  public function testAuthSanslogin() {
+    $page = new page();
+    $result = $page->testAuth();
+    $this->assertEquals(false, $result);
+  }
 
+  /**
+   * @todo tester un session correcte
+    public function testAuthAveclogin() {
+    $page = new page();
+    $result=$page->testAuth();
+    $this->assertEquals(true, $result);
+    }
+   * 
+   */
   public function testHeaderSansParametre() {
     // Arrange
     $page = new page();
@@ -51,6 +67,9 @@ class pageTest extends PHPUnit_Framework_TestCase {
       <script src=\"https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js\"></script>
       <script src=\"https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js\"></script>
     <![endif]-->
+    
+    <!-- Css added -->
+
   </head>
 
   <body>
@@ -77,7 +96,7 @@ class pageTest extends PHPUnit_Framework_TestCase {
     <div class=\"container\">
 ";
     // Assert
-    $this->assertEquals($result, $page->header());
+    $this->assertEquals($page->header(), $result);
   }
 
   public function testFooterSansParametre() {
@@ -94,10 +113,37 @@ class pageTest extends PHPUnit_Framework_TestCase {
     <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js\"></script>
     <script src=\"../../js/bootstrap.min.js\"></script>
   </body>
-</html>";
+</html>
+";
 
     // Assert
-    $this->assertEquals($result, $page->footer());
+    $this->assertEquals($page->footer(), $result);
+  }
+
+  public function testRetourIndex() {
+    global $config;
+    $ch = curl_init($config['serverUrl']);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    curl_exec($ch);
+
+    //Le code retour curl OK est 0
+    $this->assertEquals(curl_errno($ch), 0);
+    $info = curl_getinfo($ch);
+    
+    //Il vaut mieux vérifier que le code est 200, un 301 ou autre n'est pas normal
+    $this->assertEquals($info['http_code'], 200);
+    curl_close($ch);
+  }
+  
+  public function testLaconnexionBddestKO_laPageDeMaintenanceEstAffichée() {
+    global $config, $db;
+    $config['db']['user'] = 'nePeutPasExisterSinonLeTestSeraPlanté';
+    $db = new dbLmondo;
+    $page = new page(FALSE);
+    $result = $page->showPage();
+    $template = file_get_contents('templates/maintenance.html');
+    $this->assertEquals($template, $result);
   }
 
 }

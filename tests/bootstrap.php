@@ -25,9 +25,10 @@
 //ini_set('include_path', ini_get('include_path'));
 
 
-include_once '../lib/base.php';
+include_once '../lib/common.php';
 
-
+$config['serverUrl']='http://localhost:8000/';
+$config['db']['prefix']=$config['db']['prefix'].'test_';
 foreach (scandir('.') as $file) {
   if (preg_match('/^test.*.php$/', $file)) {
     include $file;
