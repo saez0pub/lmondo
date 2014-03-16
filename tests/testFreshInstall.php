@@ -28,11 +28,12 @@ class testFreshInstall extends PHPUnit_Framework_TestCase {
     $this->assertEquals(false, $result);
   }
   public function testSitrouveAdminAvecUnMotDePasseVide_AlorsJAfficheLaPageDInstallation() {
-    global $db;
-    $oldAdminPwd = $db->fetch("SELECT password from users where login = 'adminlmondo';");
-    $db->query("UPDATE users SET password='' where login = 'adminlmondo';");
-    $result = false;
-    $db->query("UPDATE users SET password='$oldAdminPwd' where login = 'adminlmondo';");
+    global $db, $config, $adminPassword;
+    $resPass = $db->query("UPDATE ".$config['db']['prefix']."users SET password='' where login = 'adminlmondo';");
+    $this->assertNotEquals(FALSE, $resPass);
+    $result = $db->checkDB();
+    $db->query("UPDATE ".$config['db']['prefix']."users SET password='$adminPassword' where login = 'adminlmondo';");
+    $resPass = $this->assertNotEquals(FALSE, $resPass);
     $this->assertEquals(false, $result);
   }
 

@@ -22,15 +22,18 @@
  * @author saez0pub
  */
 
+global $adminPassword;
 
 include_once dirname(__FILE__).'/../lib/common.php';
 include_once dirname(__FILE__).'/../lib/dbInstall.function.php';
-
 $config['serverUrl'] = 'http://localhost:8000/';
 $config['db']['prefix'] = 'tests_todelete_' . $config['db']['prefix'];
 //Nettoyage des précedents tests en cas d'interuption
 dropDB();
 initDB();
+//Sur une installation fraiche, il faut un mot de passe pour l'admin
+$adminPassword= md5(time()+rand(0, 2000));
+$db->query("UPDATE ".$config['db']['prefix']."users SET password='$adminPassword' where login = 'adminlmondo';");
 foreach (scandir('.') as $file) {
   if (preg_match('/^test.*.php$/', $file)) {
     echo "Include $file\n";

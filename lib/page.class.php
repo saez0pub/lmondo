@@ -38,7 +38,7 @@ class page {
       //Vu que l'on a un problème de connexion de Bdd, on affiche la page de maintenance
       $this->showMaintenancePage();
     } elseif ($db->checkDB() === FALSE) {
-      $this->overrideContent = "<div class='alert alert-critical maintenance'>Une migration de version est necessaire, veuillez consulter les notes de mise à jour</div>";
+      $this->overrideContent = "<div class='alert alert-critical maintenance'>Une installation ou mise à jour doit être faite, veuillez consulter les notes de mise à jour</div>";
       $this->showMaintenancePage();
     }
     $this->prepareHeader();

@@ -25,10 +25,12 @@
 class dbInstallTest extends PHPUnit_Framework_TestCase {
 
   public function testInstallationDB() {
-    global $db;
+    global $db, $config, $adminPassword;
     dropDB();
     $resInit = initDB();
     $this->assertNotEquals(FALSE, $resInit);
+    $resPass = $db->query("UPDATE ".$config['db']['prefix']."users SET password='$adminPassword' where login = 'adminlmondo';");
+    $this->assertNotEquals(FALSE, $resPass);
     $result = $db->checkDB();
     $this->assertEquals(TRUE, $result);
   }
@@ -45,7 +47,7 @@ class dbInstallTest extends PHPUnit_Framework_TestCase {
   public function testIlNYAPasDeTablesRestantesApresUnDropDB() {
     global $config, $db;
     dropDB();
-    $this->assertEquals(array(), preg_grep('/^' . str_replace('/', '\\/', $config['db']['prefix']) . '/',$db->fetchAll("show tables;", PDO::FETCH_COLUMN)));
+    $this->assertEquals(array(), preg_grep('/^' . str_replace('/', '\\/', $config['db']['prefix']) . '/', $db->fetchAll("show tables;", PDO::FETCH_COLUMN)));
     initDB();
   }
 

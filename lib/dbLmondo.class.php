@@ -133,12 +133,17 @@ class dbLmondo {
   }
   public function checkDB() {
     global $config;
+      $return = TRUE;
     $sql = "select valeur from `" . $config['db']['prefix'] . "config` where cle = 'version';";
     $res = $this->fetch($sql);
     $version = $res['valeur'];
-    if ($config['version'] === $version) {
-      $return = TRUE;
-    } else {
+    if ($config['version'] !== $version) {
+      $return = FALSE;
+    }
+    
+    $sql = "select password from `" . $config['db']['prefix'] . "users` where login = 'adminlmondo';";
+    $res = $this->fetch($sql);
+    if($res === FALSE || empty($res['password'])){
       $return = FALSE;
     }
     return $return;
