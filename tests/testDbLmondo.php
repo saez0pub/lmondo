@@ -58,7 +58,6 @@ class dbTest extends PHPUnit_Framework_TestCase {
     $config['db']['host'] = '127.0.0.1';
     $db = new dbLmondo;
     $result = $db->getErrorCode();
-    var_dump($result);
     $config['db']['port'] = $oldPort;
     $config['db']['host'] = $oldHost;
     $db = NULL;

@@ -29,23 +29,43 @@ function initDB() {
   `lastlogin` datetime NOT NULL,
   `enabled` tinyint(1) NOT NULL
   ) ;");
-  if ($res === FALSE){
+  if ($res === FALSE) {
     $return = FALSE;
   }
   $res = $db->query("CREATE TABLE IF NOT EXISTS `" . $prefix . "config` (
   `cle` varchar(100) PRIMARY KEY,
   `valeur` varchar(100) NOT NULL
   ) ;");
-  if ($res === FALSE){
+  if ($res === FALSE) {
     $return = FALSE;
   }
   $res = $db->query("INSERT INTO `" . $prefix . "config` VALUES ('version', '0.1');");
+  if ($res === FALSE) {
+    $return = FALSE;
+  }
+  /*
+   * @TODO: faire un script sql pour l'installation
+   */
   return $return;
 }
 
 function dropDB() {
+  /*
+   * @TODO: automatiser la suppression des tables avec un preg match de show tables
+   */
   global $config, $db;
+  $return = TRUE;
   $prefix = $config['db']['prefix'];
-  $sql = "DROP TABLE IF EXISTS `" . $prefix . "users`;";
-  return $db->query($sql);
+  $listeTables = $db->fetchAll("show tables;", PDO::FETCH_COLUMN);
+  foreach ($listeTables as $table) {
+    if (preg_match('/^' . str_replace('/', '\\/', $prefix) . '/', $table)) {
+      $sql = "DROP TABLE IF EXISTS `" . $table . "`;";
+      $res = $db->query($sql);
+      if ($res === FALSE) {
+        $return = FALSE;
+      }
+    }
+  }
+  return $return;
+  ;
 }

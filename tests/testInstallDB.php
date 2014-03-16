@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * Copyright (C) 2014 saez0pub
  *
  * This program is free software; you can redistribute it and/or
@@ -19,16 +19,27 @@
  */
 
 /**
-* @backupGlobals disabled
-* @backupStaticAttributes disabled
-*/
+ * @backupGlobals disabled
+ * @backupStaticAttributes disabled
+ */
 class dbInstallTest extends PHPUnit_Framework_TestCase {
+
   public function testInstallationDB() {
     global $db;
     dropDB();
     $resInit = initDB();
     $this->assertNotEquals(FALSE, $resInit);
-    $result=$db->checkDB();
+    $result = $db->checkDB();
     $this->assertEquals(TRUE, $result);
   }
+
+  public function testSiUneInsertionOuUneDeletionSePasseBien_AlorsLeRetourDeQueryNEstPasFalse() {
+    global $config, $db;
+    $prefix = $config['db']['prefix'];
+    $resInsert = $db->query("INSERT INTO `" . $prefix . "config` VALUES ('testDbQuery', '0.1');");
+    $this->assertNotEquals(FALSE, $resInsert);
+    $resDelete = $db->query("DELETE FROM `" . $prefix . "config` where cle = 'testDbQuery';");
+    $this->assertNotEquals(FALSE, $resDelete);
+  }
+
 }

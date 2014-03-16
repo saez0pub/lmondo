@@ -82,6 +82,21 @@ class dbLmondo {
     return $return;
   }
 
+  public function fetchAll($sql, $fetchStyle = PDO::FETCH_ASSOC) {
+    $return = array();
+    try {
+      $stmt = $this->dbh->prepare($sql);
+      // call the stored procedure
+      $stmt->execute();
+      while ($rs = $stmt->fetch($fetchStyle)) {
+        $return[] = $rs;
+      }
+    } catch (PDOException $e) {
+      $return = FALSE;
+    }
+    return $return;
+  }
+
   public function query($sql) {
     try {
       /*
