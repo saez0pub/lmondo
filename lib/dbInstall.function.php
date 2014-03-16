@@ -18,33 +18,21 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+//Vérou supplémentaire,impossible d'appeler l'installation depuis un serveur Web
+if (isset($_SERVER['HTTP_HOST'])) {
+  die();
+}
+
 function initDB() {
   global $config, $db;
   $prefix = $config['db']['prefix'];
   $return = TRUE;
-  $res = $db->query("CREATE TABLE IF NOT EXISTS `" . $prefix . "users` (
-  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `login` varchar(100) NOT NULL,
-  `password` varchar(100) NOT NULL,
-  `lastlogin` datetime NOT NULL,
-  `enabled` tinyint(1) NOT NULL
-  ) ;");
-  if ($res === FALSE) {
-    $return = FALSE;
-  }
-  $res = $db->query("CREATE TABLE IF NOT EXISTS `" . $prefix . "config` (
-  `cle` varchar(100) PRIMARY KEY,
-  `valeur` varchar(100) NOT NULL
-  ) ;");
-  if ($res === FALSE) {
-    $return = FALSE;
-  }
-  $res = $db->query("INSERT INTO `" . $prefix . "config` VALUES ('version', '0.1');");
+  $sql = str_replace('$prefix$', $prefix, file_get_contents('../var/DB/installDB.sql'));
+  $res = $db->query($sql);
   if ($res === FALSE) {
     $return = FALSE;
   }
   /*
-   * @todo faire un script sql pour l'installation
    * @todo mettre en oeuvre un upgrade quand ce sera necessaire
    */
   return $return;

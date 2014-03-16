@@ -21,12 +21,10 @@
 /**
  * @author saez0pub
  */
-// TODO: check include path
-//ini_set('include_path', ini_get('include_path'));
 
 
-include_once '../lib/common.php';
-include_once '../lib/dbInstall.function.php';
+include_once dirname(__FILE__).'/../lib/common.php';
+include_once dirname(__FILE__).'/../lib/dbInstall.function.php';
 
 $config['serverUrl'] = 'http://localhost:8000/';
 $config['db']['prefix'] = 'tests_todelete_' . $config['db']['prefix'];
@@ -36,7 +34,7 @@ initDB();
 foreach (scandir('.') as $file) {
   if (preg_match('/^test.*.php$/', $file)) {
     echo "Include $file\n";
-    include $file;
+    include dirname(__FILE__).'/'.$file;
   }
 }
 /**

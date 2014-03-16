@@ -19,7 +19,7 @@
  */
 
 
-include_once '../lib/common.php';
+include_once dirname(__FILE__).'/../lib/common.php';
 
 $page = new page();
 

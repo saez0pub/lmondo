@@ -18,10 +18,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-require '../etc/config.php';
-require '../etc/constants.php';
+require dirname(__FILE__).'/../etc/config.php';
+require dirname(__FILE__).'/../etc/constants.php';
 
-include_once '../lib/dbLmondo.class.php';
+include_once dirname(__FILE__).'/../lib/dbLmondo.class.php';
 global $db;
 $db = new dbLmondo();
-include_once '../lib/page.class.php';
+include_once dirname(__FILE__).'/../lib/page.class.php';
