@@ -21,6 +21,7 @@
 class dbLmondo {
 
   private $dbh;
+  private $stmnt;
   private $dbError;
 
   function __construct() {
@@ -108,20 +109,28 @@ class dbLmondo {
       $return = $this->dbh->query($sql);
     } catch (PDOException $e) {
       $return = FALSE;
-      var_dump($e);
     }
     return $return;
   }
 
   public function prepare($sql) {
     try {
-      $return = $this->dbh->prepare($sql);
+      $this->stmnt = $this->dbh->prepare($sql);
+      $return = $this->stmnt;
     } catch (PDOException $e) {
       $return = FALSE;
     }
     return $return;
   }
 
+  public function execute() {
+    try {
+      $return =$this->stmnt->execute();
+    } catch (PDOException $e) {
+      $return = FALSE;
+    }
+    return $return;
+  }
   public function checkDB() {
     global $config;
     $sql = "select valeur from `" . $config['db']['prefix'] . "config` where cle = 'version';";

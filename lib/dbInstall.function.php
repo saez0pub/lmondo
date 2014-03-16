@@ -44,23 +44,24 @@ function initDB() {
     $return = FALSE;
   }
   /*
-   * @TODO: faire un script sql pour l'installation
+   * @todo faire un script sql pour l'installation
+   * @todo mettre en oeuvre un upgrade quand ce sera necessaire
    */
   return $return;
 }
 
 function dropDB() {
   /*
-   * @TODO: automatiser la suppression des tables avec un preg match de show tables
+   * @todo automatiser la suppression des tables avec un preg match de show tables
    */
   global $config, $db;
   $return = TRUE;
-  $prefix = $config['db']['prefix'];
   $listeTables = $db->fetchAll("show tables;", PDO::FETCH_COLUMN);
   foreach ($listeTables as $table) {
-    if (preg_match('/^' . str_replace('/', '\\/', $prefix) . '/', $table)) {
-      $sql = "DROP TABLE IF EXISTS `" . $table . "`;";
-      $res = $db->query($sql);
+    if (preg_match('/^' . str_replace('/', '\\/', $config['db']['prefix']) . '/', $table)) {
+      $sql = "DROP TABLE IF EXISTS `" . $config['db']['name'] . '`.`' . $table . "`;";
+      $db->prepare($sql);
+      $res = $db->execute();
       if ($res === FALSE) {
         $return = FALSE;
       }

@@ -25,7 +25,7 @@
 class pageTest extends PHPUnit_Framework_TestCase {
 
   public function testAuthSanslogin() {
-    $page = new page();
+    $page = new page(TRUE);
     $result = $page->testAuth();
     $this->assertEquals(false, $result);
   }
@@ -41,7 +41,7 @@ class pageTest extends PHPUnit_Framework_TestCase {
    */
   public function testHeaderSansParametre() {
     // Arrange
-    $page = new page();
+    $page = new page(TRUE);
 
     $result = "<!DOCTYPE html>
 <html lang=\"en\">
@@ -101,7 +101,7 @@ class pageTest extends PHPUnit_Framework_TestCase {
 
   public function testFooterSansParametre() {
     // Arrange
-    $page = new page();
+    $page = new page(TRUE);
 
     $result = "
     </div><!-- /.container -->

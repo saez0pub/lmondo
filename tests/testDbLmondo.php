@@ -55,6 +55,8 @@ class dbTest extends PHPUnit_Framework_TestCase {
     $oldPort = $config['db']['port'];
     $config['db']['port'] = '42';
     $oldHost = $config['db']['host'];
+    //Je mets 127.0.0.1 pour éviter de passer par le socket et ainsi, 
+    //je peux provoquer une erreur en mettant un port bidon.
     $config['db']['host'] = '127.0.0.1';
     $db = new dbLmondo;
     $result = $db->getErrorCode();

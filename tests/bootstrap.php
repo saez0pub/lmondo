@@ -30,11 +30,16 @@ include_once '../lib/dbInstall.function.php';
 
 $config['serverUrl'] = 'http://localhost:8000/';
 $config['db']['prefix'] = 'tests_todelete_' . $config['db']['prefix'];
+//Nettoyage des précedents tests en cas d'interuption
 dropDB();
 initDB();
 foreach (scandir('.') as $file) {
   if (preg_match('/^test.*.php$/', $file)) {
+    echo "Include $file\n";
     include $file;
   }
 }
-?>
+/**
+ * @todo faire un drop des tables tests
+ */
+dropDB();

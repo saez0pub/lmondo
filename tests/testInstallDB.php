@@ -42,4 +42,11 @@ class dbInstallTest extends PHPUnit_Framework_TestCase {
     $this->assertNotEquals(FALSE, $resDelete);
   }
 
+  public function testIlNYAPasDeTablesRestantesApresUnDropDB() {
+    global $config, $db;
+    dropDB();
+    $this->assertEquals(array(), $db->fetchAll("show tables;", PDO::FETCH_COLUMN));
+    //initDB();
+  }
+
 }
