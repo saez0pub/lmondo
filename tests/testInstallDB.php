@@ -45,8 +45,8 @@ class dbInstallTest extends PHPUnit_Framework_TestCase {
   public function testIlNYAPasDeTablesRestantesApresUnDropDB() {
     global $config, $db;
     dropDB();
-    $this->assertEquals(array(), $db->fetchAll("show tables;", PDO::FETCH_COLUMN));
-    //initDB();
+    $this->assertEquals(array(), preg_grep('/^' . str_replace('/', '\\/', $config['db']['prefix']) . '/',$db->fetchAll("show tables;", PDO::FETCH_COLUMN)));
+    initDB();
   }
 
 }

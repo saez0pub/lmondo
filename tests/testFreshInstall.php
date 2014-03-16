@@ -19,28 +19,21 @@
  */
 
 /**
- * @author saez0pub
- */
+* @backupGlobals disabled
+* @backupStaticAttributes disabled
+*/
+class testFreshInstall extends PHPUnit_Framework_TestCase {
 
-
-include_once dirname(__FILE__).'/../lib/common.php';
-include_once dirname(__FILE__).'/../lib/dbInstall.function.php';
-
-$config['serverUrl'] = 'http://localhost:8000/';
-$config['db']['prefix'] = 'tests_todelete_' . $config['db']['prefix'];
-//Nettoyage des précedents tests en cas d'interuption
-dropDB();
-initDB();
-foreach (scandir('.') as $file) {
-  if (preg_match('/^test.*.php$/', $file)) {
-    echo "Include $file\n";
-    include dirname(__FILE__).'/'.$file;
+  public function laBDDEstVide_AlorsJeDemandeUnstallation($param) {
+    $this->assertEquals(false, $result);
   }
-}
-/**
- * @todo faire un drop des tables tests
- */
+  public function testSitrouveAdminAvecUnMotDePasseVide_AlorsJAfficheLaPageDInstallation() {
+    global $db;
+    $oldAdminPwd = $db->fetch("SELECT password from users where login = 'adminlmondo';");
+    $db->query("UPDATE users SET password='' where login = 'adminlmondo';");
+    $result = false;
+    $db->query("UPDATE users SET password='$oldAdminPwd' where login = 'adminlmondo';");
+    $this->assertEquals(false, $result);
+  }
 
-register_shutdown_function(function(){
-   dropDB();
-});
+}
