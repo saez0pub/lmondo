@@ -84,17 +84,17 @@ class page {
   }
 
   public function prepareHeader() {
-    $this->header = file_get_contents('../var/templates/header_1.html');
+    $this->header = file_get_contents(dirname(__FILE__).'/../var/templates/header_1.html');
     foreach ($this->css as $css) {
       $this->header.="
     <link href=\"" . $css . " rel=\"stylesheet\">\n";
     }
-    $this->header.=file_get_contents('../var/templates/header_2.html');
+    $this->header.=file_get_contents(dirname(__FILE__).'/../var/templates/header_2.html');
     return $this->header;
   }
 
   public function prepareFooter() {
-    $this->footer = file_get_contents('../var/templates/footer.html');
+    $this->footer = file_get_contents(dirname(__FILE__).'/../var/templates/footer.html');
     return $this->footer;
   }
 

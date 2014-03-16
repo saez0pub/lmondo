@@ -143,7 +143,7 @@ class pageTest extends PHPUnit_Framework_TestCase {
     $db = new dbLmondo;
     $page = new page(TRUE);
     $result = $page->showPage();
-    $template = file_get_contents('templates/maintenance.html');
+    $template = file_get_contents(dirname(__FILE__).'/templates/maintenance.html');
     $this->assertEquals($template, $result);
     $config['db']['user'] = $oldUser;
     $db = new dbLmondo;
@@ -155,7 +155,7 @@ class pageTest extends PHPUnit_Framework_TestCase {
     $config['version'] = '4242424242';
     $page = new page(TRUE);
     $result = $page->showPage();
-    $template = file_get_contents('templates/upgradeplz.html');
+    $template = file_get_contents(dirname(__FILE__).'/templates/upgradeplz.html');
     $this->assertEquals($template, $result);
     $config['version'] = $oldVersion;
   }

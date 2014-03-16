@@ -27,7 +27,7 @@ function initDB() {
   global $config, $db;
   $prefix = $config['db']['prefix'];
   $return = TRUE;
-  $sql = str_replace('$prefix$', $prefix, file_get_contents('../var/DB/installDB.sql'));
+  $sql = str_replace('$prefix$', $prefix, file_get_contents(dirname(__FILE__).'/../var/DB/installDB.sql'));
   $res = $db->query($sql);
   if ($res === FALSE) {
     $return = FALSE;
