@@ -18,4 +18,5 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-define('LMONDO_DB_ERR_CONNECT', 1045);
+define('LMONDO_DB_ERR_CONN', 2003);
+define('LMONDO_DB_ERR_USER', 1045);

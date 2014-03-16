@@ -24,6 +24,7 @@ class dbLmondo {
   private $dbError;
 
   function __construct() {
+    $this->dbError['code'] = 0;
     $this->dbConnect();
   }
 
@@ -31,7 +32,8 @@ class dbLmondo {
     global $config;
     try {
       $this->dbh = new PDO(
-        'mysql:host=' . $config['db']['host'] . ';port=' . $config['db']['port'] .
+        'mysql:host=' . $config['db']['host'] .
+        ';port=' . $config['db']['port'] .
         ';dbname=' . $config['db']['name'] . '', $config['db']['user'], $config['db']['pass'], array(
           PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
         )
@@ -113,7 +115,7 @@ class dbLmondo {
     if ($config['version'] === $version) {
       $return = TRUE;
     } else {
-      $resturn = FALSE;
+      $return = FALSE;
     }
     return $return;
   }

@@ -26,15 +26,19 @@ class page {
   private $footer;
   private $canShowPage;
   private $returnPage;
+  private $overrideContent;
 
   function __construct($returnPage = FALSE) {
     global $db;
     $this->css = array();
     $this->canShowPage = TRUE;
     $this->returnPage = $returnPage;
-
+    $this->overrideContent = "<div class='alert alert-warning maintenance'>Le site est en maintenance, veuillez réessayer dans quelques minutes</div>";
     if ($db->getConnexion() === FALSE) {
       //Vu que l'on a un problème de connexion de Bdd, on affiche la page de maintenance
+      $this->showMaintenancePage();
+    } elseif ($db->checkDB() === FALSE) {
+      $this->overrideContent = "<div class='alert alert-critical maintenance'>Une migration de version est necessaire, veuillez consulter les notes de mise à jour</div>";
       $this->showMaintenancePage();
     }
     $this->prepareHeader();
@@ -51,7 +55,7 @@ class page {
   }
 
   public function showPage($return = NULL) {
-    if($return === NULL){
+    if ($return === NULL) {
       $return = $this->returnPage;
     }
     if ($this->canShowPage === TRUE) {
@@ -66,10 +70,11 @@ class page {
   }
 
   public function showMaintenancePage($return = NULL) {
-    if($return === NULL){
+    if ($return === NULL) {
       $return = $this->returnPage;
     }
-    $this->content = "<div class='alert alert-warning maintenance'>Le site est en maintenance, veuillez réessayer dans quelques minutes</div>";
+    $this->content = $this->overrideContent;
+
     if ($return) {
       return $this->prepareHeader() . $this->content . $this->prepareFooter();
     } else {

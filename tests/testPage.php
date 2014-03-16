@@ -138,14 +138,27 @@ class pageTest extends PHPUnit_Framework_TestCase {
   
   public function testLaconnexionBddestKO_laPageDeMaintenanceEstAffichée() {
     global $config, $db;
+    $oldUser = $config['db']['user'];
     $config['db']['user'] = 'nePeutPasExisterSinonLeTestSeraPlanté';
     $db = new dbLmondo;
     $page = new page(TRUE);
     $result = $page->showPage();
     $template = file_get_contents('templates/maintenance.html');
     $this->assertEquals($template, $result);
+    $config['db']['user'] = $oldUser;
   }
 
+  public function testLaVersionEstMauvaise_UnUpgradeEstNecessaire() {
+    global $config, $db;
+    $oldVersion = $config['version'];
+    $config['version'] = '4242424242';
+    $db = new dbLmondo;
+    $page = new page(TRUE);
+    $result = $page->showPage();
+    $template = file_get_contents('templates/upgradeplz.html');
+    $this->assertEquals($template, $result);
+    $config['version'] = $oldVersion;
+  }
 }
 
 ?>

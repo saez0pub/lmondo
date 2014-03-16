@@ -28,15 +28,17 @@ class dbTest extends PHPUnit_Framework_TestCase {
     //Il vaut mieux valider que les conditions de tests soient bonnes
     global $db;
     $result = $db->getConnexion();
-    $this->assertNotEquals(false,$result);
+    $this->assertNotEquals(FALSE,$result);
   }
 
   public function testProblemeDeConnexionMySQL() {
     global $config;
+    $oldUser = $config['db']['user'];
     $config['db']['user'] = 'nePeutPasExisterSinonLeTestSeraPlanté';
     $db = new dbLmondo;
     $result = $db->getConnexion();
     $this->assertFalse($result);
+    $config['db']['user'] = $oldUser;
   }
 
   public function testExtractionSQLState() {
@@ -50,18 +52,27 @@ class dbTest extends PHPUnit_Framework_TestCase {
 
   public function testMySQLNonDemarre() {
     global $config;
-    $config['db']['port'] = 'nepeutxister.local.mamachine42';
+    $oldPort = $config['db']['port'];
+    $config['db']['port'] = '42';
+    $oldHost = $config['db']['host'];
+    $config['db']['host'] = '127.0.0.1';
     $db = new dbLmondo;
     $result = $db->getErrorCode();
-    $this->assertEquals($result['code'], LMONDO_DB_ERR_CONNECT);
+    var_dump($result);
+    $config['db']['port'] = $oldPort;
+    $config['db']['host'] = $oldHost;
+    $db = NULL;
+    $this->assertEquals(LMONDO_DB_ERR_CONN, $result['code']);
   }
 
   public function testUserMysqlNePeutPasSeConnecter() {
     global $config;
+    $oldUser = $config['db']['user'];
     $config['db']['user'] = 'nePeutPasExisterSinonLeTestSeraPlanté';
     $db = new dbLmondo;
     $result = $db->getErrorCode();
-    $this->assertEquals($result['code'], LMONDO_DB_ERR_CONNECT);
+    $this->assertEquals(LMONDO_DB_ERR_USER, $result['code']);
+    $config['db']['user'] = $oldUser;
   }
 
 }
