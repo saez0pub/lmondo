@@ -24,12 +24,6 @@
 */
 class pageTest extends PHPUnit_Framework_TestCase {
 
-  public function testAuthSanslogin() {
-    $page = new page(TRUE);
-    $result = $page->testAuth();
-    $this->assertEquals(false, $result);
-  }
-
   /**
    * @todo tester un session correcte
     public function testAuthAveclogin() {
@@ -144,9 +138,9 @@ class pageTest extends PHPUnit_Framework_TestCase {
     $page = new page(TRUE);
     $result = $page->showPage();
     $template = file_get_contents(dirname(__FILE__).'/templates/maintenance.html');
-    $this->assertEquals($template, $result);
     $config['db']['user'] = $oldUser;
     $db = new dbLmondo;
+    $this->assertEquals($template, $result);
   }
 
   public function testLaVersionEstMauvaise_UnUpgradeEstNecessaire() {
@@ -156,7 +150,7 @@ class pageTest extends PHPUnit_Framework_TestCase {
     $page = new page(TRUE);
     $result = $page->showPage();
     $template = file_get_contents(dirname(__FILE__).'/templates/upgradeplz.html');
-    $this->assertEquals($template, $result);
     $config['version'] = $oldVersion;
+    $this->assertEquals($template, $result);
   }
 }

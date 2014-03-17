@@ -18,6 +18,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+include_once dirname(__FILE__).'/login.function.php';
 class page {
 
   private $css;
@@ -30,6 +31,7 @@ class page {
 
   function __construct($returnPage = FALSE) {
     global $db;
+    startSession();
     $this->css = array();
     $this->canShowPage = TRUE;
     $this->returnPage = $returnPage;
@@ -59,6 +61,8 @@ class page {
       $return = $this->returnPage;
     }
     if ($this->canShowPage === TRUE) {
+      //Vérification des données de session
+      $this->content = $this->getContent();
       if ($return) {
         return $this->header . $this->content . $this->footer;
       } else {
@@ -70,6 +74,7 @@ class page {
   }
 
   public function showMaintenancePage($return = NULL) {
+    $this->prepareHeader(false);
     if ($return === NULL) {
       $return = $this->returnPage;
     }
@@ -83,24 +88,40 @@ class page {
     $this->canShowPage = FALSE;
   }
 
-  public function prepareHeader() {
-    $this->header = file_get_contents(dirname(__FILE__).'/../var/templates/header_1.html');
+  public function prepareHeader($showMenu = true) {
+    $this->header = file_get_contents(dirname(__FILE__) . '/../var/templates/header_1.html');
     foreach ($this->css as $css) {
-      $this->header.="
-    <link href=\"" . $css . " rel=\"stylesheet\">\n";
+      $this->header.="    <link href=\"" . $css . "\" rel=\"stylesheet\">\n";
     }
-    $this->header.=file_get_contents(dirname(__FILE__).'/../var/templates/header_2.html');
+    $this->header.=file_get_contents(dirname(__FILE__) . '/../var/templates/header_2.html');
+    if($showMenu){
+      $this->header = str_replace('$menu$', $this->getMenu(), $this->header);
+    }else{
+      $this->header = str_replace('$menu$', '', $this->header);
+    }
     return $this->header;
+  }
+  
+  public function getMenu() {
+    return "\n          <ul class=\"nav navbar-nav\">
+            <li class=\"active\"><a href=\"#\">Accueil</a></li>
+          </ul>";
   }
 
   public function prepareFooter() {
-    $this->footer = file_get_contents(dirname(__FILE__).'/../var/templates/footer.html');
+    $this->footer = file_get_contents(dirname(__FILE__) . '/../var/templates/footer.html');
     return $this->footer;
   }
 
-  public function testAuth() {
-    return false;
+  public function getContent() {
+    global $config;
+    if (isset($_SESSION[$config['sessionName']])) {
+      return $this->content;
+    } else {
+      $this->addCSS('../css/login.css');
+      $this->prepareHeader(false);
+      return file_get_contents(dirname(__FILE__) . '/../var/templates/login.html');
+    }
   }
 
 }
-

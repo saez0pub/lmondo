@@ -20,6 +20,10 @@
 
 global $config;
 
+//Hack POST overrides GET
+foreach ($_POST as $key => $value) {
+  $_GET[$key] = $_POST[$key];
+}
 //Versionapplicative
 $config['version'] = '0.1';
 
@@ -30,3 +34,6 @@ $config['db']['host']='localhost';
 $config['db']['port']='3306';
 $config['db']['name']='lmondo';
 $config['db']['prefix']='lmondo_';
+
+//Nom de la session
+$config['sessionName'] = 'lmondo';

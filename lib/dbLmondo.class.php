@@ -114,36 +114,77 @@ class dbLmondo {
   }
 
   public function prepare($sql) {
-    try {
-      $this->stmnt = $this->dbh->prepare($sql);
-      $return = $this->stmnt;
-    } catch (PDOException $e) {
-      $return = FALSE;
+    $return = FALSE;
+    if ($this->dbh !== false) {
+      try {
+        $this->stmnt = $this->dbh->prepare($sql);
+        $return = $this->stmnt;
+      } catch (PDOException $e) {
+        $return = FALSE;
+      }
     }
     return $return;
   }
 
+  public function bindParam($variable, $value, $type = PDO::PARAM_STR) {
+    if ($this->dbh !== false) {
+      $this->stmnt->bindParam($variable, $value, $type);
+    }
+  }
+
   public function execute() {
-    try {
-      $return =$this->stmnt->execute();
-    } catch (PDOException $e) {
-      $return = FALSE;
+    $return = FALSE;
+    if ($this->dbh !== false) {
+      try {
+        $return = $this->stmnt->execute();
+      } catch (PDOException $e) {
+        $return = FALSE;
+      }
     }
     return $return;
   }
+
+  public function executeAndFetch($fetchStyle = PDO::FETCH_ASSOC) {
+    $return = array();
+    if ($this->dbh !== false) {
+      try {
+        $this->stmnt->execute();
+        $return = $this->stmnt->fetch($fetchStyle);
+      } catch (PDOException $e) {
+        $return = FALSE;
+      }
+    }
+    return $return;
+  }
+
+  public function executeAndFetchAll($fetchStyle = PDO::FETCH_ASSOC) {
+    $return = array();
+    if ($this->dbh !== false) {
+      try {
+        $this->stmnt->execute();
+        while ($rs = $this->stmnt->fetch($fetchStyle)) {
+          $return[] = $rs;
+        }
+      } catch (PDOException $e) {
+        $return = FALSE;
+      }
+    }
+    return $return;
+  }
+
   public function checkDB() {
     global $config;
-      $return = TRUE;
+    $return = TRUE;
     $sql = "select valeur from `" . $config['db']['prefix'] . "config` where cle = 'version';";
     $res = $this->fetch($sql);
     $version = $res['valeur'];
     if ($config['version'] !== $version) {
       $return = FALSE;
     }
-    
+
     $sql = "select password from `" . $config['db']['prefix'] . "users` where login = 'adminlmondo';";
     $res = $this->fetch($sql);
-    if($res === FALSE || empty($res['password'])){
+    if ($res === FALSE || empty($res['password'])) {
       $return = FALSE;
     }
     return $return;

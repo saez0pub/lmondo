@@ -19,22 +19,24 @@
  */
 
 /**
-* @backupGlobals disabled
-* @backupStaticAttributes disabled
-*/
+ * @backupGlobals disabled
+ * @backupStaticAttributes disabled
+ */
 class testFreshInstall extends PHPUnit_Framework_TestCase {
 
-  public function laBDDEstVide_AlorsJeDemandeUnstallation($param) {
-    $this->assertEquals(false, $result);
-  }
-  public function testSitrouveAdminAvecUnMotDePasseVide_AlorsJAfficheLaPageDInstallation() {
+  public function testSitrouveAdminAvecUnMotDePasseVide_AlorsJAfficheLaPageDeMaintenance() {
     global $db, $config, $adminPassword;
-    $resPass = $db->query("UPDATE ".$config['db']['prefix']."users SET password='' where login = 'adminlmondo';");
-    $this->assertNotEquals(FALSE, $resPass);
-    $result = $db->checkDB();
-    $db->query("UPDATE ".$config['db']['prefix']."users SET password='$adminPassword' where login = 'adminlmondo';");
-    $resPass = $this->assertNotEquals(FALSE, $resPass);
-    $this->assertEquals(false, $result);
+    $resInit = reinitDB();
+    $this->assertNotEquals(FALSE, $resInit);
+    $db->query("UPDATE " . $config['db']['prefix'] . "users SET password='' where login = 'adminlmondo';");
+    $resCheck = $db->checkDB();
+    $this->assertEquals(FALSE, $resCheck);
+    $page = new page(TRUE);
+    $resultPage = $page->showPage();
+    $template = file_get_contents(dirname(__FILE__) . '/templates/upgradeplz.html');
+    $this->assertEquals($template, $resultPage);
+    $db->query("UPDATE " . $config['db']['prefix'] . "users SET password='$adminPassword' where login = 'adminlmondo';");
+    $this->assertEquals(false, $resCheck);
   }
 
 }

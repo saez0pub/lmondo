@@ -21,29 +21,47 @@
 /**
  * @author saez0pub
  */
-
 global $adminPassword;
+global $cookieTest;
 
-include_once dirname(__FILE__).'/../lib/common.php';
-include_once dirname(__FILE__).'/../lib/dbInstall.function.php';
+//Sur une installation fraiche, il faut un mot de passe pour l'admin
+$adminPassword = md5(time() + rand(0, 2000));
+$_POST["login"]="adminlmondo";
+$_POST["password"]="$adminPassword";
+
+include_once dirname(__FILE__) . '/../lib/common.php';
+include_once dirname(__FILE__) . '/../lib/dbInstall.function.php';
 $config['serverUrl'] = 'http://localhost:8000/';
 $config['db']['prefix'] = 'tests_todelete_' . $config['db']['prefix'];
-//Nettoyage des précedents tests en cas d'interuption
-dropDB();
-initDB();
-//Sur une installation fraiche, il faut un mot de passe pour l'admin
-$adminPassword= md5(time()+rand(0, 2000));
-$db->query("UPDATE ".$config['db']['prefix']."users SET password='$adminPassword' where login = 'adminlmondo';");
+reinitDB();
+startSession();
+
+$post_array = array('username' => $_POST["login"], 'password' => $_POST["password"]);
+$cookieTest = tempnam("/tmp", "COOKIE");
+$ch = curl_init($config['serverUrl']);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_COOKIEFILE, $cookieTest);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $post_array);
+
+//Initialisation de la session
+$_SESSION[$config['sessionName']] = array();
 foreach (scandir('.') as $file) {
   if (preg_match('/^test.*.php$/', $file)) {
     echo "Include $file\n";
-    include dirname(__FILE__).'/'.$file;
+    include dirname(__FILE__) . '/' . $file;
   }
 }
 /**
  * @todo faire un drop des tables tests
  */
-
-register_shutdown_function(function(){
-   dropDB();
+register_shutdown_function(function() {
+  dropDB();
 });
+
+function reinitDB() {
+  global $db, $config, $adminPassword;
+  //Nettoyage des précedents tests en cas d'interuption
+  dropDB();
+  initDB();
+  return $db->query("UPDATE " . $config['db']['prefix'] . "users SET password='$adminPassword' where login = 'adminlmondo';");
+}

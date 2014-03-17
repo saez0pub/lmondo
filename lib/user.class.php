@@ -18,12 +18,19 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-require dirname(__FILE__).'/../etc/config.php';
-require dirname(__FILE__).'/../etc/constants.php';
+class user {
 
-include_once dirname(__FILE__).'/../lib/dbLmondo.class.php';
-global $db;
-$db = new dbLmondo();
-include_once dirname(__FILE__).'/../lib/page.class.php';
-include_once dirname(__FILE__).'/../lib/login.function.php';
-include_once dirname(__FILE__).'/../lib/user.class.php';
+  function __construct() {
+    
+  }
+  
+  function getFromDB($login, $password) {
+    global $db, $config;
+    $db->prepare("SELECT * from " . $config['db']['prefix'] . "users where login = :login and password = :password");
+    $db->bindParam(":login", $login);
+    $db->bindParam(":password", md5($password));
+    $res = $db->executeAndFetch();
+    return $res;
+  }
+
+}
