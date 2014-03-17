@@ -26,8 +26,8 @@ global $cookieTest;
 
 //Sur une installation fraiche, il faut un mot de passe pour l'admin
 $adminPassword = md5(time() + rand(0, 2000));
-$_POST["login"]="adminlmondo";
-$_POST["password"]="$adminPassword";
+$_POST["login"] = "adminlmondo";
+$_POST["password"] = "$adminPassword";
 
 include_once dirname(__FILE__) . '/../lib/common.php';
 include_once dirname(__FILE__) . '/../lib/dbInstall.function.php';
@@ -35,25 +35,16 @@ $config['serverUrl'] = 'http://localhost:8000/';
 $config['db']['prefix'] = 'tests_todelete_' . $config['db']['prefix'];
 reinitDB();
 startSession();
-
-$post_array = array('username' => $_POST["login"], 'password' => $_POST["password"]);
-$cookieTest = tempnam("/tmp", "COOKIE");
-$ch = curl_init($config['serverUrl']);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_COOKIEFILE, $cookieTest);
-curl_setopt($ch, CURLOPT_POSTFIELDS, $post_array);
-
-//Initialisation de la session
-$_SESSION[$config['sessionName']] = array();
+initLogin();
+/**
+ * @todo faire un drop des tables tests
+ */
 foreach (scandir('.') as $file) {
   if (preg_match('/^test.*.php$/', $file)) {
     echo "Include $file\n";
     include dirname(__FILE__) . '/' . $file;
   }
 }
-/**
- * @todo faire un drop des tables tests
- */
 register_shutdown_function(function() {
   dropDB();
 });
@@ -64,4 +55,18 @@ function reinitDB() {
   dropDB();
   initDB();
   return $db->query("UPDATE " . $config['db']['prefix'] . "users SET password='$adminPassword' where login = 'adminlmondo';");
+}
+
+function initLogin() {
+  global $config, $cookieTest;
+  $post_array = array('username' => $_POST["login"], 'password' => $_POST["password"]);
+  $cookieTest = tempnam("/tmp", "COOKIE");
+  $ch = curl_init($config['serverUrl']);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookieTest);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $post_array);
+  $user = new user();
+  
+  //Initialisation de la session
+  $_SESSION[$config['sessionName']] =$user->getFromDB($_POST["login"], $_POST["password"]);
 }
