@@ -33,25 +33,20 @@ class testLogin extends PHPUnit_Framework_TestCase {
 
     $retour = curl_exec($ch);
     $template = file_get_contents(dirname(__FILE__) . '/templates/login.html');
-    $this->assertEquals($retour, $template);
+    $this->assertEquals($template, $retour);
     curl_close($ch);
     $_SESSION[$config['sessionName']] = $oldSession;
   }
 
-  public function AtestSiJePosteUnUtilisateurValide_AlorsJaiLaPageDIndex() {
+  public function testSiJePosteUnUtilisateurValide_AlorsJaiLaPageDIndex() {
     global $config, $cookieTest;
-    $oldSession = $_SESSION[$config['sessionName']];
-    unset($_SESSION[$config['sessionName']]);
     $ch = curl_init($config['serverUrl']);
     curl_setopt($ch, CURLOPT_COOKIEFILE, $cookieTest);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $retour = curl_exec($ch);
-    $template = file_get_contents(dirname(__FILE__) . '/templates/index.html');
-    //Je mets la réinitialisaition de session avant le test pour s'assurer que 
-    //l'on la conserve
-    $_SESSION[$config['sessionName']] = $oldSession;
-    $this->assertEquals($template, $retour);
     curl_close($ch);
+    $template = file_get_contents(dirname(__FILE__) . '/templates/index.html');
+    $this->assertEquals($template, $retour);
   }
 
 }

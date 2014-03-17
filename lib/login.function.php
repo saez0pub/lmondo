@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * Copyright (C) 2014 saez0pub
  *
  * This program is free software; you can redistribute it and/or
@@ -18,10 +18,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-function startSession(){
+function startSession() {
   global $config;
-  if(isset($_GET['login']) && isset($_GET['password'])){
+  if ($_SESSION === NULL) {
+    session_start();
+  }
+  if (isset($_GET['login']) && isset($_GET['password'])) {
     $user = new user();
-    $_SESSION[$config['sessionName']]['user'] = $user->getFromDB($_GET['login'],$_GET['password']);
+    $_SESSION[$config['sessionName']]['user'] = $user->getFromDB($_GET['login'], $_GET['password']);
   }
 }

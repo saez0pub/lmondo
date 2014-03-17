@@ -25,17 +25,18 @@ global $adminPassword;
 global $cookieTest;
 
 //Sur une installation fraiche, il faut un mot de passe pour l'admin
-$adminPassword = md5(time() + rand(0, 2000));
+$_POST["password"] = time() + rand(0, 2000);
+$_POST["password"]= 'adminlmondo';
+$adminPassword = md5($_POST["password"]);
 $_POST["login"] = "adminlmondo";
-$_POST["password"] = "$adminPassword";
 
 include_once dirname(__FILE__) . '/../lib/common.php';
 include_once dirname(__FILE__) . '/../lib/dbInstall.function.php';
 $config['serverUrl'] = 'http://localhost:8000/';
 $config['db']['prefix'] = 'tests_todelete_' . $config['db']['prefix'];
 reinitDB();
-startSession();
 initLogin();
+startSession();
 /**
  * @todo faire un drop des tables tests
  */
@@ -46,7 +47,9 @@ foreach (scandir('.') as $file) {
   }
 }
 register_shutdown_function(function() {
+  global $cookieTest;
   dropDB();
+  unlink($cookieTest);
 });
 
 function reinitDB() {
@@ -59,14 +62,18 @@ function reinitDB() {
 
 function initLogin() {
   global $config, $cookieTest;
-  $post_array = array('username' => $_POST["login"], 'password' => $_POST["password"]);
+  $post_array = array('login' => $_POST["login"], 'password' => $_POST["password"]);
   $cookieTest = tempnam("/tmp", "COOKIE");
   $ch = curl_init($config['serverUrl']);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch, CURLOPT_COOKIEFILE, $cookieTest);
+  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookieTest);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $post_array);
+  echo "$cookieTest :\n";
+  echo file_get_contents($cookieTest);
+  $retour = curl_exec($ch);
+  curl_close($ch);
   $user = new user();
-  
+
   //Initialisation de la session
-  $_SESSION[$config['sessionName']] =$user->getFromDB($_POST["login"], $_POST["password"]);
+  $_SESSION[$config['sessionName']] = $user->getFromDB($_POST["login"], $_POST["password"]);
 }
