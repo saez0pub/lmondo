@@ -18,7 +18,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-include_once dirname(__FILE__).'/login.function.php';
+include_once dirname(__FILE__) . '/login.function.php';
+
 class page {
 
   private $css;
@@ -94,18 +95,31 @@ class page {
       $this->header.="    <link href=\"" . $css . "\" rel=\"stylesheet\">\n";
     }
     $this->header.=file_get_contents(dirname(__FILE__) . '/../var/templates/header_2.html');
-    if($showMenu){
+    if ($showMenu) {
       $this->header = str_replace('$menu$', $this->getMenu(), $this->header);
-    }else{
+    } else {
       $this->header = str_replace('$menu$', '', $this->header);
     }
     return $this->header;
   }
-  
+
   public function getMenu() {
-    return "\n          <ul class=\"nav navbar-nav\">
+    global $config;
+    $return = "\n          <ul class=\"nav navbar-nav\">
             <li class=\"active\"><a href=\"#\">Accueil</a></li>
           </ul>";
+    if (isset($_SESSION[$config['sessionName']]['user']['login'])) {
+      $return.="
+          <ul class=\"nav navbar-nav navbar-right\" id=\"usernavigation\">
+            <li class=\"dropdown\">
+              <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">".$_SESSION[$config['sessionName']]['user']['login']." <b class=\"caret\"></b></a>
+              <ul class=\"dropdown-menu\">
+                <li><a href=\"#\">Déconnexion</a></li>
+              </ul>
+            </li>
+          </ul>";
+    }
+    return $return;
   }
 
   public function prepareFooter() {

@@ -32,6 +32,7 @@ class testFreshInstall extends PHPUnit_Framework_TestCase {
     $resCheck = $db->checkDB();
     $this->assertEquals(FALSE, $resCheck);
     $page = new page(TRUE);
+    $page->prepareHeader(FALSE);
     $resultPage = $page->showPage();
     $template = file_get_contents(dirname(__FILE__) . '/templates/upgradeplz.html');
     $this->assertEquals($template, $resultPage);

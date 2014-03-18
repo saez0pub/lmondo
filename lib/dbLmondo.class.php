@@ -70,30 +70,34 @@ class dbLmondo {
 
   public function fetch($sql, $fetchStyle = PDO::FETCH_ASSOC) {
     $return = array();
-    try {
-      $stmt = $this->dbh->prepare($sql);
+    if ($this->dbh !== false) {
+      try {
+        $stmt = $this->dbh->prepare($sql);
 
-      // call the stored procedure
-      $stmt->execute();
+        // call the stored procedure
+        $stmt->execute();
 
-      $return = $stmt->fetch($fetchStyle);
-    } catch (PDOException $e) {
-      $return = FALSE;
+        $return = $stmt->fetch($fetchStyle);
+      } catch (PDOException $e) {
+        $return = FALSE;
+      }
     }
     return $return;
   }
 
   public function fetchAll($sql, $fetchStyle = PDO::FETCH_ASSOC) {
     $return = array();
-    try {
-      $stmt = $this->dbh->prepare($sql);
-      // call the stored procedure
-      $stmt->execute();
-      while ($rs = $stmt->fetch($fetchStyle)) {
-        $return[] = $rs;
+    if ($this->dbh !== false) {
+      try {
+        $stmt = $this->dbh->prepare($sql);
+        // call the stored procedure
+        $stmt->execute();
+        while ($rs = $stmt->fetch($fetchStyle)) {
+          $return[] = $rs;
+        }
+      } catch (PDOException $e) {
+        $return = FALSE;
       }
-    } catch (PDOException $e) {
-      $return = FALSE;
     }
     return $return;
   }

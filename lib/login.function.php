@@ -20,7 +20,7 @@
 
 function startSession() {
   global $config;
-  if ($_SESSION === NULL) {
+  if (!isset($_SESSION) || $_SESSION === NULL) {
     session_start();
   }
   if (isset($_GET['login']) && isset($_GET['password'])) {

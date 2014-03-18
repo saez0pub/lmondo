@@ -68,12 +68,10 @@ function initLogin() {
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   curl_setopt($ch, CURLOPT_COOKIEJAR, $cookieTest);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $post_array);
-  echo "$cookieTest :\n";
-  echo file_get_contents($cookieTest);
   $retour = curl_exec($ch);
   curl_close($ch);
   $user = new user();
 
   //Initialisation de la session
-  $_SESSION[$config['sessionName']] = $user->getFromDB($_POST["login"], $_POST["password"]);
+  $_SESSION[$config['sessionName']]['user'] = $user->getFromDB($_POST["login"], $_POST["password"]);
 }

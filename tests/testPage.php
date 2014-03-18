@@ -148,6 +148,7 @@ class pageTest extends PHPUnit_Framework_TestCase {
     $oldVersion = $config['version'];
     $config['version'] = '4242424242';
     $page = new page(TRUE);
+    $page->prepareHeader(FALSE);
     $result = $page->showPage();
     $template = file_get_contents(dirname(__FILE__).'/templates/upgradeplz.html');
     $config['version'] = $oldVersion;

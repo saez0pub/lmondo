@@ -26,7 +26,7 @@ class user {
   
   function getFromDB($login, $password) {
     global $db, $config;
-    $db->prepare("SELECT * from " . $config['db']['prefix'] . "users where login = :login and password = :password");
+    $db->prepare("SELECT * from " . $config['db']['prefix'] . "users where login = :login and password = :password and enabled = 1");
     $db->bindParam(":login", $login);
     $db->bindParam(":password", md5($password));
     $res = $db->executeAndFetch();

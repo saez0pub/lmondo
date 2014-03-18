@@ -28,5 +28,5 @@ $page->addcontent("
         <h1>Lmondo Home</h1>
         <p class=\"lead\">Page d'accueil.</p>
       </div>
-");
+");    
 $page->showPage();
