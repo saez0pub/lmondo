@@ -104,12 +104,6 @@ class dbLmondo {
 
   public function query($sql) {
     try {
-      /*
-        $stmt = $this->dbh->prepare($sql);
-        $stmt->execute();
-        $return = $stmt->fetch(PDO::FETCH_OBJ);
-       * 
-       */
       $return = $this->dbh->query($sql);
     } catch (PDOException $e) {
       $return = FALSE;

@@ -32,7 +32,6 @@ class page {
 
   function __construct($returnPage = FALSE) {
     global $db;
-    startSession();
     $this->css = array();
     $this->canShowPage = TRUE;
     $this->returnPage = $returnPage;
@@ -114,7 +113,7 @@ class page {
             <li class=\"dropdown\">
               <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">".$_SESSION[$config['sessionName']]['user']['login']." <b class=\"caret\"></b></a>
               <ul class=\"dropdown-menu\">
-                <li><a href=\"#\">Déconnexion</a></li>
+                <li><a href=\"#\" id=\"logout\">Déconnexion</a></li>
               </ul>
             </li>
           </ul>";
@@ -129,7 +128,7 @@ class page {
 
   public function getContent() {
     global $config;
-    if (isset($_SESSION[$config['sessionName']])) {
+    if (isset($_SESSION[$config['sessionName']]['user'])) {
       return $this->content;
     } else {
       $this->addCSS('../css/login.css');

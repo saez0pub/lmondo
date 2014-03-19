@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * Copyright (C) 2014 saez0pub
  *
  * This program is free software; you can redistribute it and/or
@@ -18,15 +18,19 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+include_once dirname(__FILE__) . '/../../lib/common.php';
 
-include_once dirname(__FILE__).'/../lib/common.php';
+if (isset($_SESSION[$config['sessionName']])) {
 
-$page = new page();
+  session_unset();
+  session_destroy();
 
-$page->addcontent("
-      <div>
-        <h1>Lmondo Home</h1>
-        <p class=\"lead\">Page d'accueil.</p>
-      </div>
-");
-$page->showPage();
+// If it's desired to kill the session, also delete the session cookie.
+// Note: This will destroy the session, and not just the session data!
+  if (ini_get("session.use_cookies")) {
+    $params = session_get_cookie_params();
+    setcookie(session_name(), '', time() - 42000, $params["path"], $params["domain"], $params["secure"], $params["httponly"]
+    );
+  }
+  echo 'true';
+}

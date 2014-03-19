@@ -48,5 +48,24 @@ class testLogin extends PHPUnit_Framework_TestCase {
     $template = file_get_contents(dirname(__FILE__) . '/templates/index.html');
     $this->assertEquals($template, $retour);
   }
+  
+  public function testSiJeCliqueSurDeconnexion_AlorsJeSuisSurLaPageDeLogin() {
+    global $config, $cookieTest;
+    $ch = curl_init($config['serverUrl'].'/ajax/logout.php');
+    curl_setopt($ch, CURLOPT_COOKIEFILE, $cookieTest);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $retour = curl_exec($ch);
+    curl_close($ch);
+    //Un retour normal d'un logout est true
+    $this->assertEquals('true', $retour);
+    $ch = curl_init($config['serverUrl']);
+    curl_setopt($ch, CURLOPT_COOKIEFILE, $cookieTest);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $retour = curl_exec($ch);
+    curl_close($ch);
+    $template = file_get_contents(dirname(__FILE__) . '/templates/login.html');
+    initLogin();
+    $this->assertEquals($template, $retour);
+  }
 
 }

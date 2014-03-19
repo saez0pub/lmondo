@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * Copyright (C) 2014 saez0pub
  *
  * This program is free software; you can redistribute it and/or
@@ -18,12 +18,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-require dirname(__FILE__).'/../etc/config.php';
-require dirname(__FILE__).'/../etc/constants.php';
+require dirname(__FILE__) . '/../etc/config.php';
+require dirname(__FILE__) . '/../etc/constants.php';
 
-include_once dirname(__FILE__).'/../lib/dbLmondo.class.php';
+include_once dirname(__FILE__) . '/../lib/dbLmondo.class.php';
 global $db;
 $db = new dbLmondo();
-include_once dirname(__FILE__).'/../lib/page.class.php';
-include_once dirname(__FILE__).'/../lib/login.function.php';
-include_once dirname(__FILE__).'/../lib/user.class.php';
+include_once dirname(__FILE__) . '/../lib/page.class.php';
+include_once dirname(__FILE__) . '/../lib/login.function.php';
+include_once dirname(__FILE__) . '/../lib/user.class.php';
+
+
+startSession();

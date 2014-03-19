@@ -90,7 +90,7 @@ class pageTest extends PHPUnit_Framework_TestCase {
     <div class=\"container\">
 ";
     // Assert
-    $this->assertEquals($page->prepareHeader(), $result);
+    $this->assertEquals($result, $page->prepareHeader());
   }
 
   public function testFooterSansParametre() {
@@ -106,12 +106,13 @@ class pageTest extends PHPUnit_Framework_TestCase {
     <!-- Placed at the end of the document so the pages load faster -->
     <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js\"></script>
     <script src=\"../../js/bootstrap.min.js\"></script>
+    <script src=\"../../js/main.js\"></script>
   </body>
 </html>
 ";
 
     // Assert
-    $this->assertEquals($page->prepareFooter(), $result);
+    $this->assertEquals($result, $page->prepareFooter());
   }
 
   public function testRetourIndex() {
@@ -126,7 +127,7 @@ class pageTest extends PHPUnit_Framework_TestCase {
     $info = curl_getinfo($ch);
     
     //Il vaut mieux vérifier que le code est 200, un 301 ou autre n'est pas normal
-    $this->assertEquals($info['http_code'], 200);
+    $this->assertEquals(200, $info['http_code']);
     curl_close($ch);
   }
   

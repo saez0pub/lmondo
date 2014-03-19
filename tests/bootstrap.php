@@ -25,7 +25,9 @@ global $adminPassword;
 global $cookieTest;
 
 //Sur une installation fraiche, il faut un mot de passe pour l'admin
-$_POST["password"] = time() + rand(0, 2000);
+//Pour que les tests fonctionnent, il faut l'applicatif qui tourne et 
+//l'utilisateur adminlmondo ainsi que son mot de passe valide
+//$_POST["password"] = time() + rand(0, 2000);
 $_POST["password"]= 'adminlmondo';
 $adminPassword = md5($_POST["password"]);
 $_POST["login"] = "adminlmondo";
@@ -42,15 +44,9 @@ startSession();
  */
 foreach (scandir('.') as $file) {
   if (preg_match('/^test.*.php$/', $file)) {
-    echo "Include $file\n";
     include dirname(__FILE__) . '/' . $file;
   }
 }
-register_shutdown_function(function() {
-  global $cookieTest;
-  dropDB();
-  unlink($cookieTest);
-});
 
 function reinitDB() {
   global $db, $config, $adminPassword;
@@ -71,7 +67,13 @@ function initLogin() {
   $retour = curl_exec($ch);
   curl_close($ch);
   $user = new user();
-
   //Initialisation de la session
   $_SESSION[$config['sessionName']]['user'] = $user->getFromDB($_POST["login"], $_POST["password"]);
 }
+
+
+register_shutdown_function(function() {
+  global $cookieTest;
+  dropDB();
+  unlink($cookieTest);
+});

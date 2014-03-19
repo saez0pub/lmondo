@@ -1,5 +1,3 @@
-<?php
-
 /* 
  * Copyright (C) 2014 saez0pub
  *
@@ -18,15 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
-include_once dirname(__FILE__).'/../lib/common.php';
-
-$page = new page();
-
-$page->addcontent("
-      <div>
-        <h1>Lmondo Home</h1>
-        <p class=\"lead\">Page d'accueil.</p>
-      </div>
-");
-$page->showPage();
+$('#logout').click(function() {
+    $.get("ajax/logout.php", function(data) {
+       window.location = 'index.php';
+    });
+});
