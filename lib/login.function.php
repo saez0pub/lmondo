@@ -23,8 +23,40 @@ function startSession() {
   if (!isset($_SESSION) || $_SESSION === NULL) {
     session_start();
   }
-  if (isset($_GET['login']) && isset($_GET['password'])) {
+  if (isset($_GET['login']) && (isset($_GET['password']) || isset($_GET['passwordmd5']))) {
     $user = new user();
-    $_SESSION[$config['sessionName']]['user'] = $user->getFromDB($_GET['login'], $_GET['password']);
+    $res = $user->getFromDB();
+    if ($res !== FALSE) {
+      $_SESSION[$config['sessionName']]['user'] = $res;
+      if (isset($_GET['remember-me']) && $res !== FALSE) {
+        $params = session_get_cookie_params();
+        setcookie('login', $_GET['login'], $config['cookieTime'], $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
+        setcookie('passwordmd5', md5($_GET['password']), $config['cookieTime'], $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
+      }
+    } else {
+      $_SESSION[$config['sessionName']] = FALSE;
+    }
   }
+}
+
+function addMessageAfterRedirect($message, $level = 'info') {
+  switch ($level) {
+    case 'success':
+        $res = '<div class="alert alert-success">'.$message.'<div>';
+      break;
+    case 'info':
+        $res = '<div class="alert alert-info">'.$message.'<div>';
+      break;
+    case 'warning':
+        $res = '<div class="alert alert-warning">'.$message.'<div>';
+      break;
+    case 'danger':
+        $res = '<div class="alert alert-danger">'.$message.'<div>';
+      break;
+
+    default:
+        $res = '<div class="'.$class.'">'.$message.'<div>';
+      break;
+  }
+  $_SESSION[$config['sessionName']]['messageAfterRedirect'] = $res;
 }

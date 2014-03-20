@@ -102,6 +102,13 @@ class page {
     return $this->header;
   }
 
+  public function addRedirectMessage() {
+    global $config;
+    if (isset($_SESSION[$config['sessionName']]['messageAfterRedirect'])) {
+      return $_SESSION[$config['sessionName']]['messageAfterRedirect'];
+    }
+  }
+
   public function getMenu() {
     global $config;
     $return = "\n          <ul class=\"nav navbar-nav\">
@@ -111,7 +118,7 @@ class page {
       $return.="
           <ul class=\"nav navbar-nav navbar-right\" id=\"usernavigation\">
             <li class=\"dropdown\">
-              <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">".$_SESSION[$config['sessionName']]['user']['login']." <b class=\"caret\"></b></a>
+              <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" . $_SESSION[$config['sessionName']]['user']['login'] . " <b class=\"caret\"></b></a>
               <ul class=\"dropdown-menu\">
                 <li><a href=\"#\" id=\"logout\">Déconnexion</a></li>
               </ul>
@@ -128,13 +135,15 @@ class page {
 
   public function getContent() {
     global $config;
-    if (isset($_SESSION[$config['sessionName']]['user'])) {
-      return $this->content;
+    //Je ne teste pas $_SESSION[$config['sessionName']]['user']['login'] pour pouvoir afficher la page de maintenance
+    if (isset($_SESSION[$config['sessionName']]['user']) && $this->canShowPage === TRUE) {
+      $return = $this->content;
     } else {
       $this->addCSS('../css/login.css');
       $this->prepareHeader(false);
-      return file_get_contents(dirname(__FILE__) . '/../var/templates/login.html');
+      $return = file_get_contents(dirname(__FILE__) . '/../var/templates/login.html');
     }
+    return $this->addRedirectMessage() . $return;
   }
 
 }

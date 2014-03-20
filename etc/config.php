@@ -21,8 +21,11 @@
 global $config;
 
 //Hack POST overrides GET
+foreach ($_COOKIE as $key => $value) {
+  $_POST[$key] = $value;
+}
 foreach ($_POST as $key => $value) {
-  $_GET[$key] = $_POST[$key];
+  $_GET[$key] = $value;
 }
 //Versionapplicative
 $config['version'] = '0.1';
@@ -37,3 +40,7 @@ $config['db']['prefix']='lmondo_';
 
 //Nom de la session
 $config['sessionName'] = 'lmondo';
+
+//Expiration des cookies
+//Par défaut : 1 mois
+$config['cookieTime'] = time() + 60 * 60 * 24;

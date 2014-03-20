@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * Copyright (C) 2014 saez0pub
  *
  * This program is free software; you can redistribute it and/or
@@ -23,12 +23,26 @@ class user {
   function __construct() {
     
   }
-  
-  function getFromDB($login, $password) {
+
+  function getFromDB($login = NULL, $password = NULL) {
     global $db, $config;
+    if ($login == NULL) {
+      if (isset($_GET['login'])) {
+        $login = $_GET['login'];
+      }
+    }
+
+    if ($password == NULL) {
+      if (isset($_GET['password'])) {
+        $password = md5($_GET['password']);
+      } elseif (isset($_GET['passwordmd5'])) {
+        $password = $_GET['passwordmd5'];
+      }
+    }
+
     $db->prepare("SELECT * from " . $config['db']['prefix'] . "users where login = :login and password = :password and enabled = 1");
     $db->bindParam(":login", $login);
-    $db->bindParam(":password", md5($password));
+    $db->bindParam(":password", $password);
     $res = $db->executeAndFetch();
     return $res;
   }

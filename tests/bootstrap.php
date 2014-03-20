@@ -27,10 +27,10 @@ global $cookieTest;
 //Sur une installation fraiche, il faut un mot de passe pour l'admin
 //Pour que les tests fonctionnent, il faut l'applicatif qui tourne et 
 //l'utilisateur adminlmondo ainsi que son mot de passe valide
-//$_POST["password"] = time() + rand(0, 2000);
-$_POST["password"]= 'adminlmondo';
-$adminPassword = md5($_POST["password"]);
-$_POST["login"] = "adminlmondo";
+//$_GET["password"] = time() + rand(0, 2000);
+$_GET["password"]= 'adminlmondo';
+$adminPassword = md5($_GET["password"]);
+$_GET["login"] = "adminlmondo";
 
 include_once dirname(__FILE__) . '/../lib/common.php';
 include_once dirname(__FILE__) . '/../lib/dbInstall.function.php';
@@ -58,7 +58,7 @@ function reinitDB() {
 
 function initLogin() {
   global $config, $cookieTest;
-  $post_array = array('login' => $_POST["login"], 'password' => $_POST["password"]);
+  $post_array = array('login' => $_GET["login"], 'password' => $_GET["password"], 'remember-me' => 1);
   $cookieTest = tempnam("/tmp", "COOKIE");
   $ch = curl_init($config['serverUrl']);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -68,7 +68,7 @@ function initLogin() {
   curl_close($ch);
   $user = new user();
   //Initialisation de la session
-  $_SESSION[$config['sessionName']]['user'] = $user->getFromDB($_POST["login"], $_POST["password"]);
+  $_SESSION[$config['sessionName']]['user'] = $user->getFromDB($_GET["login"], $_GET["password"]);
 }
 
 
