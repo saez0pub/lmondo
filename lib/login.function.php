@@ -40,6 +40,7 @@ function startSession() {
 }
 
 function addMessageAfterRedirect($message, $level = 'info') {
+  global $config;
   switch ($level) {
     case 'success':
         $res = '<div class="alert alert-success">'.$message.'<div>';
