@@ -53,8 +53,8 @@ class testLogin extends PHPUnit_Framework_TestCase {
   public function testSiMonCookieAUnUtilisateurValide_AlorsJaiLaPageDIndex() {
     global $config;
     $ch = curl_init($config['serverUrl']);
-    $content = "localhost	FALSE	/	FALSE	".$config['cookieTime']."	login	adminlmondo
-localhost	FALSE	/	FALSE	".$config['cookieTime']."	passwordmd5	".  md5($_GET['password']);
+    $content = "localhost	FALSE	/	FALSE	" . $config['cookieTime'] . "	login	adminlmondo
+localhost	FALSE	/	FALSE	" . $config['cookieTime'] . "	passwordmd5	" . md5($_GET['password']);
     $cookie = tempnam("/tmp", "COOKIE");
     file_put_contents($cookie, $content);
     curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
@@ -96,6 +96,21 @@ localhost	FALSE	/	FALSE	".$config['cookieTime']."	passwordmd5	".  md5($_GET['pas
     $template = file_get_contents(dirname(__FILE__) . '/templates/login.html');
     $_SESSION[$config['sessionName']] = $oldSession;
     $this->assertEquals($template, $result);
+  }
+
+  public function testSiJAjouteUnMessageAfterRedirect_AlorsJeLetrouveDansSession() {
+    global $config;
+    $oldMessage = "";
+    if (isset($_SESSION[$config['sessionName']]['messageAfterRedirect'])) {
+      $oldMessage = $_SESSION[$config['sessionName']]['messageAfterRedirect'];
+    }
+    addMessageAfterRedirect('test');
+    $this->assertEquals('<div class="alert alert-info">test<div>', $_SESSION[$config['sessionName']]['messageAfterRedirect']);
+    if (!empty($oldMessage)) {
+      $_SESSION[$config['sessionName']]['messageAfterRedirect'] = $oldMessage;
+    } else {
+      unset($_SESSION[$config['sessionName']]['messageAfterRedirect']);
+    }
   }
 
 }
