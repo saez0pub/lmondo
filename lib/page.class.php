@@ -112,7 +112,7 @@ class page {
   public function getMenu() {
     global $config;
     $return = "\n          <ul class=\"nav navbar-nav\">
-            <li class=\"active\"><a href=\"#\">Accueil</a></li>
+            <li class=\"active\"><a href=\"index.php\">Accueil</a></li>
           </ul>";
     if (isset($_SESSION[$config['sessionName']]['user']['login'])) {
       $return.="
