@@ -39,24 +39,60 @@ function startSession() {
   }
 }
 
+function stopSession($rediRectToIndex = TRUE, $stopExec = FALSE) {
+  global $config;
+  if (isset($_SESSION[$config['sessionName']])) {
+
+    session_unset();
+    session_destroy();
+    // Unset all of the session variables.
+    $_SESSION = array();
+
+    // If it's desired to kill the session, also delete the session cookie.
+    // Note: This will destroy the session, and not just the session data!
+    if (ini_get("session.use_cookies")) {
+      $params = session_get_cookie_params();
+      foreach ($_COOKIE as $key => $value) {
+        setcookie($key, '', time() - 42000, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
+      }
+    }
+  }
+  if ($rediRectToIndex == TRUE) {
+    /* Redirection vers une page différente du même dossier 
+     * le @ permet de pouvoir appeler la fonction ans générer d'erreur
+     */
+    $host = @$_SERVER['HTTP_HOST'];
+    $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+    $curUri = rtrim(basename($_SERVER['PHP_SELF']), '/\\');
+    $extra = 'index.php';
+    header("Location: http://$host$uri/$extra");
+  } else {
+    echo 'true';
+  }
+
+  if ($stopExec) {
+    exit;
+  }
+}
+
 function addMessageAfterRedirect($message, $level = 'info') {
   global $config;
   switch ($level) {
     case 'success':
-        $res = '<div class="alert alert-success">'.$message.'<div>';
+      $res = '<div class="alert alert-success">' . $message . '<div>';
       break;
     case 'info':
-        $res = '<div class="alert alert-info">'.$message.'<div>';
+      $res = '<div class="alert alert-info">' . $message . '<div>';
       break;
     case 'warning':
-        $res = '<div class="alert alert-warning">'.$message.'<div>';
+      $res = '<div class="alert alert-warning">' . $message . '<div>';
       break;
     case 'danger':
-        $res = '<div class="alert alert-danger">'.$message.'<div>';
+      $res = '<div class="alert alert-danger">' . $message . '<div>';
       break;
 
     default:
-        $res = '<div class="'.$class.'">'.$message.'<div>';
+      $res = '<div class="' . $class . '">' . $message . '<div>';
       break;
   }
   $_SESSION[$config['sessionName']]['messageAfterRedirect'] = $res;

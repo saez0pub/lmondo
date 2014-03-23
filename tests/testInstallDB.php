@@ -32,6 +32,7 @@ class dbInstallTest extends PHPUnit_Framework_TestCase {
     $resPass = $db->query("UPDATE ".$config['db']['prefix']."users SET password='$adminPassword' where login = 'adminlmondo';");
     $this->assertNotEquals(FALSE, $resPass);
     $result = $db->checkDB();
+    reinitDB();
     $this->assertEquals(TRUE, $result);
   }
 
@@ -48,7 +49,7 @@ class dbInstallTest extends PHPUnit_Framework_TestCase {
     global $config, $db;
     dropDB();
     $this->assertEquals(array(), preg_grep('/^' . str_replace('/', '\\/', $config['db']['prefix']) . '/', $db->fetchAll("show tables;", PDO::FETCH_COLUMN)));
-    initDB();
+    reinitDB();
   }
 
 }

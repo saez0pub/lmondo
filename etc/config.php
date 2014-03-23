@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * Copyright (C) 2014 saez0pub
  *
  * This program is free software; you can redistribute it and/or
@@ -31,12 +31,12 @@ foreach ($_POST as $key => $value) {
 $config['version'] = '0.1';
 
 //DB Connexion
-$config['db']['user']='lmondo';
-$config['db']['pass']='IlVaudraitMieuxLeChanger';
-$config['db']['host']='localhost';
-$config['db']['port']='3306';
-$config['db']['name']='lmondo';
-$config['db']['prefix']='lmondo_';
+$config['db']['user'] = 'lmondo';
+$config['db']['pass'] = 'IlVaudraitMieuxLeChanger';
+$config['db']['host'] = 'localhost';
+$config['db']['port'] = '3306';
+$config['db']['name'] = 'lmondo';
+$config['db']['prefix'] = 'lmondo_';
 
 //Nom de la session
 $config['sessionName'] = 'lmondo';
@@ -44,3 +44,17 @@ $config['sessionName'] = 'lmondo';
 //Expiration des cookies
 //Par défaut : 1 mois
 $config['cookieTime'] = time() + 60 * 60 * 24;
+
+//Est ce que l'on arrête le chargepment de la page en cas de problème dur les 
+//variables postées ? recommendé : TRUE 
+//FALSE est surtout utilisé pour les tests Unitaires
+$config['stopOnExec'] = TRUE;
+
+//Configuration des vérifications de sécurité
+$config['securite']['login'] = 'alphanum';
+$config['securite']['password'] = 'mysqlChecked';
+$config['securite']['passwordmd5'] = 'alphanum';
+$config['securite']['PHPSESSID'] = 'alphanum';
+$config['securite']['remember-me'] = 'digit';
+$config['securite']['XDEBUG_SESSION_START'] = 'alphanum';
+$config['securite']['XDEBUG_SESSION_STOP_NO_EXEC'] = 'alphanum';

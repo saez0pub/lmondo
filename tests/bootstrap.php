@@ -24,6 +24,7 @@
 global $adminPassword;
 global $cookieTest;
 
+
 //Sur une installation fraiche, il faut un mot de passe pour l'admin
 //Pour que les tests fonctionnent, il faut l'applicatif qui tourne et 
 //l'utilisateur adminlmondo ainsi que son mot de passe valide
@@ -36,6 +37,16 @@ include_once dirname(__FILE__) . '/../lib/common.php';
 include_once dirname(__FILE__) . '/../lib/dbInstall.function.php';
 $config['serverUrl'] = 'http://localhost:8000/';
 $config['db']['prefix'] = 'tests_todelete_' . $config['db']['prefix'];
+
+//Les tests ne doivent pas être interompus
+//$config['stopOnExec'] = FALSE;
+
+
+//Utilisé pour redirections ou autres
+//Ne doit pas être positionné avant car il planterait l'installation de base 
+//de données
+$_SERVER['HTTP_HOST']='localhost';
+
 reinitDB();
 initLogin();
 startSession();

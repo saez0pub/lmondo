@@ -92,4 +92,23 @@ class pageTest extends PHPUnit_Framework_TestCase {
     $config['version'] = $oldVersion;
     $this->assertEquals($template, $result);
   }
+  
+  public function testJAiLIndexParDefaut(){
+    $page = new page(TRUE);
+    $page->prepareHeader(FALSE);
+    $result = $page->showPage();
+    $template = file_get_contents(dirname(__FILE__) . '/templates/index_vide_sans_menu.html');
+    $this->assertEquals($template, $result);
+  }
+  
+  public function testJAiLIndexParDefautViaCurlApresLeLogin(){
+    global $config;
+    $ch = curl_init($config['serverUrl']);
+    $post_array = array('login' => $_GET["login"], 'password' => $_GET["password"], 'remember-me' => 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $post_array);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+    $result = curl_exec($ch);
+    $template = file_get_contents(dirname(__FILE__) . '/templates/index.html');
+    $this->assertEquals($template, $result);
+  }
 }
