@@ -20,6 +20,9 @@
 
 include_once dirname(__FILE__) . '/login.function.php';
 
+/**
+ * Page d'abstration d'affichage de la page
+ */
 class page {
 
   private $css;
@@ -30,6 +33,10 @@ class page {
   private $returnPage;
   private $overrideContent;
 
+  /**
+   * Construction de la page
+   * @param boolean $returnPage TRUE : retourne la page, FALSE (valeur par défaut) affiche la page
+   */
   function __construct($returnPage = FALSE) {
     global $db;
     $this->css = array();
@@ -47,15 +54,28 @@ class page {
     $this->prepareFooter();
   }
 
+  /**
+   * Ajoute dans la page du contenu
+   * @param string $content Texte a ajouter dans la page
+   */
   public function addcontent($content) {
     $this->content.="$content\n";
   }
 
+  /**
+   * Ajoute une classe CSS dans le header de la page
+   * @param string $css
+   */
   public function addCSS($css) {
     $this->css[] = $css;
     $this->prepareHeader();
   }
 
+  /**
+   * Permet de produire le contenu final de la page
+   * @param boolean $return TRUE : retourne le contenu, FALSE affiche le contenu (Par défaut, il s'agit du paramètre donné à la construction).
+   * @return string si $return est TRUE, affiche la page
+   */
   public function showPage($return = NULL) {
     if ($return === NULL) {
       $return = $this->returnPage;
@@ -73,6 +93,11 @@ class page {
     }
   }
 
+  /**
+   * Permet de produire une page de maintenance
+   * @param boolean $return TRUE : retourne le contenu, FALSE affiche le contenu (Par défaut, il s'agit du paramètre donné à la construction).
+   * @return string si $return est TRUE, affiche la page
+   */
   public function showMaintenancePage($return = NULL) {
     $this->prepareHeader(false);
     if ($return === NULL) {
@@ -88,7 +113,12 @@ class page {
     $this->canShowPage = FALSE;
   }
 
-  public function prepareHeader($showMenu = true) {
+  /**
+   * Permet de préparer le header de la page
+   * @param boolean $showMenu Est ce que je peux afficher les menu
+   * @return string le contenu html du header
+   */
+  public function prepareHeader($showMenu = TRUE) {
     $this->header = file_get_contents(dirname(__FILE__) . '/../var/templates/header_1.html');
     foreach ($this->css as $css) {
       $this->header.="    <link href=\"" . $css . "\" rel=\"stylesheet\">\n";
@@ -102,6 +132,10 @@ class page {
     return $this->header;
   }
 
+  /**
+   * Donne le message de redirection s'il existe
+   * @return string le message de redirection
+   */
   public function addRedirectMessage() {
     global $config;
     if (isset($_SESSION[$config['sessionName']]['messageAfterRedirect'])) {
@@ -109,6 +143,10 @@ class page {
     }
   }
 
+  /**
+   * construit et retourne le menu html 
+   * @return string le menu
+   */
   public function getMenu() {
     global $config;
     $return = "\n          <ul class=\"nav navbar-nav\">
@@ -128,11 +166,19 @@ class page {
     return $return;
   }
 
+  /**
+   * COnstruit et retourne le footer
+   * @return string le footer en html
+   */
   public function prepareFooter() {
     $this->footer = file_get_contents(dirname(__FILE__) . '/../var/templates/footer.html');
     return $this->footer;
   }
 
+  /**
+   * Donne le contenu de la page
+   * @return string le contenu de la page.
+   */
   public function getContent() {
     global $config;
     //Je ne teste pas $_SESSION[$config['sessionName']]['user']['login'] pour pouvoir afficher la page de maintenance

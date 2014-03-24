@@ -18,6 +18,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+/**
+ * Vérifie les variables $_POST $_COOKIE et $_GET qui ont été regroupée
+ * Chaque variable doit être connue et doit correspondre à un masque définit 
+ * dans le fichier config.php
+ * @param type $rediRectToIndex Est ce que je dois rediriger vers l'index
+ */
 function doSecurityCheck($rediRectToIndex = TRUE) {
   global $config;
   $stopExec = $config['stopOnExec'];

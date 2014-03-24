@@ -18,12 +18,22 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+/**
+ * Class Utilisateur
+ */
 class user {
 
   function __construct() {
     
   }
 
+  /**
+   * Permet de récupérer l'utilisateur à partir des données d'identifiant
+   * @param string $login nom de l'utilisateur, $_GET['login'] si NULL
+   * @param string $password mot de passe de l'utilisateur, $_GET['password'] 
+   * si NULL et $_GET['passwordmd5'] si $_GET['password'] est NULL
+   * @return array données de l'utilisateur
+   */
   function getFromDB($login = NULL, $password = NULL) {
     global $db, $config;
     if ($login == NULL) {

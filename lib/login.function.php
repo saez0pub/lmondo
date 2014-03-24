@@ -18,6 +18,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+/**
+ * Initialisation de la session utilisateur
+ */
 function startSession() {
   global $config;
   if (!isset($_SESSION) || $_SESSION === NULL) {
@@ -39,6 +42,12 @@ function startSession() {
   }
 }
 
+/**
+ * Destruction coomplète de la session et des cookies
+ * @param boolean $rediRectToIndex Est ce que je dois rediriger vers l'index
+ * @param boolean $stopExec Est ce que je fais un exit après l'exécution de la 
+ * fonction
+ */
 function stopSession($rediRectToIndex = TRUE, $stopExec = FALSE) {
   global $config;
   if (isset($_SESSION[$config['sessionName']])) {
@@ -75,6 +84,12 @@ function stopSession($rediRectToIndex = TRUE, $stopExec = FALSE) {
   }
 }
 
+/**
+ * Ajout d'unmessage dans page ou le prochaine rechargement de page
+ * @param string $message
+ * @param string $level niveau du message, si le niveau n'est pas connu, ce 
+ * sera le nom de la classe CSS de la div contenant le message.
+ */
 function addMessageAfterRedirect($message, $level = 'info') {
   global $config;
   switch ($level) {

@@ -23,6 +23,10 @@ if (isset($_SERVER['HTTP_HOST'])) {
   die();
 }
 
+/**
+ * Initialisation de la base de données
+ * @return boolean résultat de l'initialisation
+ */
 function initDB() {
   global $config, $db;
   $prefix = $config['db']['prefix'];
@@ -38,6 +42,10 @@ function initDB() {
   return $return;
 }
 
+/**
+ * Suppression de la BDD
+ * @return boolean Résultat de la suppression
+ */
 function dropDB() {
   /*
    * @todo automatiser la suppression des tables avec un preg match de show tables
