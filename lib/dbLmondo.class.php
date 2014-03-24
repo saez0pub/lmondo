@@ -26,10 +26,12 @@ class dbLmondo {
   private $dbh;
   private $stmnt;
   private $dbError;
+  private $table;
   
-  function __construct() {
+  function __construct($table=NULL) {
     $this->dbError['code'] = 0;
     $this->dbConnect();
+    $this->table = $table;
   }
 
   /*
@@ -277,6 +279,25 @@ class dbLmondo {
     $res = $this->fetch($sql);
     if ($res === FALSE || empty($res['password'])) {
       $return = FALSE;
+    }
+    return $return;
+  }
+  
+  /**
+   * Récupère une ligne à partir de l'id de la table donnée en paramètre de la construction
+   * @param string $id id de la ligne a récupérer
+   * @param string $colonneId nom de la colonne a chercher
+   * @param string $champs champs positionnés après le select, '*' par défaut
+   * @return mixed false si l'on n'a pas la table ou si on a eu un problème dans 
+   * la requête, sinon la ligne trouvée.
+   */
+  public function getFromDB($id, $colonneId ='id', $champs = "*"){
+    global $config;
+    $return = FALSE;
+    if ($this->table !== NULL){
+      $this->prepare("SELECT $champs from ".$config['db']['prefix'].$this->table." where $colonneId = :id");
+      $this->bindParam('id', $id);
+      $return = $this->executeAndFetch();
     }
     return $return;
   }

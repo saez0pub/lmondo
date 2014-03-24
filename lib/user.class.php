@@ -21,11 +21,7 @@
 /**
  * Class Utilisateur
  */
-class user {
-
-  function __construct() {
-    
-  }
+class user extends dbLmondo{
 
   /**
    * Permet de récupérer l'utilisateur à partir des données d'identifiant
@@ -34,7 +30,7 @@ class user {
    * si NULL et $_GET['passwordmd5'] si $_GET['password'] est NULL
    * @return array données de l'utilisateur
    */
-  function getFromDB($login = NULL, $password = NULL) {
+  function getFromLogin($login = NULL, $password = NULL) {
     global $db, $config;
     if ($login == NULL) {
       if (isset($_GET['login'])) {

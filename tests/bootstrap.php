@@ -79,7 +79,7 @@ function initLogin() {
   curl_close($ch);
   $user = new user();
   //Initialisation de la session
-  $_SESSION[$config['sessionName']]['user'] = $user->getFromDB($_GET["login"], $_GET["password"]);
+  $_SESSION[$config['sessionName']]['user'] = $user->getFromLogin($_GET["login"], $_GET["password"]);
 }
 
 

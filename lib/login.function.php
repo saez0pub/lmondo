@@ -28,7 +28,7 @@ function startSession() {
   }
   if (isset($_GET['login']) && (isset($_GET['password']) || isset($_GET['passwordmd5']))) {
     $user = new user();
-    $res = $user->getFromDB();
+    $res = $user->getFromLogin();
     if ($res !== FALSE) {
       $_SESSION[$config['sessionName']]['user'] = $res;
       if (isset($_GET['remember-me']) && $res !== FALSE) {
