@@ -19,9 +19,9 @@
  */
 
 /**
-* @backupGlobals disabled
-* @backupStaticAttributes disabled
-*/
+ * @backupGlobals disabled
+ * @backupStaticAttributes disabled
+ */
 class pageTest extends PHPUnit_Framework_TestCase {
 
   /**
@@ -36,7 +36,7 @@ class pageTest extends PHPUnit_Framework_TestCase {
   public function testHeaderSansParametre() {
     // Arrange
     $page = new page(TRUE);
-    $template = file_get_contents(dirname(__FILE__).'/templates/header.html');
+    $template = file_get_contents(dirname(__FILE__) . '/templates/header.html');
 
     // Assert
     $this->assertEquals($template, $page->prepareHeader());
@@ -46,7 +46,7 @@ class pageTest extends PHPUnit_Framework_TestCase {
     // Arrange
     $page = new page(TRUE);
 
-    $template = file_get_contents(dirname(__FILE__).'/templates/footer.html');
+    $template = file_get_contents(dirname(__FILE__) . '/templates/footer.html');
 
     // Assert
     $this->assertEquals($template, $page->prepareFooter());
@@ -62,12 +62,12 @@ class pageTest extends PHPUnit_Framework_TestCase {
     //Le code retour curl OK est 0
     $this->assertEquals(curl_errno($ch), 0);
     $info = curl_getinfo($ch);
-    
+
     //Il vaut mieux vérifier que le code est 200, un 301 ou autre n'est pas normal
     $this->assertEquals(200, $info['http_code']);
     curl_close($ch);
   }
-  
+
   public function testLaconnexionBddestKO_laPageDeMaintenanceEstAffichée() {
     global $config, $db;
     $oldUser = $config['db']['user'];
@@ -75,7 +75,7 @@ class pageTest extends PHPUnit_Framework_TestCase {
     $db = new dbLmondo;
     $page = new page(TRUE);
     $result = $page->showPage();
-    $template = file_get_contents(dirname(__FILE__).'/templates/maintenance.html');
+    $template = file_get_contents(dirname(__FILE__) . '/templates/maintenance.html');
     $config['db']['user'] = $oldUser;
     $db = new dbLmondo;
     $this->assertEquals($template, $result);
@@ -88,20 +88,20 @@ class pageTest extends PHPUnit_Framework_TestCase {
     $page = new page(TRUE);
     $page->prepareHeader(FALSE);
     $result = $page->showPage();
-    $template = file_get_contents(dirname(__FILE__).'/templates/upgradeplz.html');
+    $template = file_get_contents(dirname(__FILE__) . '/templates/upgradeplz.html');
     $config['version'] = $oldVersion;
     $this->assertEquals($template, $result);
   }
-  
-  public function testJAiLIndexParDefaut(){
+
+  public function testJAiLIndexParDefaut() {
     $page = new page(TRUE);
     $page->prepareHeader(FALSE);
     $result = $page->showPage();
     $template = file_get_contents(dirname(__FILE__) . '/templates/index_vide_sans_menu.html');
     $this->assertEquals($template, $result);
   }
-  
-  public function testJAiLIndexParDefautViaCurlApresLeLogin(){
+
+  public function testJAiLIndexParDefautViaCurlApresLeLogin() {
     global $config;
     $ch = curl_init($config['serverUrl']);
     $post_array = array('login' => $_GET["login"], 'password' => $_GET["password"], 'remember-me' => 1);
@@ -111,4 +111,18 @@ class pageTest extends PHPUnit_Framework_TestCase {
     $template = file_get_contents(dirname(__FILE__) . '/templates/index.html');
     $this->assertEquals($template, $result);
   }
+
+  public function testSimaSessionRenseigneunMenu_AlorsJaiUnMenu() {
+    global $config;
+    $page = new page(TRUE);
+    $_SESSION[$config['sessionName']]['menu'] = array('test' => 'toto');
+    $result = $page->prepareHeader(TRUE);
+    $template = file_get_contents(dirname(__FILE__) . '/templates/header_sans_dropdown.html');
+    $this->assertEquals($template, $result);
+    $_SESSION[$config['sessionName']]['menu'] = array('test' => array('tata' => 'tutu'));
+    $result = $page->prepareHeader(TRUE);
+    $template = file_get_contents(dirname(__FILE__) . '/templates/header_avec_dropdown.html');
+    $this->assertEquals($template, $result);
+  }
+
 }

@@ -149,8 +149,13 @@ class page {
    */
   public function getMenu() {
     global $config;
+    $class = '';
+    if (!isset($_SESSION[$config['sessionName']]['curMenu']) || $_SESSION[$config['sessionName']]['curMenu'] == "Accueil") {
+      $class = 'active';
+      $_SESSION[$config['sessionName']]['curMenu'] = "Accueil";
+    }
     $return = "\n          <ul class=\"nav navbar-nav\">
-            <li class=\"active\"><a href=\"index.php\">Accueil</a></li>
+            <li class=\"$class\"><a href=\"index.php\">Accueil</a></li>".$this->getUserMenu()."
           </ul>";
     if (isset($_SESSION[$config['sessionName']]['user']['login'])) {
       $return.="
@@ -166,8 +171,38 @@ class page {
     return $return;
   }
 
+  public function getUserMenu() {
+    global $config;
+    $class = '';
+    $return='';
+    if (isset($_SESSION[$config['sessionName']]['menu'])) {
+      foreach ($_SESSION[$config['sessionName']]['menu'] as $nom => $menu) {
+        if (isset($_SESSION[$config['sessionName']]['curMenu']) && $_SESSION[$config['sessionName']]['curMenu'] == $menu) {
+          $class = 'active';
+        }
+        if (!is_array($menu)) {
+          $return.="
+            <li class=\"$class\"><a href=\"$menu\">$nom</a></li>";
+        } else {
+          $return.="
+              <li class=\"dropdown $class\"><a href=\"#\">$nom</a></li>
+                <ul class=\"dropdown-menu\">
+                  <li class=\"dropdown\">";
+          foreach ($menu as $submenu => $link) {
+            $return.="
+                  <li><a href=\"$link\">$submenu</a></li>";
+          }
+          $return.="
+                </ul>
+              </li>";
+        }
+      }
+    }
+    return $return;
+  }
+
   /**
-   * COnstruit et retourne le footer
+   * Construit et retourne le footer
    * @return string le footer en html
    */
   public function prepareFooter() {
