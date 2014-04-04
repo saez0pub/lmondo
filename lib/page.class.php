@@ -171,6 +171,10 @@ class page {
     return $return;
   }
 
+  /**
+   * Retourne le menu suivant la session utilisateur
+   * @return string menu au format HTML ou vide si il n'ya pas d'accès
+   */
   public function getUserMenu() {
     global $config;
     $class = '';

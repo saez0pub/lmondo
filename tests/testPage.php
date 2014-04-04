@@ -124,5 +124,4 @@ class pageTest extends PHPUnit_Framework_TestCase {
     $template = file_get_contents(dirname(__FILE__) . '/templates/header_avec_dropdown.html');
     $this->assertEquals($template, $result);
   }
-
 }
