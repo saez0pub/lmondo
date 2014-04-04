@@ -105,12 +105,12 @@ class page {
     }
     $this->content = $this->overrideContent;
 
-    if ($return) {
-      return $this->prepareHeader() . $this->content . $this->prepareFooter();
-    } else {
-      echo $this->prepareHeader() . $this->content . $this->prepareFooter();
-    }
     $this->canShowPage = FALSE;
+    if ($return) {
+      return $this->prepareHeader(FALSE) . $this->content . $this->prepareFooter();
+    } else {
+      echo $this->prepareHeader(FALSE) . $this->content . $this->prepareFooter();
+    }
   }
 
   /**
@@ -124,7 +124,7 @@ class page {
       $this->header.="    <link href=\"" . $css . "\" rel=\"stylesheet\">\n";
     }
     $this->header.=file_get_contents(dirname(__FILE__) . '/../var/templates/header_2.html');
-    if ($showMenu) {
+    if ($showMenu && $this->canShowPage) {
       $this->header = str_replace('$menu$', $this->getMenu(), $this->header);
     } else {
       $this->header = str_replace('$menu$', '', $this->header);
@@ -186,12 +186,11 @@ class page {
         }
         if (!is_array($menu)) {
           $return.="
-            <li class=\"$class\"><a href=\"$menu\">$nom</a></li>";
+            <li class=\"$class\"><a href=\"$menu\">$nom</a>";
         } else {
           $return.="
-              <li class=\"dropdown $class\"><a href=\"#\">$nom</a></li>
-                <ul class=\"dropdown-menu\">
-                  <li class=\"dropdown\">";
+              <li class=\"dropdown $class\"><a data-toggle=\"dropdown\" class=\"dropdown-toggle\" href=\"#\">$nom <b class=\"caret\"></b></a>
+                <ul class=\"dropdown-menu\">";
           foreach ($menu as $submenu => $link) {
             $return.="
                   <li><a href=\"$link\">$submenu</a></li>";

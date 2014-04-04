@@ -21,7 +21,7 @@
 /**
  * Class Utilisateur
  */
-class user extends dbLmondo{
+class user extends dbLmondo {
 
   /**
    * Permet de récupérer l'utilisateur à partir des données d'identifiant
@@ -31,7 +31,7 @@ class user extends dbLmondo{
    * @return array données de l'utilisateur
    */
   function getFromLogin($login = NULL, $password = NULL) {
-    global $db, $config;
+    global $config;
     if ($login == NULL) {
       if (isset($_GET['login'])) {
         $login = $_GET['login'];
@@ -46,10 +46,34 @@ class user extends dbLmondo{
       }
     }
 
-    $db->prepare("SELECT * from " . $config['db']['prefix'] . "users where login = :login and password = :password and enabled = 1");
-    $db->bindParam(":login", $login);
-    $db->bindParam(":password", $password);
-    $res = $db->executeAndFetch();
+    $this->prepare("SELECT * from " . $config['db']['prefix'] . "users where login = :login and password = :password and enabled = 1");
+    $this->bindParam(":login", $login);
+    $this->bindParam(":password", $password);
+    $res = $this->executeAndFetch();
+    return $res;
+  }
+
+  function getUserMenu() {
+    global $config;
+
+    $res = '';
+    $this->prepare("SELECT id,nom,link from " . $config['db']['prefix'] . "menu where level = 0 order by ordre" );
+    $topMenu = $this->executeAndFetchAll();
+    foreach ($topMenu as $value) {
+      $id = $value['id'];
+      $this->prepare("SELECT id,nom,link from " . $config['db']['prefix'] . "menu where parent = :id and level = 1 order by ordre");
+      $this->bindParam(":id", $id);
+      $subMenu = $this->executeAndFetchAll();
+      if ($subMenu === false || sizeof($subMenu) <= 0) {
+        $res[$value['nom']] = $value['link'];
+      } else {
+        foreach ($subMenu as $value2) {
+          $tmp[$value2['nom']] = $value2['link'];
+        }
+        $res[$value['nom']] = $tmp;
+      }
+    }
+
     return $res;
   }
 
