@@ -19,16 +19,16 @@
  */
 
 /**
-* @backupGlobals disabled
-* @backupStaticAttributes disabled
-*/
+ * @backupGlobals disabled
+ * @backupStaticAttributes disabled
+ */
 class dbTest extends PHPUnit_Framework_TestCase {
 
   public function testLaConnexionMySQLEstOK() {
     //Il vaut mieux valider que les conditions de tests soient bonnes
     global $db;
     $result = $db->getConnexion();
-    $this->assertNotEquals(FALSE,$result);
+    $this->assertNotEquals(FALSE, $result);
   }
 
   public function testProblemeDeConnexionMySQL() {
@@ -74,6 +74,59 @@ class dbTest extends PHPUnit_Framework_TestCase {
     $result = $db->getErrorCode();
     $this->assertEquals(LMONDO_DB_ERR_USER, $result['code']);
     $config['db']['user'] = $oldUser;
+  }
+
+  public function testSiJeFaisUnSelectWhereAndOr_AlorsLeResultatEstBon() {
+    global $config;
+    $db = new dbLmondo($table = 'test_requete');
+    $db->query("DROP TABLE IF EXISTS " . $config['db']['prefix'] . "test_requete ");
+    $db->query("CREATE TABLE " . $config['db']['prefix'] . "test_requete (
+      `id` int(11) NOT NULL AUTO_INCREMENT,      
+      `a1` varchar(100) NOT NULL,
+      `a2` varchar(100) NOT NULL,
+      `a3` varchar(100) NOT NULL,
+      `a4` varchar(100) NOT NULL,
+      PRIMARY KEY (`id`))");
+    $db->query("INSERT INTO " . $config['db']['prefix'] . "test_requete VALUES
+      (NULL,1,1,1,1),
+      (NULL,2,2,2,2),
+      (NULL,3,3,3,3),
+      (NULL,4,4,4,4),
+      (NULL,5,5,5,5),
+      (NULL,1,1,1,2),
+      (NULL,1,1,1,3),
+      (NULL,1,1,1,4),
+      (NULL,1,1,2,1),
+      (NULL,1,2,1,1),
+      (NULL,1,1,1,6),
+      (NULL,1,3,1,1),
+      (NULL,1,1,3,1),
+      (NULL,1,1,1,3),
+      (NULL,1,1,1,1)
+    ");
+    $db->select('id,a1,a2,a3')
+      ->addWhere('a1')
+      ->addWhere('a2')
+      ->addWhere('a2', '=', 'or', 'a22')
+      ->addWhere('a4', '<');
+    $db->prepare();
+    $db->bindParam('a1', '1');
+    $db->bindParam('a2', '1');
+    $db->bindParam('a22', '1');
+    $db->bindParam('a4', '6');
+    $result = $db->executeAndFetchAll();
+    $expected = Array(
+        0 => Array('id' => 1, 'a1' => 1, 'a2' => 1, 'a3' => 1,),
+        1 => Array('id' => 6, 'a1' => 1, 'a2' => 1, 'a3' => 1,),
+        2 => Array('id' => 7, 'a1' => 1, 'a2' => 1, 'a3' => 1,),
+        3 => Array('id' => 8, 'a1' => 1, 'a2' => 1, 'a3' => 1,),
+        4 => Array('id' => 9, 'a1' => 1, 'a2' => 1, 'a3' => 2,),
+        5 => Array('id' => 11, 'a1' => 1, 'a2' => 1, 'a3' => 1,),
+        6 => Array('id' => 13, 'a1' => 1, 'a2' => 1, 'a3' => 3,),
+        7 => Array('id' => 14, 'a1' => 1, 'a2' => 1, 'a3' => 1,),
+        8 => Array('id' => 15, 'a1' => 1, 'a2' => 1, 'a3' => 1,)
+    );
+    $this->assertEquals($expected, $result);
   }
 
 }

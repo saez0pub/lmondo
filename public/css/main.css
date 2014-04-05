@@ -32,3 +32,11 @@ body {
   background: transparent;
   color: #999999;
 }
+
+.highlight {
+    background-color: #F7F7F9;
+    border: 1px solid #E1E1E8;
+    border-radius: 0px 0px 8px 8px;
+    margin-bottom: 14px;
+    padding: 9px 14px;
+}

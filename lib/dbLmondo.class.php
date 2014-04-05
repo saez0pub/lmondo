@@ -27,16 +27,24 @@ class dbLmondo {
   private $stmnt;
   private $dbError;
   private $table;
-  
-  function __construct($table=NULL) {
+  private $select;
+  private $where;
+  private $sql;
+
+  function __construct($table = NULL) {
+    global $config;
     $this->dbError['code'] = 0;
     $this->dbConnect();
-    $this->table = $table;
+    $this->table = $config['db']['prefix'] . $table;
+    $this->select = '*';
+    $this->where = NULL;
+    $this->sql = 'SELECT ' . $this->select . ' FROM ' . $this->table;
   }
 
   /*
    * Connection à la BDD configurée
    */
+
   private function dbConnect() {
     global $config;
     try {
@@ -53,6 +61,7 @@ class dbLmondo {
       $this->dbError['message'] = $e->getMessage();
       $this->dbError['sqlstate'] = $this->getErrorFromConnexionErrorMessage();
     }
+    $this->table = NULL;
   }
 
   /**
@@ -140,7 +149,7 @@ class dbLmondo {
     }
     return $return;
   }
-  
+
   /**
    * Exécute une requête et récupère tout le résultat
    * @param string $sql Requête à exécuter
@@ -157,12 +166,15 @@ class dbLmondo {
 
   /**
    * Prépare une instruction SQL
-   * @param string $sql Requête à exécuter
+   * @param string $sql Requête à exécuter, si NULL (défaut, récupère la requête SQL construite.
    * @return PDOStatement|false retourne l'objet PDOStatement 
    * ou false en cas d'erreur
    */
-  public function prepare($sql) {
+  public function prepare($sql = NULL) {
     $return = FALSE;
+    if ($sql === NULL) {
+      $sql = $this->sql;
+    }
     if ($this->dbh !== false) {
       try {
         $this->stmnt = $this->dbh->prepare($sql);
@@ -183,6 +195,7 @@ class dbLmondo {
    *                        valeur de PDO::FETCH_ASSOC
    * http://www.php.net/manual/fr/pdostatement.bindparam.php
    */
+
   /**
    * Exécute un bind des paramètres d'une instruction SQL préparée
    * @param mixed $parameter Identifiant. Pour une requête préparée utilisant 
@@ -272,17 +285,17 @@ class dbLmondo {
     $res = $this->fetch($sql);
     $version = $res['valeur'];
     if ($config['version'] !== $version) {
-      $return = FALSE;
+      return FALSE;
     }
 
     $sql = "select password from `" . $config['db']['prefix'] . "users` where login = 'adminlmondo';";
     $res = $this->fetch($sql);
     if ($res === FALSE || empty($res['password'])) {
-      $return = FALSE;
+      return FALSE;
     }
     return $return;
   }
-  
+
   /**
    * Récupère une ligne à partir de l'id de la table donnée en paramètre de la construction
    * @param string $id id de la ligne a récupérer
@@ -291,15 +304,79 @@ class dbLmondo {
    * @return mixed false si l'on n'a pas la table ou si on a eu un problème dans 
    * la requête, sinon la ligne trouvée.
    */
-  public function getFromDB($id, $colonneId ='id', $champs = "*"){
-    global $config;
+  public function getFromID($id, $colonneId = 'id') {
     $return = FALSE;
-    if ($this->table !== NULL){
-      $this->prepare("SELECT $champs from ".$config['db']['prefix'].$this->table." where $colonneId = :id");
+    if ($this->table !== NULL) {
+      $this->prepare("SELECT " . $this->select . " from " . $this->table . " where $colonneId = :id");
       $this->bindParam('id', $id);
       $return = $this->executeAndFetch();
     }
     return $return;
+  }
+
+  /**
+   * Prépare la clause select d'un requete
+   * @param Array $champs Tableau des champs du SELECT
+   */
+  public function select($champs) {
+    if(!is_array($champs)){
+      $champs = array($champs);
+    }
+    $this->select = join(', ', $champs);
+    return $this;
+  }
+
+  /**
+   * Ajoute une clause Where a la requête en cours de préparation
+   * @param string $column partie gauche de la clause where
+   * @param string $operator opérator (défaut =)
+   * @param string $and jointure avec la précédente clause where (s'il y en a une)
+   * @param string $paramName nom du paramètre qui sera a spécifier dans le bind (défaut la valeur de $column)
+   */
+  public function addWhere($column, $operator = '=', $and = "AND", $paramName = NULL) {
+    if ($paramName === NULL) {
+      $paramName = $column;
+    }
+    if ($this->where === NULL) {
+      $this->sql = "SELECT " .$this->select . " FROM " . $this->table . " WHERE ($column $operator :$paramName) ";
+      $this->where = 0;
+    } else {
+      $this->sql.= " $and ($column $operator :$paramName) ";
+    }
+    return $this;
+  }
+  /**
+   * Ajoute une clause Where a la requête en cours de préparation précédée de AND si besoin
+   * @param string $column partie gauche de la clause where
+   * @param string $operator opérator (défaut =)
+   * @param string $paramName nom du paramètre qui sera a spécifier dans le bind (défaut la valeur de $column)
+   */
+  public function _and($column, $operator = '=', $paramName = NULL) {
+    $this->addWhere($column, $operator, "AND", $paramName);
+    return $this;
+  }
+  
+  /**
+   * Ajoute une clause Where a la requête en cours de préparation précédée de OR si besoin
+   * @param string $column partie gauche de la clause where
+   * @param string $operator opérator (défaut =)
+   * @param string $paramName nom du paramètre qui sera a spécifier dans le bind (défaut la valeur de $column)
+   */
+  public function _or($column, $operator = '=', $paramName = NULL) {
+    $this->addWhere($column, $operator, "OR", $paramName);
+    return $this;
+  }
+
+  /**
+   * Retourne le nombre de lignes affectées par le dernier appel à une exécution SQL
+   * @return int nombre de lignes
+   */
+  public function numRows() {
+    if ($this->table !== NULL) {
+      return $this->stmnt->rowCount;
+    } else {
+      return 0;
+    }
   }
 
 }
