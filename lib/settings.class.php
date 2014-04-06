@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * Copyright (C) 2014 saez0pub
  *
  * This program is free software; you can redistribute it and/or
@@ -18,26 +18,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+/**
+ * Class Utilisateur
+ */
+class settings extends dbLmondo {
 
-include_once dirname(__FILE__).'/../lib/common.php';
-include_once dirname(__FILE__).'/../lib/settings.class.php';
+  function __construct() {
+    parent::__construct('config');
+  }
 
-$page = new page();
-
-$content="
-      <div class=row>
-        <div class=\"highlight col-md-3\">
-          <h1>Paramètres</h1>
-        </div>
-        <div class=\"col-md-9\">
-";
-
-$settings = new settings();
-$settings->prepare();
-$content.=$settings->getTable();
-$content.="
-        </div>
-      </div>
-";
-$page->addcontent($content);
-$page->showPage();
+}

@@ -31,16 +31,23 @@ class dbLmondo {
   private $where;
   private $sql;
   private $champId;
+  private $column;
 
   function __construct($table = NULL) {
     global $config;
     $this->dbError['code'] = 0;
     $this->dbConnect();
+    //Placer la table après la connexion car la connexion initialise le champs table à NULL
     $this->table = $config['db']['prefix'] . $table;
     $this->select = '*';
     $this->champId = 'id';
     $this->where = NULL;
     $this->sql = 'SELECT ' . $this->select . ' FROM ' . $this->table;
+    if ($this->dbh !== FALSE) {
+      foreach ($this->getColumns() as $value) {
+        $this->column[$value] = $value;
+      }
+    }
   }
 
   /*
@@ -420,6 +427,9 @@ class dbLmondo {
     $res.= '<thead>' . "\n";
     $res.= '<tr>' . "\n";
     foreach ($columns as $value) {
+      if (isset($this->column[$value])) {
+        $value = $this->column[$value];
+      }
       $res.= '<th>' . $value . '</th>' . "\n";
     }
     $res.= '</tr>' . "\n";
@@ -438,6 +448,17 @@ class dbLmondo {
       return $res;
     } else {
       echo $res;
+    }
+  }
+
+  /**
+   * Permet d'afficher un alias différent sur un colonne donnée
+   * @param type $column
+   * @param type $alias
+   */
+  public function setColumnAlias($column, $alias) {
+    if (isset($this->column[$column])) {
+      $this->column[$column] = $alias;
     }
   }
 

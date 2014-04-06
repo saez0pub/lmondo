@@ -35,7 +35,7 @@ class dbTest extends PHPUnit_Framework_TestCase {
     global $config;
     $oldUser = $config['db']['user'];
     $config['db']['user'] = 'nePeutPasExisterSinonLeTestSeraPlanté';
-    $db = new dbLmondo;
+    $db = new dbLmondo();
     $result = $db->getConnexion();
     $this->assertFalse($result);
     $config['db']['user'] = $oldUser;

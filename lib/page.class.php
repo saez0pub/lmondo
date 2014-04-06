@@ -150,10 +150,6 @@ class page {
   public function getMenu() {
     global $config;
     $class = '';
-    if (!isset($_SESSION[$config['sessionName']]['curMenu']) || $_SESSION[$config['sessionName']]['curMenu'] == "Accueil") {
-      $class = 'active';
-      $_SESSION[$config['sessionName']]['curMenu'] = "Accueil";
-    }
     $return = "\n          <ul class=\"nav navbar-nav\">
             <li class=\"$class\"><a href=\"index.php\">Accueil</a></li>".$this->getUserMenu()."
           </ul>";
@@ -181,9 +177,6 @@ class page {
     $return='';
     if (isset($_SESSION[$config['sessionName']]['menu'])) {
       foreach ($_SESSION[$config['sessionName']]['menu'] as $nom => $menu) {
-        if (isset($_SESSION[$config['sessionName']]['curMenu']) && $_SESSION[$config['sessionName']]['curMenu'] == $menu) {
-          $class = 'active';
-        }
         if (!is_array($menu)) {
           $return.="
             <li class=\"$class\"><a href=\"$menu\">$nom</a>";

@@ -112,7 +112,7 @@ class pageTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals($template, $result);
   }
 
-  public function testSimaSessionRenseigneunMenu_AlorsJaiUnMenu() {
+  public function testSimaSessionRenseigneUnMenu_AlorsJaiUnMenu() {
     global $config;
     $page = new page(TRUE);
     $_SESSION[$config['sessionName']]['menu'] = array('test' => 'toto');

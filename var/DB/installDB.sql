@@ -13,6 +13,8 @@ CREATE TABLE IF NOT EXISTS `$prefix$config` (
   `valeur` varchar(100) NOT NULL
   ) ;
 INSERT INTO `$prefix$config` VALUES ('version', '0.1');
+INSERT INTO `$prefix$config` VALUES ('reco_name', 'marvin');
+INSERT INTO `$prefix$config` VALUES ('reco_spell', 'mm aa rr vv ii nn ee');
 CREATE TABLE IF NOT EXISTS `$prefix$menu` (
   `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `nom` varchar(100) NOT NULL,
