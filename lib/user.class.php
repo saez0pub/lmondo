@@ -60,6 +60,7 @@ class user extends dbLmondo {
     $this->prepare("SELECT id,nom,link from " . $config['db']['prefix'] . "menu where level = 0 order by ordre" );
     $topMenu = $this->executeAndFetchAll();
     foreach ($topMenu as $value) {
+      $tmp = Array();
       $id = $value['id'];
       $this->prepare("SELECT id,nom,link from " . $config['db']['prefix'] . "menu where parent = :id and level = 1 order by ordre");
       $this->bindParam(":id", $id);

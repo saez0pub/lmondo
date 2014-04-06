@@ -119,7 +119,7 @@ class pageTest extends PHPUnit_Framework_TestCase {
     $result = $page->prepareHeader(TRUE);
     $template = file_get_contents(dirname(__FILE__) . '/templates/header_sans_dropdown.html');
     $this->assertEquals($template, $result);
-    $_SESSION[$config['sessionName']]['menu'] = array('test' => array('tata' => 'tutu'));
+    $_SESSION[$config['sessionName']]['menu'] = array('test' => array('tata' => 'tutu'), '2' => array( 21 => 22));
     $result = $page->prepareHeader(TRUE);
     $template = file_get_contents(dirname(__FILE__) . '/templates/header_avec_dropdown.html');
     $this->assertEquals($template, $result);

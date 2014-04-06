@@ -21,7 +21,8 @@
 
 include dirname(__FILE__) . '/../lib/common.php';
 include dirname(__FILE__) . '/../lib/dbInstall.function.php';
-echo "Assurez vous d'avoir créé l'utilisateur de connexion, cf etc/config.php pour le définir et le script var/DB/createLmondoUser.sql puis appuyez sur Entrée.";
+echo "Assurez vous d'avoir créé l'utilisateur de connexion, le base de donnéescf etc/config.php\n"
+. "pour le définir et le script var/DB/createLmondoUser.sql puis appuyez sur Entrée.";
 $password = trim(fgets(STDIN));
 
 $resInit = initDB();

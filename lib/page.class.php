@@ -189,15 +189,15 @@ class page {
             <li class=\"$class\"><a href=\"$menu\">$nom</a>";
         } else {
           $return.="
-              <li class=\"dropdown $class\"><a data-toggle=\"dropdown\" class=\"dropdown-toggle\" href=\"#\">$nom <b class=\"caret\"></b></a>
-                <ul class=\"dropdown-menu\">";
+            <li class=\"dropdown $class\"><a data-toggle=\"dropdown\" class=\"dropdown-toggle\" href=\"#\">$nom <b class=\"caret\"></b></a>
+              <ul class=\"dropdown-menu\">";
           foreach ($menu as $submenu => $link) {
             $return.="
-                  <li><a href=\"$link\">$submenu</a></li>";
+                <li><a href=\"$link\">$submenu</a></li>";
           }
           $return.="
-                </ul>
-              </li>";
+              </ul>
+            </li>";
         }
       }
     }

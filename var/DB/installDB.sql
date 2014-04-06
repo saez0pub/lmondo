@@ -20,10 +20,12 @@ CREATE TABLE IF NOT EXISTS `$prefix$menu` (
   `level` tinyint(2) NOT NULL,
   `parent` INT NOT NULL,
   `ordre` INT NOT NULL,
-  UNIQUE INDEX `idx_$prefix$menu_nom` (`nom`)
+  UNIQUE INDEX `idx_$prefix$menu_nom_parent` (`nom`, `parent`)
   ) ;
-INSERT INTO `$prefix$menu` VALUES (NULL, 'Outils', '#', 0, 0, 1);
-INSERT INTO `$prefix$menu` VALUES (NULL, 'Gestion de grammaire', 'grammar.php', 1, 1, 1);
+INSERT INTO `$prefix$menu` VALUES (1, 'Reconnaissance vocale', '#', 0, 0, 1);
+INSERT INTO `$prefix$menu` VALUES (2, 'Paramètres', '#', 0, 0, 2);
+INSERT INTO `$prefix$menu` VALUES (NULL, 'Gestion de grammaire', 'grammar.php', 1, 1, 3);
+INSERT INTO `$prefix$menu` VALUES (NULL, 'Paramètres', 'settings.php', 1, 2, 4);
 CREATE TABLE IF NOT EXISTS `$prefix$rules` (
   `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `nom` varchar(100) NOT NULL,
