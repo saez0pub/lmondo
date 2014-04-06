@@ -25,13 +25,13 @@ include_once dirname(__FILE__) . '/login.function.php';
  */
 class page {
 
-  private $css;
-  private $header;
-  private $content;
-  private $footer;
-  private $canShowPage;
-  private $returnPage;
-  private $overrideContent;
+  protected $css;
+  protected $header;
+  protected $content;
+  protected $footer;
+  protected $canShowPage;
+  protected $returnPage;
+  protected $overrideContent;
 
   /**
    * Construction de la page

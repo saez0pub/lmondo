@@ -118,5 +118,11 @@ class dbTest extends PHPUnit_Framework_TestCase {
     $expected = file_get_contents(dirname(__FILE__) . '/templates/table_test.html');
     $this->assertEquals($expected, $result);
   }
+  
+  public function testJePeuxModifierUnAlias() {
+    $db = new dbLmondo('requete_test');
+    $result = $db->setColumnAlias('a1', 'Salut les copains !');
+    $this->assertEquals('Salut les copains !', $result['a1']);
+  }
 
 }

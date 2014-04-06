@@ -25,6 +25,8 @@ class rule extends dbLmondo {
 
   function __construct() {
     parent::__construct('rules');
+    $this->column['nom'] = 'Nom de règle';
+    $this->column['content'] = 'Contenu de la règle';
   }
 
 }

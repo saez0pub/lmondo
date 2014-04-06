@@ -23,15 +23,15 @@
  */
 class dbLmondo {
 
-  private $dbh;
-  private $stmnt;
-  private $dbError;
-  private $table;
-  private $select;
-  private $where;
-  private $sql;
-  private $champId;
-  private $column;
+  protected $dbh;
+  protected $stmnt;
+  protected $dbError;
+  protected $table;
+  protected $select;
+  protected $where;
+  protected $sql;
+  protected $champId;
+  protected $column;
 
   function __construct($table = NULL) {
     global $config;
@@ -460,6 +460,7 @@ class dbLmondo {
     if (isset($this->column[$column])) {
       $this->column[$column] = $alias;
     }
+    return $this->column;
   }
 
 }

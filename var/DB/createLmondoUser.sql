@@ -8,4 +8,4 @@ create user 'lmondo'@'localhost' identified by 'IlVaudraitMieuxLeChanger';
 -- L'installation et l'upgrade de la base de données est faite par php, il faut 
 -- avoir des droits de faire beaucoup dur la BDD.
 grant ALL PRIVILEGES ON lmondo.* to 'lmondo'@'localhost';
-create database lmondo;
+create database lmondo CHARACTER SET utf8 COLLATE utf8_general_ci;;
