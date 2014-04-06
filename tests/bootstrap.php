@@ -24,7 +24,6 @@
 global $adminPassword;
 global $cookieTest;
 
-
 //Sur une installation fraiche, il faut un mot de passe pour l'admin
 //Pour que les tests fonctionnent, il faut l'applicatif qui tourne et 
 //l'utilisateur adminlmondo ainsi que son mot de passe valide
@@ -33,7 +32,7 @@ $_GET["password"]= 'adminlmondo';
 $adminPassword = md5($_GET["password"]);
 $_GET["login"] = "adminlmondo";
 
-include_once dirname(__FILE__) . '/../lib/common.php';
+include dirname(__FILE__) . '/../lib/common.php';
 include_once dirname(__FILE__) . '/../lib/dbInstall.function.php';
 $config['serverUrl'] = 'http://localhost:8000/';
 $config['db']['prefix'] = 'tests_todelete_' . $config['db']['prefix'];

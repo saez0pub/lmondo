@@ -19,27 +19,8 @@
  */
 
 
-include_once dirname(__FILE__).'/../lib/common.php';
+function lmondoAutoloader($class) {
+  include_once dirname(__FILE__) . '/../lib/' . $class . '.class.php';
+}
 
-$page = new page();
-
-$content="
-      <div class=row>
-        <div class=\"highlight col-md-3\">
-          <h1>Generation de grammaire</h1>
-        </div>
-        <div class=\"col-md-9\">
-        <div class=\"btn-group\">
-          <button type=\"button\" class=\"btn btn-default\">Nouvelle Règle</button>
-        </div>
-";
-
-$rule = new rule();
-$rule->prepare();
-$content.=$rule->getTable();
-$content.="
-        </div>
-      </div>
-";
-$page->addcontent($content);
-$page->showPage();
+spl_autoload_register('lmondoAutoloader');
