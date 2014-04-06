@@ -51,10 +51,12 @@ $config['cookieTime'] = time() + 60 * 60 * 24;
 $config['stopOnExec'] = TRUE;
 
 //Configuration des vérifications de sécurité
+$config['securite']['redirect'] = 'int';
 $config['securite']['login'] = 'alphanum';
 $config['securite']['password'] = 'mysqlChecked';
 $config['securite']['passwordmd5'] = 'alphanum';
 $config['securite']['PHPSESSID'] = 'alphanum';
 $config['securite']['remember-me'] = 'digit';
+$config['securite']['XDEBUG_SESSION'] = 'alphanum';
 $config['securite']['XDEBUG_SESSION_START'] = 'alphanum';
 $config['securite']['XDEBUG_SESSION_STOP_NO_EXEC'] = 'alphanum';

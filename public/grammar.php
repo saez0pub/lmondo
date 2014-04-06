@@ -26,21 +26,21 @@ $page = new page();
 
 $content="
       <div class=row>
-        <div class=\"highlight col-md-4\">
+        <div class=\"highlight col-md-3\">
           <h1>Generation de grammaire</h1>
         </div>
-        <div class=\"col-md-4\">
+        <div class=\"col-md-9\">
         <div class=\"btn-group\">
           <button type=\"button\" class=\"btn btn-default\">Nouvelle Règle</button>
         </div>
 ";
 
 $rule = new rule();
-var_dump($rule->getFromDB($content));
+$rule->prepare();
+$content.=$rule->getTable();
 $content.="
         </div>
       </div>
 ";
-
 $page->addcontent($content);
 $page->showPage();

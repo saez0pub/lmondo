@@ -30,6 +30,9 @@ function doSecurityCheck($rediRectToIndex = TRUE) {
   foreach ($_GET as $key => $value) {
     if (isset($config['securite'][$key])) {
       switch ($config['securite'][$key]) {
+        case 'int':
+          $regexp = '[0-9]+';
+          break;
         case 'alpha':
           $regexp = '[[:alpha:]]+';
           break;

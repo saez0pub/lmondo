@@ -64,7 +64,8 @@ function reinitDB() {
   //Nettoyage des précedents tests en cas d'interuption
   dropDB();
   initDB();
-  return $db->query("UPDATE " . $config['db']['prefix'] . "users SET password='$adminPassword' where login = 'adminlmondo';");
+  $ret = $db->query("UPDATE " . $config['db']['prefix'] . "users SET password='$adminPassword' where login = 'adminlmondo';");
+  return $ret;
 }
 
 function initLogin() {
@@ -82,6 +83,34 @@ function initLogin() {
   $_SESSION[$config['sessionName']]['user'] = $user->getFromLogin($_GET["login"], $_GET["password"]);
 }
 
+function initTestTable(){
+  global $db,$config;
+    $db->query("DROP TABLE IF EXISTS " . $config['db']['prefix'] . "requete_test ");
+    $db->query("CREATE TABLE " . $config['db']['prefix'] . "requete_test (
+      `id` int(11) NOT NULL AUTO_INCREMENT,      
+      `a1` varchar(100) NOT NULL,
+      `a2` varchar(100) NOT NULL,
+      `a3` varchar(100) NOT NULL,
+      `a4` varchar(100) NOT NULL,
+      PRIMARY KEY (`id`))");
+    $db->query("INSERT INTO " . $config['db']['prefix'] . "requete_test VALUES
+      (NULL,1,1,1,1),
+      (NULL,2,2,2,2),
+      (NULL,3,3,3,3),
+      (NULL,4,4,4,4),
+      (NULL,5,5,5,5),
+      (NULL,1,1,1,2),
+      (NULL,1,1,1,3),
+      (NULL,1,1,1,4),
+      (NULL,1,1,2,1),
+      (NULL,1,2,1,1),
+      (NULL,1,1,1,6),
+      (NULL,1,3,1,1),
+      (NULL,1,1,3,1),
+      (NULL,1,1,1,3),
+      (NULL,1,1,1,1)
+    ");
+}
 
 register_shutdown_function(function() {
   global $cookieTest;

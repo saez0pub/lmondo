@@ -55,9 +55,7 @@ function dropDB() {
   $listeTables = $db->fetchAll("show tables;", PDO::FETCH_COLUMN);
   foreach ($listeTables as $table) {
     if (preg_match('/^' . str_replace('/', '\\/', $config['db']['prefix']) . '/', $table)) {
-      $sql = "DROP TABLE IF EXISTS `" . $config['db']['name'] . '`.`' . $table . "`;";
-      $db->prepare($sql);
-      $res = $db->execute();
+      $res = $db->query("DROP TABLE IF EXISTS `" . $config['db']['name'] . '`.`' . $table . "`;");
       if ($res === FALSE) {
         $return = FALSE;
       }

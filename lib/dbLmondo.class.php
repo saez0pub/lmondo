@@ -30,6 +30,7 @@ class dbLmondo {
   private $select;
   private $where;
   private $sql;
+  private $champId;
 
   function __construct($table = NULL) {
     global $config;
@@ -37,6 +38,7 @@ class dbLmondo {
     $this->dbConnect();
     $this->table = $config['db']['prefix'] . $table;
     $this->select = '*';
+    $this->champId = 'id';
     $this->where = NULL;
     $this->sql = 'SELECT ' . $this->select . ' FROM ' . $this->table;
   }
@@ -153,7 +155,7 @@ class dbLmondo {
   /**
    * Exécute une requête et récupère tout le résultat
    * @param string $sql Requête à exécuter
-   * @return array|false retourne le résultat ou false en cas d'erreur
+   * @return $this|false retourne l'objet ou false en cas d'erreur
    */
   public function query($sql) {
     try {
@@ -167,7 +169,7 @@ class dbLmondo {
   /**
    * Prépare une instruction SQL
    * @param string $sql Requête à exécuter, si NULL (défaut, récupère la requête SQL construite.
-   * @return PDOStatement|false retourne l'objet PDOStatement 
+   * @return $this|false retourne l'objet  
    * ou false en cas d'erreur
    */
   public function prepare($sql = NULL) {
@@ -178,7 +180,7 @@ class dbLmondo {
     if ($this->dbh !== false) {
       try {
         $this->stmnt = $this->dbh->prepare($sql);
-        $return = $this->stmnt;
+        $return = $this;
       } catch (PDOException $e) {
         $return = FALSE;
       }
@@ -217,13 +219,14 @@ class dbLmondo {
 
   /**
    * Execute l'instruction préparée
-   * @return boolean
+   * @return $this|boolean
    */
   public function execute() {
     $return = FALSE;
     if ($this->dbh !== false) {
       try {
-        $return = $this->stmnt->execute();
+        $this->stmnt->execute();
+        $return = $this;
       } catch (PDOException $e) {
         $return = FALSE;
       }
@@ -297,6 +300,14 @@ class dbLmondo {
   }
 
   /**
+   * Permet définir le champs ID qui est id pardéfaut.
+   * @param string $nomColonneId
+   */
+  public function setChampId($nomColonneId) {
+    $this->champId = $nomColonneId;
+  }
+
+  /**
    * Récupère une ligne à partir de l'id de la table donnée en paramètre de la construction
    * @param string $id id de la ligne a récupérer
    * @param string $colonneId nom de la colonne a chercher
@@ -304,10 +315,10 @@ class dbLmondo {
    * @return mixed false si l'on n'a pas la table ou si on a eu un problème dans 
    * la requête, sinon la ligne trouvée.
    */
-  public function getFromID($id, $colonneId = 'id') {
+  public function getFromID($id) {
     $return = FALSE;
     if ($this->table !== NULL) {
-      $this->prepare("SELECT " . $this->select . " from " . $this->table . " where $colonneId = :id");
+      $this->prepare("SELECT " . $this->select . " from " . $this->table . " where " . $this->champId . " = :id");
       $this->bindParam('id', $id);
       $return = $this->executeAndFetch();
     }
@@ -319,10 +330,11 @@ class dbLmondo {
    * @param Array $champs Tableau des champs du SELECT
    */
   public function select($champs) {
-    if(!is_array($champs)){
+    if (!is_array($champs)) {
       $champs = array($champs);
     }
     $this->select = join(', ', $champs);
+    $this->sql = "SELECT " . $this->select . " FROM " . $this->table;
     return $this;
   }
 
@@ -338,13 +350,14 @@ class dbLmondo {
       $paramName = $column;
     }
     if ($this->where === NULL) {
-      $this->sql = "SELECT " .$this->select . " FROM " . $this->table . " WHERE ($column $operator :$paramName) ";
+      $this->sql .= " WHERE ($column $operator :$paramName) ";
       $this->where = 0;
     } else {
       $this->sql.= " $and ($column $operator :$paramName) ";
     }
     return $this;
   }
+
   /**
    * Ajoute une clause Where a la requête en cours de préparation précédée de AND si besoin
    * @param string $column partie gauche de la clause where
@@ -355,7 +368,7 @@ class dbLmondo {
     $this->addWhere($column, $operator, "AND", $paramName);
     return $this;
   }
-  
+
   /**
    * Ajoute une clause Where a la requête en cours de préparation précédée de OR si besoin
    * @param string $column partie gauche de la clause where
@@ -376,6 +389,55 @@ class dbLmondo {
       return $this->stmnt->rowCount;
     } else {
       return 0;
+    }
+  }
+
+  /**
+   * Permet d'obtenir les colonnes de la requête
+   * @return array les noms de colonnes
+   */
+  public function getColumns() {
+    $db = $this->getConnexion();
+    $columns = array();
+    $stmnt = $db->prepare($this->sql . ' LIMIT 0');
+    $stmnt->execute();
+    for ($i = 0; $i < $stmnt->columnCount(); $i++) {
+      $col = $stmnt->getColumnMeta($i);
+      $columns[] = $col['name'];
+    }
+    return $columns;
+    ;
+  }
+
+  /**
+   * Fonction de préformatage de table
+   * @param type $return
+   * @return string
+   */
+  public function getTable($return = TRUE) {
+    $columns = $this->getColumns();
+    $res = '<table class="table table-striped table-hover">' . "\n";
+    $res.= '<thead>' . "\n";
+    $res.= '<tr>' . "\n";
+    foreach ($columns as $value) {
+      $res.= '<th>' . $value . '</th>' . "\n";
+    }
+    $res.= '</tr>' . "\n";
+    $res.= '</thead>' . "\n";
+    $this->prepare($this->sql);
+    foreach ($this->executeAndFetchAll() as $value) {
+      $res.='<tr>';
+      foreach ($columns as $col) {
+        $res.= '<td>' . $value[$col] . '</td>';
+      }
+      $res.='</tr>' . "\n";
+    }
+    $res.= '</table>' . "\n";
+
+    if ($return === TRUE) {
+      return $res;
+    } else {
+      echo $res;
     }
   }
 

@@ -101,16 +101,11 @@ localhost	FALSE	/	FALSE	" . $config['cookieTime'] . "	passwordmd5	" . md5($_GET[
   public function testSiJAjouteUnMessageAfterRedirect_AlorsJeLetrouveDansSession() {
     global $config;
     $oldMessage = "";
-    if (isset($_SESSION[$config['sessionName']]['messageAfterRedirect'])) {
-      $oldMessage = $_SESSION[$config['sessionName']]['messageAfterRedirect'];
-    }
+    $oldSession = $_SESSION[$config['sessionName']];
     addMessageAfterRedirect('test');
-    $this->assertEquals('<div class="alert alert-info">test<div>', $_SESSION[$config['sessionName']]['messageAfterRedirect']);
-    if (!empty($oldMessage)) {
-      $_SESSION[$config['sessionName']]['messageAfterRedirect'] = $oldMessage;
-    } else {
-      unset($_SESSION[$config['sessionName']]['messageAfterRedirect']);
-    }
+    $result = $_SESSION[$config['sessionName']]['messageAfterRedirect'];
+    $_SESSION[$config['sessionName']] = $oldSession;
+    $this->assertEquals('<div class="alert alert-info">test<div>', $result);
   }
 
 }

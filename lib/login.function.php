@@ -37,8 +37,8 @@ function startSession() {
         setcookie('passwordmd5', md5($_GET['password']), $config['cookieTime'], $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
       }
       $menu = $user->getUserMenu();
-      if(is_array($menu)){
-         $_SESSION[$config['sessionName']]['menu'] = $menu;
+      if (is_array($menu)) {
+        $_SESSION[$config['sessionName']]['menu'] = $menu;
       }
     } else {
       $_SESSION[$config['sessionName']] = FALSE;
@@ -77,8 +77,10 @@ function stopSession($rediRectToIndex = TRUE, $stopExec = FALSE) {
     $host = @$_SERVER['HTTP_HOST'];
     $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
     $curUri = rtrim(basename($_SERVER['PHP_SELF']), '/\\');
-    $extra = 'index.php';
-    header("Location: http://$host$uri/$extra");
+    $extra = 'index.php?redirect=0';
+    if (!isset($_GET['redirect'])) {
+      header("Location: http://$host$uri/$extra");
+    }
   } else {
     echo 'true';
   }

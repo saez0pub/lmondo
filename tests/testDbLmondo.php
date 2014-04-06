@@ -77,33 +77,8 @@ class dbTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testSiJeFaisUnSelectWhereAndOr_AlorsLeResultatEstBon() {
-    global $config;
-    $db = new dbLmondo($table = 'test_requete');
-    $db->query("DROP TABLE IF EXISTS " . $config['db']['prefix'] . "test_requete ");
-    $db->query("CREATE TABLE " . $config['db']['prefix'] . "test_requete (
-      `id` int(11) NOT NULL AUTO_INCREMENT,      
-      `a1` varchar(100) NOT NULL,
-      `a2` varchar(100) NOT NULL,
-      `a3` varchar(100) NOT NULL,
-      `a4` varchar(100) NOT NULL,
-      PRIMARY KEY (`id`))");
-    $db->query("INSERT INTO " . $config['db']['prefix'] . "test_requete VALUES
-      (NULL,1,1,1,1),
-      (NULL,2,2,2,2),
-      (NULL,3,3,3,3),
-      (NULL,4,4,4,4),
-      (NULL,5,5,5,5),
-      (NULL,1,1,1,2),
-      (NULL,1,1,1,3),
-      (NULL,1,1,1,4),
-      (NULL,1,1,2,1),
-      (NULL,1,2,1,1),
-      (NULL,1,1,1,6),
-      (NULL,1,3,1,1),
-      (NULL,1,1,3,1),
-      (NULL,1,1,1,3),
-      (NULL,1,1,1,1)
-    ");
+    $db = new dbLmondo('requete_test');
+    initTestTable();
     $db->select('id,a1,a2,a3')
       ->addWhere('a1')
       ->addWhere('a2')
@@ -126,6 +101,21 @@ class dbTest extends PHPUnit_Framework_TestCase {
         7 => Array('id' => 14, 'a1' => 1, 'a2' => 1, 'a3' => 1,),
         8 => Array('id' => 15, 'a1' => 1, 'a2' => 1, 'a3' => 1,)
     );
+    $this->assertEquals($expected, $result);
+  }
+
+  public function testJePeuxRecupererLeNomDesColonnes() {
+    $db = new dbLmondo('rules');
+    $db->select('id,nom');
+    $result=$db->getColumns();
+    $expected=Array(0=>'id', 1=> 'nom');
+    $this->assertEquals($expected, $result);
+  }
+  
+  public function testLaFonctionGetTablesEstCoherente() {
+    $db = new dbLmondo('requete_test');
+    $result = $db->getTable();
+    $expected = file_get_contents(dirname(__FILE__) . '/templates/table_test.html');
     $this->assertEquals($expected, $result);
   }
 
