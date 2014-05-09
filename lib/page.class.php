@@ -26,6 +26,7 @@ include_once dirname(__FILE__) . '/login.function.php';
 class page {
 
   protected $css;
+  protected $js;
   protected $header;
   protected $content;
   protected $footer;
@@ -38,8 +39,9 @@ class page {
    * @param boolean $returnPage TRUE : retourne la page, FALSE (valeur par défaut) affiche la page
    */
   function __construct($returnPage = FALSE) {
-    global $db;
+    global $db, $config;
     $this->css = array();
+    $this->js = $config['js'];
     $this->canShowPage = TRUE;
     $this->returnPage = $returnPage;
     $this->overrideContent = "<div class='alert alert-warning maintenance'>Le site est en maintenance, veuillez réessayer dans quelques minutes</div>";
@@ -69,6 +71,14 @@ class page {
   public function addCSS($css) {
     $this->css[] = $css;
     $this->prepareHeader();
+  }
+
+  /**
+   * Ajoute une reference javascript dans le footer de la page
+   * @param string $css
+   */
+  public function addJS($js) {
+    $this->js[] = $js;
   }
 
   /**
@@ -151,7 +161,7 @@ class page {
     global $config;
     $class = '';
     $return = "\n          <ul class=\"nav navbar-nav\">
-            <li class=\"$class\"><a href=\"index.php\">Accueil</a></li>".$this->getUserMenu()."
+            <li class=\"$class\"><a href=\"index.php\">Accueil</a></li>" . $this->getUserMenu() . "
           </ul>";
     if (isset($_SESSION[$config['sessionName']]['user']['login'])) {
       $return.="
@@ -174,7 +184,7 @@ class page {
   public function getUserMenu() {
     global $config;
     $class = '';
-    $return='';
+    $return = '';
     if (isset($_SESSION[$config['sessionName']]['menu'])) {
       foreach ($_SESSION[$config['sessionName']]['menu'] as $nom => $menu) {
         if (!is_array($menu)) {
@@ -202,7 +212,13 @@ class page {
    * @return string le footer en html
    */
   public function prepareFooter() {
+    global $config;
+    $js = "";
+    foreach ($this->js as $jsAdd) {
+      $js.='    <script src="'.$jsAdd.'"></script>'."\n";
+    }
     $this->footer = file_get_contents(dirname(__FILE__) . '/../var/templates/footer.html');
+    $this->footer = str_replace('$jsToLoad$', $js, $this->footer);
     return $this->footer;
   }
 

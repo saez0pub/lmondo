@@ -60,3 +60,9 @@ $config['securite']['remember-me'] = 'digit';
 $config['securite']['XDEBUG_SESSION'] = 'alphanum';
 $config['securite']['XDEBUG_SESSION_START'] = 'alphanum';
 $config['securite']['XDEBUG_SESSION_STOP_NO_EXEC'] = 'alphanum';
+
+//Liste des javascripts a charger par défaut
+$config['js'] = array();
+$config['js'][] = 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js';
+$config['js'][] = '../../js/bootstrap.min.js';
+$config['js'][] = '../../js/main.js';
