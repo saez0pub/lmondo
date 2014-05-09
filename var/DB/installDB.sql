@@ -28,6 +28,7 @@ INSERT INTO `$prefix$menu` VALUES (1, 'Reconnaissance vocale', '#', 0, 0, 1);
 INSERT INTO `$prefix$menu` VALUES (2, 'Paramètres', '#', 0, 0, 2);
 INSERT INTO `$prefix$menu` VALUES (NULL, 'Gestion de grammaire', 'grammar.php', 1, 1, 3);
 INSERT INTO `$prefix$menu` VALUES (NULL, 'Paramètres', 'settings.php', 1, 2, 4);
+INSERT INTO `$prefix$menu` VALUES (NULL, 'Gestion des actions', 'action.php', 1, 1, 5);
 CREATE TABLE IF NOT EXISTS `$prefix$rules` (
   `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `nom` varchar(100) NOT NULL,
@@ -53,3 +54,12 @@ INSERT INTO `$prefix$rules` VALUES (NULL, 'éteint l ampoule la cuisine', 'marvi
 INSERT INTO `$prefix$rules` VALUES (NULL, 'éteint l ampoule du salon', 'marvin éteint l ampoule du salon');
 INSERT INTO `$prefix$rules` VALUES (NULL, 'éteint l ampoule de la salle a manger', 'marvin éteint l ampoule de la salle a manger');
 INSERT INTO `$prefix$rules` VALUES (NULL, 'comment ca va', 'marvin comment ca va');
+
+CREATE TABLE IF NOT EXISTS `$prefix$actions` (
+  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `nom` varchar(100) NOT NULL,
+  `command` varchar(100) NOT NULL,
+  `args` varchar(100) NOT NULL,
+  UNIQUE INDEX `idx_$prefix$actions_nom` (`nom`)
+  ) ;
+INSERT INTO `$prefix$actions` VALUES (NULL, 'Dire', '/usr/bin/espeak', '"$1$" -v mb/mb-fr1 -s 150');
