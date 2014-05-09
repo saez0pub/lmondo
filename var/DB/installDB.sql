@@ -29,6 +29,7 @@ INSERT INTO `$prefix$menu` VALUES (2, 'Paramètres', '#', 0, 0, 2);
 INSERT INTO `$prefix$menu` VALUES (NULL, 'Gestion de grammaire', 'grammar.php', 1, 1, 3);
 INSERT INTO `$prefix$menu` VALUES (NULL, 'Paramètres', 'settings.php', 1, 2, 4);
 INSERT INTO `$prefix$menu` VALUES (NULL, 'Gestion des actions', 'action.php', 1, 1, 5);
+INSERT INTO `$prefix$menu` VALUES (NULL, 'Scenarios', 'scenario.php', 1, 1, 6);
 CREATE TABLE IF NOT EXISTS `$prefix$rules` (
   `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `nom` varchar(100) NOT NULL,
@@ -63,3 +64,10 @@ CREATE TABLE IF NOT EXISTS `$prefix$actions` (
   UNIQUE INDEX `idx_$prefix$actions_nom` (`nom`)
   ) ;
 INSERT INTO `$prefix$actions` VALUES (NULL, 'Dire', '/usr/bin/espeak', '"$1$" -v mb/mb-fr1 -s 150');
+
+CREATE TABLE IF NOT EXISTS `$prefix$actions` (
+  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `nom` varchar(100) NOT NULL,
+  UNIQUE INDEX `idx_$prefix$actions_nom` (`nom`)
+  ) ;
+INSERT INTO `$prefix$actions` VALUES (NULL, 'Repetes');
