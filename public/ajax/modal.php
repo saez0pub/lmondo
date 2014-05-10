@@ -25,23 +25,25 @@ $champsId = $_GET['champs'];
 $id = $_GET['id'];
 eval("\$target = new $table();");
 
-
-if ($ligne = $target->getFromID($id)) {
+$ligne = $target->getFromID($id);
+if ($ligne !== FALSE && $target->canEdit()) {
   $colonnes = $target->getColumns();
   echo '
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+        <h4 class="modal-title" id="myModalLabel">Modification ID '.$id.'</h4>
       </div>
       <div class="modal-body">
-        <form class="form-horizontal" role="form">
+        <form id="modalForm" role="form">
         ';
+  echo '<input type="hidden" id="inputTable" name="inputTable" value="'.$table.'" />'
+    . '<input type="hidden" id="inputId" name="inputId" value="'.$id.'" />';
   foreach ($colonnes as $colonne) {
     if ($colonne != $champsId){
       echo '
           <div class="form-group">
-            <label for="input'.$colonne.'">'.$target->getColumnName($colonne).'</label>
-            <input type="text" class="form-control" id="input'.$colonne.'" value="'.$ligne[$colonne].'">
+            <label for="'.$colonne.'">'.$target->getColumnName($colonne).'</label>
+            <input type="text" class="form-control" id="'.$colonne.'" name="'.$colonne.'" value="'.htmlentities($ligne[$colonne]).'" />
           </div>';
     }
   }
@@ -49,8 +51,8 @@ if ($ligne = $target->getFromID($id)) {
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+        <button type="button" class="btn btn-primary save" href="../ajax/update.php">Enregistrer</button>
       </div>
     </div>';
 }

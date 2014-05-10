@@ -50,7 +50,7 @@ class dbLmondo {
       }
     }
     $this->canEdit = true;
-    $this->modalTarget = '../ajax/default.php?table='.get_class($this).'&champs='.$this->champId.'&id=';
+    $this->modalTarget = '../ajax/modal.php?table=' . get_class($this) . '&champs=' . $this->champId . '&id=';
   }
 
   /*
@@ -428,21 +428,21 @@ class dbLmondo {
     return $this->canEdit;
   }
 
-  
   /**
    * permet de forcer le fait de pouvoir editer les entrées
    */
   public function setEdit($canEdit) {
     $this->canEdit = $canEdit;
   }
-  
+
   public function getColumnName($colonne) {
-      if (isset($this->column[$colonne])) {
-        return $this->column[$colonne];
-      }  else {
-        return $colonne;
-      }
+    if (isset($this->column[$colonne])) {
+      return $this->column[$colonne];
+    } else {
+      return $colonne;
+    }
   }
+
   /**
    * Fonction de préformatage de table
    * @param type $return
@@ -457,7 +457,9 @@ class dbLmondo {
       $res.= "<th></th>\n";
     }
     foreach ($columns as $value) {
-      $res.= '<th>' . $this->getColumnName($value) . '</th>' . "\n";
+      if ($value != $this->champId) {
+        $res.= '<th>' . $this->getColumnName($value) . '</th>' . "\n";
+      }
     }
     $res.= '</tr>' . "\n";
     $res.= '</thead>' . "\n";
@@ -465,11 +467,13 @@ class dbLmondo {
     foreach ($this->executeAndFetchAll() as $value) {
       $res.='<tr>';
       if ($this->canEdit()) {
-        $res.= '<td><button type="button" class="btn btn-default" data-toggle="modal" data-remote="'.$this->modalTarget.$value[$this->champId].'" data-target="#myModal"><span class="glyphicon glyphicon-edit"></span></button>
-</td>'."\n";
+        $res.= '<td><a type="button" class="btn btn-default" data-toggle="modal" href="' . $this->modalTarget . $value[$this->champId] . '" data-target="#myModal"><span class="glyphicon glyphicon-edit"></span></a>
+</td>' . "\n";
       }
       foreach ($columns as $col) {
-        $res.= '<td>' . $value[$col] . '</td>';
+        if ($col != $this->champId) {
+          $res.= '<td>' . $value[$col] . '</td>';
+        }
       }
       $res.='</tr>' . "\n";
     }
@@ -492,6 +496,27 @@ class dbLmondo {
       $this->column[$column] = $alias;
     }
     return $this->column;
+  }
+
+  public function update($id, $columns) {
+    $sql = 'UPDATE ' . $this->table . ' SET ';
+    $sep = '';
+    foreach ($columns as $key => $value) {
+      if ($key !== $this->champId) {
+        $sql.="$sep $key=:$key";
+        $sep = ', ';
+      }
+    }
+    $sql .= " WHERE " . $this->champId . "=:id";
+    $this->prepare($sql);
+    $this->bindParam('id', $id);
+    foreach ($columns as $key => $value) {
+      if ($key !== $this->champId) {
+        $this->bindParam("$key", $value);
+      }
+    }
+    echo $sql;
+    return $this->execute();
   }
 
 }

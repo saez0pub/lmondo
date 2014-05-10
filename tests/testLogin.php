@@ -105,7 +105,7 @@ localhost	FALSE	/	FALSE	" . $config['cookieTime'] . "	passwordmd5	" . md5($_GET[
     addMessageAfterRedirect('test');
     $result = $_SESSION[$config['sessionName']]['messageAfterRedirect'];
     $_SESSION[$config['sessionName']] = $oldSession;
-    $this->assertEquals('<div class="alert alert-info">test<div>', $result);
+    $this->assertEquals('<div class="alert alert-info">test</div>', $result);
   }
 
 }

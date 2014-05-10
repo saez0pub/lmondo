@@ -18,7 +18,7 @@
 
 $('#logout').click(function() {
     $.get("ajax/logout.php", function(data) {
-       window.location = 'index.php';
+        window.location = 'index.php';
     });
 });
 
@@ -27,7 +27,24 @@ $("a[data-target=#myModal]").click(function(ev) {
     var target = $(this).attr("href");
 
     // load the url and show modal on success
-    $("#myModal .modal-body").load(target, function() { 
-         $("#myModal").modal("show"); 
+    $("#myModal .modal-content").load(target, function() {
+        $("#myModal").modal("show");
+    });
+    $('#myModal').on('shown.bs.modal', function() {
+        $("#myModal button.save").click(function(ev) {
+            $.ajax({
+                type: "POST",
+                url: ev.target.getAttribute('href'),
+                data: $('#modalForm').serialize(),
+                success: function(msg) {
+                    console.log(msg);
+                    $("#myModal").modal('hide');
+                    window.location.reload()
+                },
+                error: function(msg) {
+                    console.log(msg);
+                }
+            });
+        });
     });
 });

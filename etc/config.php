@@ -57,12 +57,19 @@ $config['securite']['password'] = 'mysqlChecked';
 $config['securite']['passwordmd5'] = 'alphanum';
 $config['securite']['PHPSESSID'] = 'alphanum';
 $config['securite']['remember-me'] = 'digit';
-$config['securite']['XDEBUG_SESSION'] = 'alphanum';
-$config['securite']['XDEBUG_SESSION_START'] = 'alphanum';
-$config['securite']['XDEBUG_SESSION_STOP_NO_EXEC'] = 'alphanum';
+$config['securite']['XDEBUG_SESSION'] = 'ascii';
+$config['securite']['XDEBUG_SESSION_START'] = 'ascii';
+$config['securite']['XDEBUG_SESSION_STOP_NO_EXEC'] = 'ascii';
 $config['securite']['table'] = 'alphanum';
-$config['securite']['champs'] = 'alphanum';
-$config['securite']['id'] = 'alphanum';
+$config['securite']['champs'] = 'ascii';
+$config['securite']['id'] = 'int';
+//champsutilisé dans les update ajax
+$config['securite']['inputId'] = 'int';
+$config['securite']['inputTable'] = 'alphanum';
+$config['securite']['nom'] = 'ascii';
+$config['securite']['content'] = 'ascii';
+$config['securite']['command'] = 'ascii';
+$config['securite']['args'] = 'ascii';
 
 //Liste des javascripts a charger par défaut
 $config['js'] = array();

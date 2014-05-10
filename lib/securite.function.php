@@ -31,32 +31,33 @@ function doSecurityCheck($rediRectToIndex = TRUE) {
     if (isset($config['securite'][$key])) {
       switch ($config['securite'][$key]) {
         case 'int':
-          $regexp = '[0-9]+';
+          $regexp = '^[0-9]+$';
           break;
         case 'alpha':
-          $regexp = '[[:alpha:]]+';
+          $regexp = '^[[:alpha:]]+$';
           break;
         case 'ascii':
-          $regexp = '[[:ascii:]]+';
+          $regexp = '^[[:ascii:]]+$';
           break;
         case 'digit':
-          $regexp = '[[:digit:]]+';
+          $regexp = '^[[:digit:]]+$';
           break;
         case 'alphanum':
-          $regexp = '[[:alnum:]]+';
+          $regexp = '^[[:alnum:]]+$';
           break;
         case 'mysqlChecked':
           $regexp = '.*';
           break;
         default:
-          stopSession();
+          stopSession($rediRectToIndex, $stopExec, $extra = 'index.php?redirect=0&champs='.htmlentities($key));
           break;
       }
       if (!preg_match("/$regexp/", $value)) {
-        stopSession();
+echo "$key-$value";
+        stopSession($rediRectToIndex, $stopExec, $extra = 'index.php?redirect=0&champs='.htmlentities($key));
       }
     } else {
-      stopSession($rediRectToIndex, $stopExec);
+      stopSession($rediRectToIndex, $stopExec, $extra = 'index.php?redirect=0&champs='.htmlentities($key));
     }
   }
 }
