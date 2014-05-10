@@ -21,3 +21,13 @@ $('#logout').click(function() {
        window.location = 'index.php';
     });
 });
+
+$("a[data-target=#myModal]").click(function(ev) {
+    ev.preventDefault();
+    var target = $(this).attr("href");
+
+    // load the url and show modal on success
+    $("#myModal .modal-body").load(target, function() { 
+         $("#myModal").modal("show"); 
+    });
+});

@@ -32,6 +32,7 @@ class dbLmondo {
   protected $sql;
   protected $champId;
   protected $column;
+  protected $canEdit;
 
   function __construct($table = NULL) {
     global $config;
@@ -48,6 +49,8 @@ class dbLmondo {
         $this->column[$value] = $value;
       }
     }
+    $this->canEdit = true;
+    $this->modalTarget = '../ajax/default.php?table='.get_class($this).'&champs='.$this->champId.'&id=';
   }
 
   /*
@@ -417,6 +420,30 @@ class dbLmondo {
   }
 
   /**
+   * fonction de vérification si la table peut être éditée
+   * @return boolean
+   * @todo ajouter des droits utilisateurs un jour
+   */
+  public function canEdit() {
+    return $this->canEdit;
+  }
+
+  
+  /**
+   * permet de forcer le fait de pouvoir editer les entrées
+   */
+  public function setEdit($canEdit) {
+    $this->canEdit = $canEdit;
+  }
+  
+  public function getColumnName($colonne) {
+      if (isset($this->column[$colonne])) {
+        return $this->column[$colonne];
+      }  else {
+        return $colonne;
+      }
+  }
+  /**
    * Fonction de préformatage de table
    * @param type $return
    * @return string
@@ -426,17 +453,21 @@ class dbLmondo {
     $res = '<table class="table table-striped table-hover">' . "\n";
     $res.= '<thead>' . "\n";
     $res.= '<tr>' . "\n";
+    if ($this->canEdit()) {
+      $res.= "<th></th>\n";
+    }
     foreach ($columns as $value) {
-      if (isset($this->column[$value])) {
-        $value = $this->column[$value];
-      }
-      $res.= '<th>' . $value . '</th>' . "\n";
+      $res.= '<th>' . $this->getColumnName($value) . '</th>' . "\n";
     }
     $res.= '</tr>' . "\n";
     $res.= '</thead>' . "\n";
     $this->prepare($this->sql);
     foreach ($this->executeAndFetchAll() as $value) {
       $res.='<tr>';
+      if ($this->canEdit()) {
+        $res.= '<td><button type="button" class="btn btn-default" data-toggle="modal" data-remote="'.$this->modalTarget.$value[$this->champId].'" data-target="#myModal"><span class="glyphicon glyphicon-edit"></span></button>
+</td>'."\n";
+      }
       foreach ($columns as $col) {
         $res.= '<td>' . $value[$col] . '</td>';
       }

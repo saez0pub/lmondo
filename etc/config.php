@@ -60,6 +60,9 @@ $config['securite']['remember-me'] = 'digit';
 $config['securite']['XDEBUG_SESSION'] = 'alphanum';
 $config['securite']['XDEBUG_SESSION_START'] = 'alphanum';
 $config['securite']['XDEBUG_SESSION_STOP_NO_EXEC'] = 'alphanum';
+$config['securite']['table'] = 'alphanum';
+$config['securite']['champs'] = 'alphanum';
+$config['securite']['id'] = 'alphanum';
 
 //Liste des javascripts a charger par défaut
 $config['js'] = array();
