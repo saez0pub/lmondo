@@ -27,6 +27,22 @@ class trigger extends dbLmondo {
     parent::__construct('triggers');
     $this->column['type'] = 'Type';
     $this->column['args'] = 'Paramètres';
+    $this->hideColumn('scenario_id');
   }
-
+  public function getColumnInput($colonne, $valeur) {
+    global $config;
+    $return = parent::getColumnInput($colonne, $valeur);
+    switch ($colonne) {
+      case 'type':
+        $return = '<select class="form-control" id="' . $colonne . '" name="' . $colonne . '">';
+        foreach ($config['triggers'] as $key => $value) {
+          $return .='<option value="'.$key.'">'.htmlentities($value).'</option> ';
+        }
+        $return .="</select>";
+        break;
+      default:
+        break;
+    }
+    return $return;
+  }
 }

@@ -64,18 +64,25 @@ $config['securite']['table'] = 'alphanum';
 $config['securite']['champs'] = 'ascii';
 $config['securite']['id'] = 'int';
 //champsutilisé dans les update ajax
-$config['securite']['inputId'] = 'int';
+$config['securite']['inputid'] = 'int';
 $config['securite']['inputTable'] = 'alphanum';
+$config['securite']['inputChamps'] = 'alphanum';
 $config['securite']['nom'] = 'mysqlChecked';
 $config['securite']['content'] = 'mysqlChecked';
 $config['securite']['command'] = 'ascii';
 $config['securite']['args'] = 'ascii';
+$config['securite']['type'] = 'alphanum';
+$config['securite']['scenario_id'] = 'int';
+$config['securite']['cle'] = 'ascii';
+$config['securite']['inputcle'] = 'alphanum-_';
+$config['securite']['valeur'] = 'ascii';
 
 $config['allowed_modals'][] = 'action';
 $config['allowed_modals'][] = 'rule';
 $config['allowed_modals'][] = 'scenario';
-$config['allowed_modals'][] = 'triger';
+$config['allowed_modals'][] = 'trigger';
 $config['allowed_modals'][] = 'user';
+$config['allowed_modals'][] = 'setting';
 
 //Liste des javascripts a charger par défaut
 $config['js'][] = 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js';

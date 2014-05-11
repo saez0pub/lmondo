@@ -21,37 +21,25 @@ $('#logout').click(function() {
         window.location = 'index.php';
     });
 });
-
-$("a[data-target=#myModal]").click(function(ev) {
-    ev.preventDefault();
-    var target = $(this).attr("href");
-
-    // load the url and show modal on success
-    $("#myModal .modal-content").load(target, function(response, status, xhr) {
-        if (status == "error") {
-            var msg = "Sorry but there was an error: "+target+" : \n";
-            alert(msg + xhr.status + " " + xhr.statusText);
-            window.location.reload()
-        } else {
-            $("#myModal").modal("show");
-        }
-    });
-    $('#myModal').on('shown.bs.modal', function() {
-        $("#myModal button.save").click(function(ev) {
-            $.ajax({
-                type: "POST",
-                url: ev.target.getAttribute('href'),
-                data: $('#modalForm').serialize(),
-                success: function(msg) {
-                    console.log(msg);
-                    $("#myModal").modal('hide');
-                    window.location.reload()
-                },
-                error: function(msg) {
-                    alert(msg);
-                    window.location.reload()
-                }
-            });
+$(document).on('hidden.bs.modal', function(e) {
+    $(e.target).removeData('bs.modal');
+})
+$('#myModal').on('shown.bs.modal', function() {
+    $("#myModal button.save").click(function(ev) {
+        $.ajax({
+            type: "POST",
+            url: ev.target.getAttribute('href'),
+            data: $('#modalForm').serialize(),
+            success: function(msg) {
+                console.log(msg);
+                $("#myModal").modal('hide');
+                window.location.reload()
+            },
+            error: function(msg) {
+                console.log(msg);
+                alert("Error : " + msg.status + " " + msg.statusText + " " + msg.responseText);
+                window.location.reload()
+            }
         });
     });
 });

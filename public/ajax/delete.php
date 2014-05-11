@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * Copyright (C) 2014 saez0pub
  *
  * This program is free software; you can redistribute it and/or
@@ -18,25 +18,23 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+include_once dirname(__FILE__) . '/../../lib/common.php';
 
-include_once dirname(__FILE__).'/../lib/common.php';
+$table = $_GET['inputTable'];
+if (!in_array($table, $config['allowed_modals'])) {
+  stopSession();
+}
+$champsId = $_GET['inputChamps'];
+$id = $_GET['input'.$champsId];
+eval("\$target = new $table();");
+$ligne = $target->getFromID($id);
+if ($ligne !== FALSE && $target->canEdit()) {
+  if ($target->delete($id) !== FALSE) {
+    addMessageAfterRedirect("ID $id Supprimé");
+  } else {
+    addMessageAfterRedirect("ID $id non Supprimé, action non autorisée", 'warning');
+  }
+} else {
+  addMessageAfterRedirect("ID $id non Supprimé, action non autorisée", 'warning');
+}
 
-$page = new page();
-
-$content="
-      <div class=row>
-        <div class=\"highlight col-md-3\">
-          <h1>Paramètres</h1>
-        </div>
-        <div class=\"col-md-9\">
-";
-
-$settings = new setting();
-$settings->prepare();
-$content.=$settings->getTable();
-$content.="
-        </div>
-      </div>
-";
-$page->addcontent($content);
-$page->showPage();

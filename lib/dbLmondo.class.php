@@ -53,9 +53,17 @@ class dbLmondo {
       }
     }
     $this->canEdit = true;
-    $this->modalTarget = '../ajax/modal.php?table=' . get_class($this) . '&champs=' . $this->champId . '&id=';
+    $this->updateModalTarget();
     $this->additionalColumns = array();
     $this->hideColumn('id');
+  }
+
+  public function updateModalTarget($target = NULL) {
+    if ($target === NULL) {
+      $this->modalTarget = '../ajax/modal.php?table=' . get_class($this) . '&champs=' . $this->champId;
+    } else {
+      $this->modalTarget = $target;
+    }
   }
 
   /*
@@ -203,16 +211,6 @@ class dbLmondo {
     return $return;
   }
 
-  /*
-   * Exécute un bind des paramètres d'une instruction SQL préparée
-   * @param string $sql Requête à exécuter
-   * @param int $fetchStyle Contrôle comment la prochaine ligne sera retournée 
-   *                        à l'appelant. Cette valeur doit être une des 
-   *                        constantes PDO::FETCH_*, et par défaut, vaut la 
-   *                        valeur de PDO::FETCH_ASSOC
-   * http://www.php.net/manual/fr/pdostatement.bindparam.php
-   */
-
   /**
    * Exécute un bind des paramètres d'une instruction SQL préparée
    * @param mixed $parameter Identifiant. Pour une requête préparée utilisant 
@@ -320,6 +318,7 @@ class dbLmondo {
    */
   public function setChampId($nomColonneId) {
     $this->champId = $nomColonneId;
+    $this->updateModalTarget();
   }
 
   /**
@@ -458,7 +457,11 @@ class dbLmondo {
    */
   public function getTable($return = TRUE) {
     $columns = $this->getColumns();
-    $res = '<table class="table table-striped table-hover">' . "\n";
+    $res = '
+            <a type="button" class="btn btn-default" data-toggle="modal" href="' .
+      $this->modalTarget .
+      '" data-target="#myModal"><span class="glyphicon glyphicon-plus"></span></a>';
+    $res .= '<table class="table table-striped table-hover">' . "\n";
     $res.= '<thead>' . "\n";
     $res.= '<tr>' . "\n";
     if ($this->canEdit()) {
@@ -476,7 +479,9 @@ class dbLmondo {
     foreach ($this->executeAndFetchAll() as $value) {
       $res.='<tr>';
       if ($this->canEdit()) {
-        $res.= '<td><a type="button" class="btn btn-default" data-toggle="modal" href="' . $this->modalTarget . $value[$this->champId] . '" data-target="#myModal"><span class="glyphicon glyphicon-edit"></span></a>
+        $res.= '<td><a type="button" class="btn btn-default" data-toggle="modal" href="' .
+          $this->modalTarget . '&' . $this->champId . '=' . $value[$this->champId] .
+          '" data-target="#myModal"><span class="glyphicon glyphicon-pencil"></span></a>
 </td>' . "\n";
       }
       foreach ($columns as $col) {
@@ -502,8 +507,12 @@ class dbLmondo {
    * @param type $id id de la ligne
    * @return string valeur correspondante à la colonne
    */
-  public function getAdditionalColumn($name, $id, $value='') {
+  public function getAdditionalColumn($name, $id, $value = '') {
     return $value;
+  }
+
+  public function getColumnInput($colonne, $valeur) {
+    return '<input type="text" class="form-control" id="' . $colonne . '" name="' . $colonne . '" value="' . htmlentities($valeur) . '" />';
   }
 
   /**
@@ -539,6 +548,37 @@ class dbLmondo {
     return $this->column;
   }
 
+  public function insert($columns) {
+    $sql = 'INSERT ' . $this->table . ' (';
+    $sep = '';
+    foreach ($columns as $key => $value) {
+      if ($key !== $this->champId) {
+        $sql.="$sep $key";
+        $sep = ', ';
+      }
+    }
+    $sql .= ") VALUES (";
+    foreach ($columns as $key => $value) {
+      if ($key !== $this->champId) {
+        $sql.="$sep:$key";
+        $sep = ', ';
+      }
+    }
+    $sql.=")";
+    $this->prepare($sql);
+    foreach ($columns as $key => $value) {
+      if ($key !== $this->champId) {
+        $this->bindParam("$key", $value);
+      }
+    }
+    echo $sql;
+    $return = $this->execute();
+    if ($return !== FALSE) {
+      $return = $this->dbh->lastInsertId();
+    }
+    return $return;
+  }
+
   public function update($id, $columns) {
     $sql = 'UPDATE ' . $this->table . ' SET ';
     $sep = '';
@@ -556,7 +596,13 @@ class dbLmondo {
         $this->bindParam("$key", $value);
       }
     }
-    echo $sql;
+    return $this->execute();
+  }
+
+  public function delete($id) {
+    $sql = 'DELETE FROM ' . $this->table . ' WHERE ' . $this->champId . '=:id';
+    $this->prepare($sql);
+    $this->bindParam('id', $id);
     return $this->execute();
   }
 

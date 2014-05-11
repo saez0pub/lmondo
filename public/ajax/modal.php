@@ -18,35 +18,54 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+$champsId = @$_GET['champs'];
+if (!isset($_GET[$champsId])) {
+  $id = 0;
+} else {
+  $id = $_GET[$champsId];
+}
 include_once dirname(__FILE__) . '/../../lib/common.php';
 
 $table = $_GET['table'];
 $champsId = $_GET['champs'];
-$id = $_GET['id'];
-if(!in_array($table,$config['allowed_modals'])){
+$id = $_GET[$champsId];
+if (!in_array($table, $config['allowed_modals'])) {
   stopSession();
 }
 eval("\$target = new $table();");
-
+$target->setChampId($champsId);
 $ligne = $target->getFromID($id);
+$colonnes = $target->getColumns();
+if (empty($id)) {
+  foreach ($colonnes as $value) {
+    $ligne[$value] = '';
+  }
+  $titre = 'Nouvelle entrée';
+  $action = '../ajax/insert.php';
+} else {
+  $titre = 'Modification ID ' . $id;
+  $action = '../ajax/update.php';
+}
 if ($ligne !== FALSE && $target->canEdit()) {
-  $colonnes = $target->getColumns();
   echo '
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Modification ID '.$id.'</h4>
+        <h4 class="modal-title" id="myModalLabel">' . $titre . '</h4>
       </div>
       <div class="modal-body">
         <form id="modalForm" role="form">
         ';
-  echo '<input type="hidden" id="inputTable" name="inputTable" value="'.$table.'" />'
-    . '<input type="hidden" id="inputId" name="inputId" value="'.$id.'" />';
+  echo '<input type="hidden" id="inputTable" name="inputTable" value="' . $table . '" />';
+  if (!empty($id)) {
+    echo '<input type="hidden" id="inputChamps" name="inputChamps" value="' . $champsId . '" />'
+    . '<input type="hidden" id="input' . $champsId . '" name="input' . $champsId . '" value="' . $id . '" />';
+  }
   foreach ($colonnes as $colonne) {
-    if ($colonne != $champsId){
+    if ($colonne != $champsId) {
       echo '
           <div class="form-group">
-            <label for="'.$colonne.'">'.$target->getColumnName($colonne).'</label>
-            <input type="text" class="form-control" id="'.$colonne.'" name="'.$colonne.'" value="'.htmlentities($ligne[$colonne]).'" />
+            <label for="' . $colonne . '">' . $target->getColumnName($colonne) . '</label>
+            ' . $target->getColumnInput($colonne, $ligne[$colonne]) . '
           </div>';
     }
   }
@@ -54,8 +73,12 @@ if ($ligne !== FALSE && $target->canEdit()) {
         </form>
       </div>
       <div class="modal-footer">
+        ';
+  if (!empty($id)) {
+    echo '<button type="button" class="btn btn-danger save" href="../ajax/delete.php">Supprimer</button>';
+  }
+  echo '<button type="button" class="btn btn-primary save" href="' . $action . '">Enregistrer</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
-        <button type="button" class="btn btn-primary save" href="../ajax/update.php">Enregistrer</button>
       </div>
     </div>';
 }

@@ -45,6 +45,9 @@ function doSecurityCheck($rediRectToIndex = TRUE) {
         case 'alphanum':
           $regexp = '^[[:alnum:]]+$';
           break;
+        case 'alphanum-_':
+          $regexp = '^[[:alnum:]-_]+$';
+          break;
         case 'mysqlChecked':
           $regexp = '.*';
           break;

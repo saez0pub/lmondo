@@ -21,7 +21,11 @@
 include_once dirname(__FILE__) . '/../../lib/common.php';
 
 $table = $_GET['inputTable'];
-$id = $_GET['inputId'];
+if(!in_array($table,$config['allowed_modals'])){
+  stopSession();
+}
+$champsId = $_GET['inputChamps'];
+$id = $_GET['input'.$champsId];
 eval("\$target = new $table();");
 $update = array();
 $ligne = $target->getFromID($id);

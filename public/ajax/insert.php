@@ -18,13 +18,28 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-/**
- * Class Utilisateur
- */
-class settings extends dbLmondo {
+include_once dirname(__FILE__) . '/../../lib/common.php';
 
-  function __construct() {
-    parent::__construct('config');
+$table = $_GET['inputTable'];
+if (!in_array($table, $config['allowed_modals'])) {
+  stopSession();
+}
+eval("\$target = new $table();");
+$insert = array();
+if ($target->canEdit()) {
+  $colonnes = $target->getColumns();
+  foreach ($colonnes as $col) {
+    echo " $col\n";
+    if (isset($_GET[$col]) && $ligne[$col] !== $_GET[$col]) {
+      $insert[$col] = $_GET[$col];
+    }
   }
-
+  if (sizeof($insert) > 0) {
+    $id = $target->insert($id, $insert);
+    if ($id !== FALSE && $id !== "0") {
+      addMessageAfterRedirect("ID $id Inséré");
+    } else {
+      addMessageAfterRedirect("Pas de modification, il semble que vous essayez d'insérer un doublon ou bien il ya une erreur interne", 'warning');
+    }
+  }
 }
