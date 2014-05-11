@@ -56,6 +56,7 @@ class dbLmondo {
     $this->updateModalTarget();
     $this->additionalColumns = array();
     $this->hideColumn('id');
+    $this->prepare($this->sql);
   }
 
   public function updateModalTarget($target = NULL) {
@@ -413,9 +414,9 @@ class dbLmondo {
   public function getColumns() {
     $db = $this->getConnexion();
     $columns = array();
-    $stmnt = $db->prepare($this->sql . ' LIMIT 0');
+    //var_dump("SELECT " . $this->select . " from " . $this->table . ' LIMIT 0');
+    $stmnt = $db->prepare("SELECT " . $this->select . " from " . $this->table . ' LIMIT 0');
     $stmnt->execute();
-    //var_dump($this->hideColumns);
     for ($i = 0; $i < $stmnt->columnCount(); $i++) {
       $col = $stmnt->getColumnMeta($i);
       if (!in_array($col['name'], $this->hideColumns)) {
@@ -478,7 +479,7 @@ class dbLmondo {
     }
     $res.= '</tr>' . "\n";
     $res.= '</thead>' . "\n";
-    $this->prepare($this->sql);
+    //$this->prepare($this->sql);
     foreach ($this->executeAndFetchAll() as $value) {
       $res.='<tr>';
       if ($this->canEdit()) {

@@ -47,11 +47,15 @@ class scenario extends dbLmondo {
 
     switch ($name) {
       case 'triggers':
-        $modalTarget = '../ajax/modal.php?table=trigger&champs=scenario_id&scenario_id=' . $id;
-        $return = '<a type="button" class="btn btn-default" data-toggle="modal" href="' . $modalTarget . $id . '" data-target="#myModal"><span class="glyphicon glyphicon-link"></span></a>';
+        //$modalTarget = '../ajax/modal.php?table=trigger&champs=scenario_id&scenario_id=';
+        //$return = '<a type="button" class="btn btn-default" data-toggle="modal" href="' . $modalTarget . $id . '" data-target="#myModal"><span class="glyphicon glyphicon-link"></span></a>';
         $trigger = new trigger();
-        $trigger->setEdit(false);
+        $trigger->updateModalTarget('../ajax/modal.trigger.php?scenario_id='.$id);
         $trigger->hideColumn('scenario_id');
+        $trigger->select('type,args')
+          ->addWhere('scenario_id');
+        $trigger->prepare();
+        $trigger->bindParam('scenario_id', $id);
         $return .= $trigger->getTable();
         break;
     }

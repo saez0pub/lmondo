@@ -108,11 +108,11 @@ class dbTest extends PHPUnit_Framework_TestCase {
     $db = new dbLmondo('rules');
     $db->select('id,nom');
     $db->showColumn('id');
-    $result=$db->getColumns();
-    $expected=Array(0=>'id', 1=> 'nom');
+    $result = $db->getColumns();
+    $expected = Array(0 => 'id', 1 => 'nom');
     $this->assertEquals($expected, $result);
   }
-  
+
   public function testLaFonctionGetTablesEstCoherente() {
     $db = new dbLmondo('requete_test');
     $db->setEdit(false);
@@ -120,11 +120,23 @@ class dbTest extends PHPUnit_Framework_TestCase {
     $expected = file_get_contents(dirname(__FILE__) . '/templates/table_test.html');
     $this->assertEquals($expected, $result);
   }
-  
+
   public function testJePeuxModifierUnAlias() {
     $db = new dbLmondo('requete_test');
     $result = $db->setColumnAlias('a1', 'Salut les copains !');
     $this->assertEquals('Salut les copains !', $result['a1']);
+  }
+
+  public function testJePeuxFaireUnBindPuisDemanderLaTable() {
+    $db = new dbLmondo('requete_test');
+    initTestTable();
+    $db->select('id,a1,a2')
+      ->addWhere('a3');
+    $db->prepare();
+    $db->bindParam('a3', '1');
+    $expected = file_get_contents(dirname(__FILE__) . '/templates/table_test_1.html');
+    $db->setEdit(false);
+    $this->assertEquals($expected, $db->getTable());
   }
 
 }

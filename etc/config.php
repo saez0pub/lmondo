@@ -65,8 +65,8 @@ $config['securite']['champs'] = 'ascii';
 $config['securite']['id'] = 'int';
 //champsutilisé dans les update ajax
 $config['securite']['inputid'] = 'int';
-$config['securite']['inputTable'] = 'alphanum';
-$config['securite']['inputChamps'] = 'alphanum';
+$config['securite']['inputTable'] = 'alphanum-_';
+$config['securite']['inputChamps'] = 'alphanum-_';
 $config['securite']['nom'] = 'mysqlChecked';
 $config['securite']['content'] = 'mysqlChecked';
 $config['securite']['command'] = 'ascii';
@@ -76,6 +76,7 @@ $config['securite']['scenario_id'] = 'int';
 $config['securite']['cle'] = 'ascii';
 $config['securite']['inputcle'] = 'alphanum-_';
 $config['securite']['valeur'] = 'ascii';
+$config['securite']['inputscenario_id'] = 'alphanum-_';
 
 $config['allowed_modals'][] = 'action';
 $config['allowed_modals'][] = 'rule';
