@@ -43,7 +43,7 @@ class scenario extends dbLmondo {
 
   public function getAdditionalColumn($name, $id, $value = '') {
     global $config, $db;
-    $return = parent::getAdditionalColumn($name, $id, $value = '');
+    $return = parent::getAdditionalColumn($name, $id, $value);
 
     switch ($name) {
       case 'triggers':
