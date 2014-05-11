@@ -79,6 +79,7 @@ class page {
    */
   public function addJS($js) {
     $this->js[] = $js;
+    $this->prepareFooter();
   }
 
   /**

@@ -79,4 +79,4 @@ CREATE TABLE IF NOT EXISTS `$prefix$triggers` (
   `args` varchar(100) NOT NULL,
   `scenario_id` INT NOT NULL
   ) ;
-INSERT INTO `$prefix$triggers` VALUES (NULL, 'reco','comment ca va',1);
+INSERT INTO `$prefix$triggers` VALUES (NULL, 'reco','2',1);

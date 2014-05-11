@@ -52,7 +52,7 @@ class scenario extends dbLmondo {
         $trigger = new trigger();
         $trigger->updateModalTarget('../ajax/modal.trigger.php?scenario_id='.$id);
         $trigger->hideColumn('scenario_id');
-        $trigger->select('type,args')
+        $trigger->select('id,type,args')
           ->addWhere('scenario_id');
         $trigger->prepare();
         $trigger->bindParam('scenario_id', $id);

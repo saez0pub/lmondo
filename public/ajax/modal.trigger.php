@@ -27,9 +27,10 @@ if (isset($_GET['scenario_id'])) {
   $scenario_id = $_GET['scenario_id'];
   $scenario = new scenario();
   $ligneScenario = $scenario->getFromID($scenario_id);
-  if($ligneScenario !== FALSE && $scenario->canEdit()) {
+  if ($ligneScenario !== FALSE && $scenario->canEdit()) {
     $trigger = new trigger();
     $ligne = $trigger->getFromID($id);
+    $trigger->hideColumn('scenario_id');
     $colonnes = $trigger->getColumns();
     if (empty($id)) {
       foreach ($colonnes as $value) {
@@ -51,15 +52,21 @@ if (isset($_GET['scenario_id'])) {
         <form id="modalForm" role="form">
         ';
       echo '<input type="hidden" id="inputTable" name="inputTable" value="' . $table . '" />';
-      echo '<input type="hidden" id="inputTable" name="scenario_id" value="' . $scenario_id . '" />';
+      echo '<input type="hidden" id="scenario_id" name="scenario_id" value="' . $scenario_id . '" />';
       if (!empty($id)) {
         echo '<input type="hidden" id="inputChamps" name="inputChamps" value="' . $champsId . '" />'
         . '<input type="hidden" id="input' . $champsId . '" name="input' . $champsId . '" value="' . $id . '" />';
       }
       foreach ($colonnes as $colonne) {
-        if ($colonne != $champsId) {
+        if ($colonne === 'args' && empty($id)) {
           echo '
-          <div class="form-group">
+          <div class="form-group" id="div' . $colonne . '">
+            <label for="' . $colonne . '">' . $trigger->getColumnName($colonne) . '</label>
+            <input class="form-control" id="' . $colonne . '" name="' . $colonne . '" value="Veuillez sélectioner le Type" disabled>
+          </div>';
+        } elseif ($colonne != $champsId) {
+          echo '
+          <div class="form-group" id="div' . $colonne . '">
             <label for="' . $colonne . '">' . $trigger->getColumnName($colonne) . '</label>
             ' . $trigger->getColumnInput($colonne, $ligne[$colonne]) . '
           </div>';

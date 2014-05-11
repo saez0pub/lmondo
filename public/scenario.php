@@ -22,7 +22,7 @@
 include_once dirname(__FILE__).'/../lib/common.php';
 
 $page = new page();
-
+$page->addJS('../../js/trigger.js');
 $content="
       <div class=row>
         <div class=\"highlight col-md-3\">

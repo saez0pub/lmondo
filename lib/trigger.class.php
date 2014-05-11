@@ -27,16 +27,43 @@ class trigger extends dbLmondo {
     parent::__construct('triggers');
     $this->column['type'] = 'Type';
     $this->column['args'] = 'Paramètres';
-    $this->hideColumn('scenario_id');
   }
+
   public function getColumnInput($colonne, $valeur) {
     global $config;
     $return = parent::getColumnInput($colonne, $valeur);
     switch ($colonne) {
       case 'type':
-        $return = '<select class="form-control" id="' . $colonne . '" name="' . $colonne . '">';
+        if (empty($valeur)) {
+          $select = 'selected';
+        } else {
+          $select = '';
+        }
+        $return = '<select class="form-control" id="' . $colonne . '" name="' . $colonne . '"><option value="" ' . $select . '>Veuillez sélectionner</option>';
         foreach ($config['triggers'] as $key => $value) {
-          $return .='<option value="'.$key.'">'.htmlentities($value).'</option> ';
+          if ($valeur == "$key") {
+            $select = 'selected';
+          } else {
+            $select = '';
+          }
+          $return .='<option value="' . $key . '" ' . $select . '>' . htmlentities($value) . '</option> ';
+        }
+        $return .="</select>";
+        break;
+      case 'argsa':
+        if (empty($valeur)) {
+          $select = 'selected';
+        } else {
+          $select = '';
+        }
+        $return = '<select class="form-control" id="' . $colonne . '" name="' . $colonne . '"><option value="" ' . $select . '>Veuillez sélectionner</option>';
+        foreach ($config['triggers'] as $key => $value) {
+          if ($valeur == "$key") {
+            $select = 'selected';
+          } else {
+            $select = '';
+          }
+          $return .='<option value="' . $key . '" ' . $select . '>' . htmlentities($value) . '</option> ';
         }
         $return .="</select>";
         break;
@@ -45,4 +72,13 @@ class trigger extends dbLmondo {
     }
     return $return;
   }
+
+  public function getAdditionalColumn($name, $id, $value = '') {
+    global $config;
+    if (isset($config['triggers'][$value])) {
+      $value = $config['triggers'][$value];
+    }
+    return parent::getAdditionalColumn($name, $id, $value);
+  }
+
 }
