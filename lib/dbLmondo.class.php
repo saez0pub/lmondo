@@ -457,10 +457,13 @@ class dbLmondo {
    */
   public function getTable($return = TRUE) {
     $columns = $this->getColumns();
-    $res = '
+    $res='';
+    if ($this->canEdit()) {
+      $res .= '
             <a type="button" class="btn btn-default" data-toggle="modal" href="' .
-      $this->modalTarget .
-      '" data-target="#myModal"><span class="glyphicon glyphicon-plus"></span></a>';
+        $this->modalTarget .
+        '" data-target="#myModal"><span class="glyphicon glyphicon-plus"></span></a>';
+    }
     $res .= '<table class="table table-striped table-hover">' . "\n";
     $res.= '<thead>' . "\n";
     $res.= '<tr>' . "\n";
@@ -538,8 +541,8 @@ class dbLmondo {
 
   /**
    * Permet d'afficher un alias différent sur un colonne donnée
-   * @param type $column
-   * @param type $alias
+   * @param string $column
+   * @param string $alias
    */
   public function setColumnAlias($column, $alias) {
     if (isset($this->column[$column])) {
@@ -548,6 +551,11 @@ class dbLmondo {
     return $this->column;
   }
 
+  /**
+   * Insertion de données dans une table
+   * @param array $columns tableau associatif nom_colonne => valeur à insérer
+   * @return string|bool false si cela se passe mal, sinon m'id inséré
+   */
   public function insert($columns) {
     $sql = 'INSERT ' . $this->table . ' (';
     $sep = '';
@@ -558,6 +566,7 @@ class dbLmondo {
       }
     }
     $sql .= ") VALUES (";
+    $sep = '';
     foreach ($columns as $key => $value) {
       if ($key !== $this->champId) {
         $sql.="$sep:$key";
@@ -571,7 +580,6 @@ class dbLmondo {
         $this->bindParam("$key", $value);
       }
     }
-    echo $sql;
     $return = $this->execute();
     if ($return !== FALSE) {
       $return = $this->dbh->lastInsertId();
@@ -579,6 +587,12 @@ class dbLmondo {
     return $return;
   }
 
+  /**
+   * Mise à jour des données d'une ligne dans la table
+   * @param string $id id de la ligne a mettre à jour
+   * @param array $columns tableau associatif nom_colonne => valeur à mettre à jour
+   * @return string|bool false si cela se passe mal
+   */
   public function update($id, $columns) {
     $sql = 'UPDATE ' . $this->table . ' SET ';
     $sep = '';
@@ -599,6 +613,11 @@ class dbLmondo {
     return $this->execute();
   }
 
+  /**
+   * Supprime une ligne de la table
+   * @param string $id id de la ligne à supprimer
+   * @return string résultat de l'exécution du statement
+   */
   public function delete($id) {
     $sql = 'DELETE FROM ' . $this->table . ' WHERE ' . $this->champId . '=:id';
     $this->prepare($sql);
