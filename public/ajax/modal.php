@@ -23,6 +23,9 @@ include_once dirname(__FILE__) . '/../../lib/common.php';
 $table = $_GET['table'];
 $champsId = $_GET['champs'];
 $id = $_GET['id'];
+if(!in_array($table,$config['allowed_modals'])){
+  stopSession();
+}
 eval("\$target = new $table();");
 
 $ligne = $target->getFromID($id);

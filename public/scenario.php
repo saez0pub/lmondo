@@ -26,8 +26,9 @@ $page = new page();
 $content="
       <div class=row>
         <div class=\"highlight col-md-3\">
-          <h1>Gestion des actions</h1>
+          <h1>Scénarios</h1>
         </div>
+        <div class=\"col-md-9\">
 ";
 
 $scenario = new scenario();

@@ -66,13 +66,25 @@ $config['securite']['id'] = 'int';
 //champsutilisé dans les update ajax
 $config['securite']['inputId'] = 'int';
 $config['securite']['inputTable'] = 'alphanum';
-$config['securite']['nom'] = 'ascii';
-$config['securite']['content'] = 'ascii';
+$config['securite']['nom'] = 'mysqlChecked';
+$config['securite']['content'] = 'mysqlChecked';
 $config['securite']['command'] = 'ascii';
 $config['securite']['args'] = 'ascii';
 
+$config['allowed_modals'][] = 'action';
+$config['allowed_modals'][] = 'rule';
+$config['allowed_modals'][] = 'scenario';
+$config['allowed_modals'][] = 'triger';
+$config['allowed_modals'][] = 'user';
+
 //Liste des javascripts a charger par défaut
-$config['js'] = array();
 $config['js'][] = 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js';
 $config['js'][] = '../../js/bootstrap.min.js';
 $config['js'][] = '../../js/main.js';
+
+
+//Liste des types de triggers
+$config['triggers']['reco']='Reconnaissance vocale';
+
+//Liste des types d'actions
+$config['actions']['commande']='Commande';

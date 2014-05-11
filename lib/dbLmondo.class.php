@@ -33,6 +33,8 @@ class dbLmondo {
   protected $champId;
   protected $column;
   protected $canEdit;
+  protected $additionalColumns;
+  protected $hideColumns;
 
   function __construct($table = NULL) {
     global $config;
@@ -44,6 +46,7 @@ class dbLmondo {
     $this->champId = 'id';
     $this->where = NULL;
     $this->sql = 'SELECT ' . $this->select . ' FROM ' . $this->table;
+    $this->hideColumns = array();
     if ($this->dbh !== FALSE) {
       foreach ($this->getColumns() as $value) {
         $this->column[$value] = $value;
@@ -51,6 +54,8 @@ class dbLmondo {
     }
     $this->canEdit = true;
     $this->modalTarget = '../ajax/modal.php?table=' . get_class($this) . '&champs=' . $this->champId . '&id=';
+    $this->additionalColumns = array();
+    $this->hideColumn('id');
   }
 
   /*
@@ -411,9 +416,12 @@ class dbLmondo {
     $columns = array();
     $stmnt = $db->prepare($this->sql . ' LIMIT 0');
     $stmnt->execute();
+    //var_dump($this->hideColumns);
     for ($i = 0; $i < $stmnt->columnCount(); $i++) {
       $col = $stmnt->getColumnMeta($i);
-      $columns[] = $col['name'];
+      if (!in_array($col['name'], $this->hideColumns)) {
+        $columns[] = $col['name'];
+      }
     }
     return $columns;
     ;
@@ -457,9 +465,10 @@ class dbLmondo {
       $res.= "<th></th>\n";
     }
     foreach ($columns as $value) {
-      if ($value != $this->champId) {
-        $res.= '<th>' . $this->getColumnName($value) . '</th>' . "\n";
-      }
+      $res.= '<th>' . $this->getColumnName($value) . '</th>' . "\n";
+    }
+    foreach ($this->additionalColumns as $value) {
+      $res.= '<th>' . $this->getColumnName($value) . '</th>';
     }
     $res.= '</tr>' . "\n";
     $res.= '</thead>' . "\n";
@@ -471,9 +480,10 @@ class dbLmondo {
 </td>' . "\n";
       }
       foreach ($columns as $col) {
-        if ($col != $this->champId) {
-          $res.= '<td>' . $value[$col] . '</td>';
-        }
+        $res.= '<td>' . $this->getAdditionalColumn($col, $value[$this->champId], $value[$col]) . '</td>';
+      }
+      foreach ($this->additionalColumns as $name) {
+        $res.= '<td>' . $this->getAdditionalColumn($name, $value[$this->champId]) . '</td>';
       }
       $res.='</tr>' . "\n";
     }
@@ -483,6 +493,37 @@ class dbLmondo {
       return $res;
     } else {
       echo $res;
+    }
+  }
+
+  /**
+   * Permet de faire de récupérer les colonnes additionneles et traiter la donnée suivant l'id
+   * @param type $name nom de la colonne
+   * @param type $id id de la ligne
+   * @return string valeur correspondante à la colonne
+   */
+  public function getAdditionalColumn($name, $id, $value='') {
+    return $value;
+  }
+
+  /**
+   * Permet de ne pas afficher certaines colonnes
+   * @param type $name nom de la colonne
+   */
+  public function hideColumn($name) {
+    $this->hideColumns[] = $name;
+  }
+
+  /**
+   * Permet d'afficher certaines colonnes
+   * @param type $name nom de la colonne
+   */
+  public function showColumn($name) {
+    if (in_array($name, $this->hideColumns)) {
+      $res = array_keys($this->hideColumns, $name);
+      foreach ($res as $key => $value) {
+        unset($this->hideColumns[$key]);
+      }
     }
   }
 

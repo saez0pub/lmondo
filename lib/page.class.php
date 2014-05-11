@@ -148,9 +148,12 @@ class page {
    */
   public function addRedirectMessage() {
     global $config;
+    $return = '';
     if (isset($_SESSION[$config['sessionName']]['messageAfterRedirect'])) {
-      return $_SESSION[$config['sessionName']]['messageAfterRedirect'];
+      $return =  $_SESSION[$config['sessionName']]['messageAfterRedirect'];
+      unset($_SESSION[$config['sessionName']]['messageAfterRedirect']);
     }
+    return $return;
   }
 
   /**

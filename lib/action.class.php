@@ -27,7 +27,23 @@ class action extends dbLmondo {
     parent::__construct('actions');
     $this->column['nom'] = 'Nom de l\'action';
     $this->column['command'] = 'Commande';
+    $this->column['type'] = 'Type';
     $this->column['args'] = 'Paramètres';
+  }
+
+  public function getAdditionalColumn($name, $id, $value = '') {
+    global $config;
+    $return = parent::getAdditionalColumn($name, $id, $value);
+
+    switch ($name) {
+      case 'type':
+        $action = new action();
+        $res = $action->getFromID($id);
+        if (isset($config['actions'][$res['type']])) {
+          $return = $config['actions'][$res['type']];
+        }
+    }
+    return $return;
   }
 
 }

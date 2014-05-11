@@ -59,15 +59,24 @@ INSERT INTO `$prefix$rules` VALUES (NULL, 'comment ca va', 'marvin comment ca va
 CREATE TABLE IF NOT EXISTS `$prefix$actions` (
   `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `nom` varchar(100) NOT NULL,
+  `type` varchar(100) NOT NULL,
   `command` varchar(100) NOT NULL,
   `args` varchar(100) NOT NULL,
   UNIQUE INDEX `idx_$prefix$actions_nom` (`nom`)
   ) ;
-INSERT INTO `$prefix$actions` VALUES (NULL, 'Dire', '/usr/bin/espeak', '"$1$" -v mb/mb-fr1 -s 150');
+INSERT INTO `$prefix$actions` VALUES (NULL, 'Dire', 'commande', '/usr/bin/espeak', '"$1$" -v mb/mb-fr1 -s 150');
 
-CREATE TABLE IF NOT EXISTS `$prefix$actions` (
+CREATE TABLE IF NOT EXISTS `$prefix$scenarios` (
   `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `nom` varchar(100) NOT NULL,
-  UNIQUE INDEX `idx_$prefix$actions_nom` (`nom`)
+  UNIQUE INDEX `idx_$prefix$scenarios_nom` (`nom`)
   ) ;
-INSERT INTO `$prefix$actions` VALUES (NULL, 'Repetes');
+INSERT INTO `$prefix$scenarios` VALUES (NULL, 'Repetes');
+
+CREATE TABLE IF NOT EXISTS `$prefix$triggers` (
+  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `type` varchar(100) NOT NULL,
+  `args` varchar(100) NOT NULL,
+  `scenario_id` INT NOT NULL
+  ) ;
+INSERT INTO `$prefix$triggers` VALUES (NULL, 'reco','comment ca va',1);

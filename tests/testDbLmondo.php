@@ -107,6 +107,7 @@ class dbTest extends PHPUnit_Framework_TestCase {
   public function testJePeuxRecupererLeNomDesColonnes() {
     $db = new dbLmondo('rules');
     $db->select('id,nom');
+    $db->showColumn('id');
     $result=$db->getColumns();
     $expected=Array(0=>'id', 1=> 'nom');
     $this->assertEquals($expected, $result);

@@ -29,9 +29,6 @@ $content="
           <h1>Generation de grammaire</h1>
         </div>
         <div class=\"col-md-9\">
-        <div class=\"btn-group\">
-          <button type=\"button\" class=\"btn btn-default\">Nouvelle Règle</button>
-        </div>
 ";
 
 $rule = new rule();

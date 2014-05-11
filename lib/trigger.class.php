@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * Copyright (C) 2014 saez0pub
  *
  * This program is free software; you can redistribute it and/or
@@ -18,25 +18,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+/**
+ * Class Utilisateur
+ */
+class trigger extends dbLmondo {
 
-include_once dirname(__FILE__).'/../lib/common.php';
+  function __construct() {
+    parent::__construct('triggers');
+    $this->column['type'] = 'Type';
+    $this->column['args'] = 'Paramètres';
+  }
 
-$page = new page();
-
-$content="
-      <div class=row>
-        <div class=\"highlight col-md-3\">
-          <h1>Gestion des actions</h1>
-        </div>
-        <div class=\"col-md-9\">
-";
-
-$action = new action();
-$action->prepare();
-$content.=$action->getTable();
-$content.="
-        </div>
-      </div>
-";
-$page->addcontent($content);
-$page->showPage();
+}

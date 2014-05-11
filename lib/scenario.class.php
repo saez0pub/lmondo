@@ -26,6 +26,37 @@ class scenario extends dbLmondo {
   function __construct() {
     parent::__construct('scenarios');
     $this->column['nom'] = 'Nom du scenario';
+    $this->additionalColumns = array(
+      'triggers',  
+    );
+  }
+  
+  public function getColumnName($colonne) {
+    $colonne = parent::getColumnName($colonne);
+    switch ($colonne) {
+      case 'triggers':
+        $colonne = 'Déclencheur';
+        break;
+    }
+    return $colonne;
+  }
+  
+  public function getAdditionalColumn($name, $id, $value='') {
+    global $config, $db;
+    $return = parent::getAdditionalColumn($name, $id, $value='');
+    
+    switch ($name) {
+      case 'triggers':
+        $return = '<a type="button" class="btn btn-default" data-toggle="modal" href="' . $this->modalTarget . $id . '" data-target="#myModal"><span class="glyphicon glyphicon-link"></span></a>';
+        $trigger = new trigger();
+        $trigger->setEdit(false);
+        $trigger->hideColumn('scenario_id');
+        $return .= $trigger->getTable();
+        break;
+    }
+    
+    
+    return $return;
   }
 
 }
