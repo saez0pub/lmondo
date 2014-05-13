@@ -38,9 +38,11 @@ if (isset($_GET['scenario_id'])) {
       }
       $titre = 'Nouvelle entrée';
       $action = '../ajax/insert.php';
+      $but = 'new';
     } else {
       $titre = 'Modification ID ' . $id;
       $action = '../ajax/update.php';
+      $but = 'update';
     }
     if ($ligne !== FALSE && $trigger->canEdit()) {
       echo '
@@ -68,7 +70,7 @@ if (isset($_GET['scenario_id'])) {
           echo '
           <div class="form-group" id="div' . $colonne . '">
             <label for="' . $colonne . '">' . $trigger->getColumnName($colonne) . '</label>
-            ' . $trigger->getColumnInput($colonne, $ligne[$colonne]) . '
+            ' . $trigger->getColumnInput($colonne, $ligne[$colonne],$ligne, $but) . '
           </div>';
         }
       }

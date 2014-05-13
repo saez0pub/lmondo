@@ -29,7 +29,7 @@ class trigger extends dbLmondo {
     $this->column['args'] = 'Paramètres';
   }
 
-  public function getColumnInput($colonne, $valeur) {
+  public function getColumnInput($colonne, $valeur = '', $ligneOriginale = Array(), $but = 'new') {
     global $config;
     $return = parent::getColumnInput($colonne, $valeur);
     switch ($colonne) {
@@ -50,22 +50,34 @@ class trigger extends dbLmondo {
         }
         $return .="</select>";
         break;
-      case 'argsa':
-        if (empty($valeur)) {
+      case 'args':
+        if ($but == 'new') {
           $select = 'selected';
+          $sql = 'select lmondo_rules.id, lmondo_rules.nom from lmondo_rules left join lmondo_triggers' .
+            ' on lmondo_rules.id = lmondo_triggers.args where lmondo_triggers.scenario_id IS NULL OR lmondo_triggers.scenario_id <> ' . $ligneOriginale['scenario_id'];
         } else {
           $select = '';
+          $sql = 'select lmondo_rules.id, lmondo_rules.nom from lmondo_rules left join lmondo_triggers' .
+            ' on lmondo_rules.id = lmondo_triggers.args where lmondo_triggers.scenario_id IS NULL OR lmondo_triggers.id = ' . $ligneOriginale['id'];
         }
-        $return = '<select class="form-control" id="' . $colonne . '" name="' . $colonne . '"><option value="" ' . $select . '>Veuillez sélectionner</option>';
-        foreach ($config['triggers'] as $key => $value) {
-          if ($valeur == "$key") {
-            $select = 'selected';
-          } else {
-            $select = '';
-          }
-          $return .='<option value="' . $key . '" ' . $select . '>' . htmlentities($value) . '</option> ';
+        switch ($ligneOriginale['type']) {
+          case 'reco':
+            $rule = new rule();
+            $res = $rule->fetchAll($sql);
+            $return = '<select class="form-control" id="args" name="args"><option value="" ' . $select . '>Veuillez sélectionner</option>';
+            foreach ($res as $key => $value) {
+              if ($valeur == $value['id']) {
+                $select = 'selected';
+              } else {
+                $select = '';
+              }
+              $return .='<option value="' . $value['id'] . '" ' . $select . '>' . htmlentities($value['nom']) . '</option> ';
+            }
+            $return .="</select>";
+            break;
+          default:
+            break;
         }
-        $return .="</select>";
         break;
       default:
         break;
@@ -78,7 +90,21 @@ class trigger extends dbLmondo {
     if (isset($config['triggers'][$value])) {
       $value = $config['triggers'][$value];
     }
-    return parent::getAdditionalColumn($name, $id, $value);
+    $return = parent::getAdditionalColumn($name, $id, $value);
+    if ($name == 'args') {
+      $trigger = new trigger();
+      $ligne = $trigger->getFromID($id);
+      switch ($ligne['type']) {
+        case 'reco':
+          $rule = new rule();
+          $res = $rule->getFromID($value);
+          if ($res !== FALSE) {
+            $return = $res['nom'];
+          }
+          break;
+      }
+    }
+    return $return;
   }
 
 }

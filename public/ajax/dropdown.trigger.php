@@ -25,7 +25,7 @@ $return = '<div id="args" name="args" class="danger">Nom implémenté</div>';
 if (isset($_GET['type']) && isset($_GET['scenario_id'])) {
   $type = $_GET['type'];
   $scenario_id = $_GET['scenario_id'];
-  if (!isset($_GET['valeur'])) {
+  if (isset($_GET['valeur'])) {
     $valeur = $_GET['valeur'];
   } else {
     $valeur = '';
@@ -35,19 +35,7 @@ if (isset($_GET['type']) && isset($_GET['scenario_id'])) {
       $scenario = new scenario();
       if ($scenario->getFromID($scenario_id) !== FALSE) {
         $trigger = new trigger();
-        $sql = 'select lmondo_rules.id, lmondo_rules.nom from lmondo_rules left join lmondo_triggers' .
-          ' on lmondo_rules.id = lmondo_triggers.args where lmondo_triggers.scenario_id IS NULL OR lmondo_triggers.scenario_id <> ' . $scenario_id;
-        $res = $trigger->fetchAll($sql);
-        $return = '<select class="form-control" id="args" name="args"><option value="" ' . $select . '>Veuillez sélectionner</option>';
-        foreach ($res as $key => $value) {
-          if ($valeur == $value['id']) {
-            $select = 'selected';
-          } else {
-            $select = '';
-          }
-          $return .='<option value="' . $value['id'] . '" ' . $select . '>' . htmlentities($value['nom']) . '</option> ';
-        }
-        $return .="</select>";
+        $return = $trigger->getColumnInput('args', '', Array('type' => $type, 'scenario_id' => $scenario_id, 'valeur' => $valeur));
       } else {
         $return = '<div id="args" name="args" class="danger">Scénario non trouvé</div>';
       }

@@ -40,7 +40,7 @@ class dbLmondo {
     global $config;
     $this->dbError['code'] = 0;
     $this->dbConnect();
-    //Placer la table après la connexion car la connexion initialise le champs table à NULL
+//Placer la table après la connexion car la connexion initialise le champs table à NULL
     $this->table = $config['db']['prefix'] . $table;
     $this->select = '*';
     $this->champId = 'id';
@@ -134,13 +134,13 @@ class dbLmondo {
    * par défaut, vaut la valeur de PDO::FETCH_ASSOC
    * @return array|false retourne le résultat ou false en cas d'erreur
    */
-  public function fetch($sql, $fetchStyle = PDO::FETCH_ASSOC) {
+  public function fetchOne($sql, $fetchStyle = PDO::FETCH_ASSOC) {
     $return = array();
     if ($this->dbh !== false) {
       try {
         $stmt = $this->dbh->prepare($sql);
 
-        // call the stored procedure
+// call the stored procedure
         $stmt->execute();
 
         $return = $stmt->fetch($fetchStyle);
@@ -150,7 +150,26 @@ class dbLmondo {
     }
     return $return;
   }
-
+  
+  /**
+   * Exécute la fonction fetch
+   * @param int $fetchStyle Contrôle comment la prochaine ligne sera retournée 
+   * à l'appelant. Cette valeur doit être une des constantes PDO::FETCH_*, et 
+   * par défaut, vaut la valeur de PDO::FETCH_ASSOC
+   * @return array|false retourne le résultat ou false en cas d'erreur
+   */
+  public function fetch($fetchStyle = PDO::FETCH_ASSOC) {
+    $return = array();
+    if ($this->dbh !== false) {
+      try {
+        $return = $this->stmnt->fetch($fetchStyle);
+      } catch (PDOException $e) {
+        $return = FALSE;
+      }
+    }
+    return $return;
+  }
+  
   /**
    * Exécute une requête et récupère tout le résultat
    * @param string $sql Requête à exécuter
@@ -164,7 +183,7 @@ class dbLmondo {
     if ($this->dbh !== false) {
       try {
         $stmt = $this->dbh->prepare($sql);
-        // call the stored procedure
+// call the stored procedure
         $stmt->execute();
         while ($rs = $stmt->fetch($fetchStyle)) {
           $return[] = $rs;
@@ -299,14 +318,14 @@ class dbLmondo {
     global $config;
     $return = TRUE;
     $sql = "select valeur from `" . $config['db']['prefix'] . "config` where cle = 'version';";
-    $res = $this->fetch($sql);
+    $res = $this->fetchOne($sql);
     $version = $res['valeur'];
     if ($config['version'] !== $version) {
       return FALSE;
     }
 
     $sql = "select password from `" . $config['db']['prefix'] . "users` where login = 'adminlmondo';";
-    $res = $this->fetch($sql);
+    $res = $this->fetchOne($sql);
     if ($res === FALSE || empty($res['password'])) {
       return FALSE;
     }
@@ -374,6 +393,21 @@ class dbLmondo {
   }
 
   /**
+   * Permet de faire un jointure
+   * @param string $table nom de la table ajouté dans la jointure
+   * @param string $on
+   * @param string $clause
+   * @param string $tablePosition
+   */
+  public function join($table, $on, $clause = 'INNER', $tablePosition = 'right') {
+    if ($tablePosition === 'right') {
+      $this->sql.=" $clause JOIN $table ON $on";
+    } else {
+      $this->sql = "SELECT " . $this->select . " FROM $table $clause JOIN " . $this->table . " ON $on";
+    }
+  }
+
+  /**
    * Ajoute une clause Where a la requête en cours de préparation précédée de AND si besoin
    * @param string $column partie gauche de la clause where
    * @param string $operator opérator (défaut =)
@@ -414,7 +448,7 @@ class dbLmondo {
   public function getColumns() {
     $db = $this->getConnexion();
     $columns = array();
-    //var_dump("SELECT " . $this->select . " from " . $this->table . ' LIMIT 0');
+//var_dump("SELECT " . $this->select . " from " . $this->table . ' LIMIT 0');
     $stmnt = $db->prepare("SELECT " . $this->select . " from " . $this->table . ' LIMIT 0');
     $stmnt->execute();
     for ($i = 0; $i < $stmnt->columnCount(); $i++) {
@@ -458,7 +492,7 @@ class dbLmondo {
    */
   public function getTable($return = TRUE) {
     $columns = $this->getColumns();
-    $res='';
+    $res = '';
     if ($this->canEdit()) {
       $res .= '
             <a type="button" class="btn btn-default" data-toggle="modal" href="' .

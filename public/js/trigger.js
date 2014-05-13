@@ -20,7 +20,6 @@ $('#myModal').on('shown.bs.modal', function() {
         $('#args').remove();
         if (this.selectedIndex != 0) {
             $.get("../ajax/dropdown.trigger.php?type=" + this.value + "&scenario_id=" + $('#scenario_id').attr('value'), function(data) {
-                console.log(data);
                 $('#divargs').append(data);
             });
         } else {
