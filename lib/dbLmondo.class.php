@@ -657,7 +657,7 @@ class dbLmondo {
    * @return string résultat de l'exécution du statement
    */
   public function delete($id) {
-    if ($this->deleteCascade($id) !== FALSE) {
+    if ($this->deleteHook($id) !== FALSE) {
       $sql = 'DELETE FROM ' . $this->table . ' WHERE ' . $this->champId . '=:id';
       $this->prepare($sql);
       $this->bindParam('id', $id);
@@ -672,7 +672,7 @@ class dbLmondo {
    * @param string $id id de la ligne à supprimer
    * @return string résultat de la suppression
    */
-  public function deleteCascade($id) {
+  public function deleteHook($id) {
     return true;
   }
 

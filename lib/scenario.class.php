@@ -69,7 +69,7 @@ class scenario extends dbLmondo {
     return $return;
   }
 
-  public function deleteCascade($id) {
+  public function deleteHook($id) {
     global $config;
     $sql = 'DELETE FROM ' . $config['db']['prefix'] . 'triggers WHERE scenario_id=:id';
     $this->prepare($sql);

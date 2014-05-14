@@ -29,7 +29,7 @@ class rule extends dbLmondo {
     $this->column['content'] = 'Contenu de la règle';
   }
 
-  public function deleteCascade($id) {
+  public function deleteHook($id) {
     global $config;
     $sql = 'DELETE FROM ' . $config['db']['prefix'] . 'triggers WHERE type=\'reco\' and args=:id';
     $this->prepare($sql);
