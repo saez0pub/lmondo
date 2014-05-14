@@ -150,7 +150,7 @@ class dbLmondo {
     }
     return $return;
   }
-  
+
   /**
    * Exécute la fonction fetch
    * @param int $fetchStyle Contrôle comment la prochaine ligne sera retournée 
@@ -169,7 +169,7 @@ class dbLmondo {
     }
     return $return;
   }
-  
+
   /**
    * Exécute une requête et récupère tout le résultat
    * @param string $sql Requête à exécuter
@@ -654,10 +654,23 @@ class dbLmondo {
    * @return string résultat de l'exécution du statement
    */
   public function delete($id) {
-    $sql = 'DELETE FROM ' . $this->table . ' WHERE ' . $this->champId . '=:id';
-    $this->prepare($sql);
-    $this->bindParam('id', $id);
-    return $this->execute();
+    if ($this->deleteCascade($id) !== FALSE) {
+      $sql = 'DELETE FROM ' . $this->table . ' WHERE ' . $this->champId . '=:id';
+      $this->prepare($sql);
+      $this->bindParam('id', $id);
+      return $this->execute();
+    } else {
+      return FALSE;
+    }
+  }
+
+  /**
+   * Supprime les dépendances de l'objet
+   * @param string $id id de la ligne à supprimer
+   * @return string résultat de la suppression
+   */
+  public function deleteCascade($id) {
+    return true;
   }
 
 }

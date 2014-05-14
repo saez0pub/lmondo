@@ -50,7 +50,7 @@ class scenario extends dbLmondo {
         //$modalTarget = '../ajax/modal.php?table=trigger&champs=scenario_id&scenario_id=';
         //$return = '<a type="button" class="btn btn-default" data-toggle="modal" href="' . $modalTarget . $id . '" data-target="#myModal"><span class="glyphicon glyphicon-link"></span></a>';
         $trigger = new trigger();
-        $trigger->updateModalTarget('../ajax/modal.trigger.php?scenario_id='.$id);
+        $trigger->updateModalTarget('../ajax/modal.trigger.php?scenario_id=' . $id);
         $trigger->hideColumn('scenario_id');
         $trigger->select('id,type,args')
           ->addWhere('scenario_id');
@@ -62,6 +62,14 @@ class scenario extends dbLmondo {
 
 
     return $return;
+  }
+
+  public function deleteCascade($id) {
+    global $config;
+    $sql = 'DELETE FROM ' . $config['db']['prefix'] . 'triggers WHERE scenario_id=:id';
+    $this->prepare($sql);
+    $this->bindParam('id', $id);
+    return $this->execute();
   }
 
 }
