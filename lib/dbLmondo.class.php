@@ -180,7 +180,7 @@ class dbLmondo {
    */
   public function fetchAll($sql = '', $fetchStyle = PDO::FETCH_ASSOC) {
     $return = array();
-    if(empty($sql)){
+    if (empty($sql)) {
       $sql = $this->sql;
     }
     if ($this->dbh !== false) {
@@ -595,34 +595,38 @@ class dbLmondo {
    * @return string|bool false si cela se passe mal, sinon m'id inséré
    */
   public function insert($columns) {
-    $sql = 'INSERT ' . $this->table . ' (';
-    $sep = '';
-    foreach ($columns as $key => $value) {
-      if ($key !== $this->champId) {
-        $sql.="$sep $key";
-        $sep = ', ';
+    if ($this->insertHook($columns) !== FALSE) {
+      $sql = 'INSERT ' . $this->table . ' (';
+      $sep = '';
+      foreach ($columns as $key => $value) {
+        if ($key !== $this->champId) {
+          $sql.="$sep $key";
+          $sep = ', ';
+        }
       }
-    }
-    $sql .= ") VALUES (";
-    $sep = '';
-    foreach ($columns as $key => $value) {
-      if ($key !== $this->champId) {
-        $sql.="$sep:$key";
-        $sep = ', ';
+      $sql .= ") VALUES (";
+      $sep = '';
+      foreach ($columns as $key => $value) {
+        if ($key !== $this->champId) {
+          $sql.="$sep:$key";
+          $sep = ', ';
+        }
       }
-    }
-    $sql.=")";
-    $this->prepare($sql);
-    foreach ($columns as $key => $value) {
-      if ($key !== $this->champId) {
-        $this->bindParam("$key", $value);
+      $sql.=")";
+      $this->prepare($sql);
+      foreach ($columns as $key => $value) {
+        if ($key !== $this->champId) {
+          $this->bindParam("$key", $value);
+        }
       }
+      $return = $this->execute();
+      if ($return !== FALSE) {
+        $return = $this->dbh->lastInsertId();
+      }
+      return $return;
+    } else {
+      return FALSE;
     }
-    $return = $this->execute();
-    if ($return !== FALSE) {
-      $return = $this->dbh->lastInsertId();
-    }
-    return $return;
   }
 
   /**
@@ -632,23 +636,27 @@ class dbLmondo {
    * @return string|bool false si cela se passe mal
    */
   public function update($id, $columns) {
-    $sql = 'UPDATE ' . $this->table . ' SET ';
-    $sep = '';
-    foreach ($columns as $key => $value) {
-      if ($key !== $this->champId) {
-        $sql.="$sep $key=:$key";
-        $sep = ', ';
+    if ($this->updateHook($id, $columns) !== FALSE) {
+      $sql = 'UPDATE ' . $this->table . ' SET ';
+      $sep = '';
+      foreach ($columns as $key => $value) {
+        if ($key !== $this->champId) {
+          $sql.="$sep $key=:$key";
+          $sep = ', ';
+        }
       }
-    }
-    $sql .= " WHERE " . $this->champId . "=:id";
-    $this->prepare($sql);
-    $this->bindParam('id', $id);
-    foreach ($columns as $key => $value) {
-      if ($key !== $this->champId) {
-        $this->bindParam("$key", $value);
+      $sql .= " WHERE " . $this->champId . "=:id";
+      $this->prepare($sql);
+      $this->bindParam('id', $id);
+      foreach ($columns as $key => $value) {
+        if ($key !== $this->champId) {
+          $this->bindParam("$key", $value);
+        }
       }
+      return $this->execute();
+    } else {
+      return FALSE;
     }
-    return $this->execute();
   }
 
   /**
@@ -673,7 +681,25 @@ class dbLmondo {
    * @return string résultat de la suppression
    */
   public function deleteHook($id) {
-    return true;
+    return TRUE;
+  }
+
+  /**
+   * Met à jour les dépendances de l'objet
+   * @param string $id id de la ligne à mettre à jour
+   * @return string résultat de la mise à jour
+   */
+  public function updateHook($id, $columns) {
+    return TRUE;
+  }
+
+  /**
+   * Insere les dépendances de l'objet
+   * @param string $id id de la ligne à insérer
+   * @return string résultat de l'insertion
+   */
+  public function insertHook($columns) {
+    return TRUE;
   }
 
 }
