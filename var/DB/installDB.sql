@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `$prefix$actions` (
   `args` varchar(100) NOT NULL,
   UNIQUE INDEX `idx_$prefix$actions_nom` (`nom`)
   ) ;
-INSERT INTO `$prefix$actions` VALUES (NULL, 'Dire', 'commande', '/usr/bin/espeak', '"$1$" -v mb/mb-fr1 -s 150');
+INSERT INTO `$prefix$actions` VALUES (NULL, 'Dire', 'commande', '/usr/bin/espeak', '"$actionTxt$" -v mb/mb-fr1 -s 150');
 
 CREATE TABLE IF NOT EXISTS `$prefix$scenarios` (
   `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,

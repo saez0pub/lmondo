@@ -63,7 +63,9 @@ $config['securite']['XDEBUG_SESSION_STOP_NO_EXEC'] = 'ascii';
 $config['securite']['table'] = 'alphanum';
 $config['securite']['champs'] = 'ascii';
 $config['securite']['id'] = 'int';
-//champsutilisé dans les update ajax
+$config['securite']['action'] = 'int';
+$config['securite']['actionTxt'] = 'alphanum';
+//champ sutilisés dans les update ajax
 $config['securite']['inputid'] = 'int';
 $config['securite']['inputTable'] = 'alphanum-_';
 $config['securite']['inputChamps'] = 'alphanum-_';
@@ -77,7 +79,6 @@ $config['securite']['cle'] = 'ascii';
 $config['securite']['inputcle'] = 'alphanum-_';
 $config['securite']['valeur'] = 'ascii';
 $config['securite']['inputscenario_id'] = 'alphanum-_';
-$config['securite']['action'] = 'int';
 
 $config['allowed_modals'][] = 'action';
 $config['allowed_modals'][] = 'rule';
