@@ -77,6 +77,7 @@ $config['securite']['cle'] = 'ascii';
 $config['securite']['inputcle'] = 'alphanum-_';
 $config['securite']['valeur'] = 'ascii';
 $config['securite']['inputscenario_id'] = 'alphanum-_';
+$config['securite']['action'] = 'int';
 
 $config['allowed_modals'][] = 'action';
 $config['allowed_modals'][] = 'rule';

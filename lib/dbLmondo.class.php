@@ -178,8 +178,11 @@ class dbLmondo {
    * par défaut, vaut la valeur de PDO::FETCH_ASSOC
    * @return array|false retourne le résultat ou false en cas d'erreur
    */
-  public function fetchAll($sql, $fetchStyle = PDO::FETCH_ASSOC) {
+  public function fetchAll($sql = '', $fetchStyle = PDO::FETCH_ASSOC) {
     $return = array();
+    if(empty($sql)){
+      $sql = $this->sql;
+    }
     if ($this->dbh !== false) {
       try {
         $stmt = $this->dbh->prepare($sql);

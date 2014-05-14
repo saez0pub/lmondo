@@ -69,9 +69,10 @@ INSERT INTO `$prefix$actions` VALUES (NULL, 'Dire', 'commande', '/usr/bin/espeak
 CREATE TABLE IF NOT EXISTS `$prefix$scenarios` (
   `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `nom` varchar(100) NOT NULL,
+  `action` INT NOT NULL,
   UNIQUE INDEX `idx_$prefix$scenarios_nom` (`nom`)
   ) ;
-INSERT INTO `$prefix$scenarios` VALUES (NULL, 'Repetes');
+INSERT INTO `$prefix$scenarios` VALUES (NULL, 'Repetes',1);
 
 CREATE TABLE IF NOT EXISTS `$prefix$triggers` (
   `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -80,3 +81,5 @@ CREATE TABLE IF NOT EXISTS `$prefix$triggers` (
   `scenario_id` INT NOT NULL
   ) ;
 INSERT INTO `$prefix$triggers` VALUES (NULL, 'reco','2',1);
+INSERT INTO `$prefix$triggers` VALUES (NULL, 'reco','19',1);
+INSERT INTO `$prefix$triggers` VALUES (NULL, 'reco','10',1);

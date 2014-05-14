@@ -58,6 +58,11 @@ class scenario extends dbLmondo {
         $trigger->bindParam('scenario_id', $id);
         $return .= $trigger->getTable();
         break;
+      case 'action':
+        $action = new action();
+        $res = $action->getFromID($value);
+        $return = $res['nom'];
+        break;
     }
 
 
@@ -70,6 +75,35 @@ class scenario extends dbLmondo {
     $this->prepare($sql);
     $this->bindParam('id', $id);
     return $this->execute();
+  }
+
+  public function getColumnInput($colonne, $valeur = '') {
+    global $config;
+    $return = parent::getColumnInput($colonne, $valeur);
+    switch ($colonne) {
+      case 'action':
+        $action = new action();
+        $res = $action->fetchAll();
+        if (empty($valeur)) {
+          $select = 'selected';
+        } else {
+          $select = '';
+        }
+        $return = '<select class="form-control" id="' . $colonne. '" name="' . $colonne. '"><option value="" ' . $select . '>Veuillez sélectionner</option>';
+        foreach ($res as $key => $value) {
+          if ($valeur == $value['id']) {
+            $select = 'selected';
+          } else {
+            $select = '';
+          }
+          $return .='<option value="' . $value['id'] . '" ' . $select . '>' . htmlentities($value['nom']) . '</option> ';
+        }
+        $return .="</select>";
+        break;
+      default:
+        break;
+    }
+    return $return;
   }
 
 }
