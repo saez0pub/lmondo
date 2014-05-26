@@ -26,10 +26,8 @@ $content = $_GET['content'];
 
 if (isset($config['triggers'][$target]['class'])) {
   eval("\$action = new " . $config['triggers'][$target]['class'] . ";");
-  var_dump($action->run($content));
-  
-  echo "\nfin\n";
+  //echo json_encode($action->run($content));
+  $result = $action->run($content);
+  //var_dump($result);
+  echo json_encode($result);
 }
-  	$command = "/usr/bin/espeak -g0 -ven+m3 -p22 -s170 'Hallo Toofie'";
-  	
-  	exec($command);
