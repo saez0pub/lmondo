@@ -46,7 +46,7 @@ class trigger extends dbLmondo {
           } else {
             $select = '';
           }
-          $return .='<option value="' . $key . '" ' . $select . '>' . htmlentities($value) . '</option> ';
+          $return .='<option value="' . $key . '" ' . $select . '>' . htmlentities($value['name']) . '</option> ';
         }
         $return .="</select>";
         break;
@@ -87,8 +87,8 @@ class trigger extends dbLmondo {
 
   public function getAdditionalColumn($name, $id, $value = '') {
     global $config;
-    if (isset($config['triggers'][$value])) {
-      $value = $config['triggers'][$value];
+    if (isset($config['triggers'][$value]['name'])) {
+      $value = $config['triggers'][$value]['name'];
     }
     $return = parent::getAdditionalColumn($name, $id, $value);
     if ($name == 'args') {

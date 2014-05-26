@@ -36,25 +36,25 @@ CREATE TABLE IF NOT EXISTS `$prefix$rules` (
   `content` varchar(100) NOT NULL,
   UNIQUE INDEX `idx_$prefix$rules_nom` (`nom`)
   ) ;
-INSERT INTO `$prefix$rules` VALUES (NULL, 'allume la lumière de la cuisine', 'marvin allume la lumière de la cuisine');
-INSERT INTO `$prefix$rules` VALUES (NULL, 'allume la lumière du salon', 'marvin allume la lumière du salon');
-INSERT INTO `$prefix$rules` VALUES (NULL, 'allume la lumière de la salle a manger', 'marvin allume la lumière de la salle a manger');
-INSERT INTO `$prefix$rules` VALUES (NULL, 'allume la lampe la cuisine', 'marvin allume la lampe la cuisine');
-INSERT INTO `$prefix$rules` VALUES (NULL, 'allume la lampe du salon', 'marvin allume la lampe du salon');
-INSERT INTO `$prefix$rules` VALUES (NULL, 'allume la lampe de la salle a manger', 'marvin allume la lampe de la salle a manger');
-INSERT INTO `$prefix$rules` VALUES (NULL, 'allume l ampoule la cuisine', 'marvin allume l ampoule la cuisine');
-INSERT INTO `$prefix$rules` VALUES (NULL, 'allume l ampoule du salon', 'marvin allume l ampoule du salon');
-INSERT INTO `$prefix$rules` VALUES (NULL, 'allume l ampoule de la salle a manger', 'marvin allume l ampoule de la salle a manger');
-INSERT INTO `$prefix$rules` VALUES (NULL, 'éteint la lumière la cuisine', 'marvin éteint la lumière la cuisine');
-INSERT INTO `$prefix$rules` VALUES (NULL, 'éteint la lumière du salon', 'marvin éteint la lumière du salon');
-INSERT INTO `$prefix$rules` VALUES (NULL, 'éteint la lumière de la salle a manger', 'marvin éteint la lumière de la salle a manger');
-INSERT INTO `$prefix$rules` VALUES (NULL, 'éteint la lampe la cuisine', 'marvin éteint la lampe la cuisine');
-INSERT INTO `$prefix$rules` VALUES (NULL, 'éteint la lampe du salon', 'marvin éteint la lampe du salon');
-INSERT INTO `$prefix$rules` VALUES (NULL, 'éteint la lampe de la salle a manger', 'marvin éteint la lampe de la salle a manger');
-INSERT INTO `$prefix$rules` VALUES (NULL, 'éteint l ampoule la cuisine', 'marvin éteint l ampoule la cuisine');
-INSERT INTO `$prefix$rules` VALUES (NULL, 'éteint l ampoule du salon', 'marvin éteint l ampoule du salon');
-INSERT INTO `$prefix$rules` VALUES (NULL, 'éteint l ampoule de la salle a manger', 'marvin éteint l ampoule de la salle a manger');
-INSERT INTO `$prefix$rules` VALUES (NULL, 'comment ca va', 'marvin comment ca va');
+INSERT INTO `$prefix$rules` VALUES (NULL, 'allume la lumière de la cuisine', 'allume la lumière de la cuisine');
+INSERT INTO `$prefix$rules` VALUES (NULL, 'allume la lumière du salon', 'allume la lumière du salon');
+INSERT INTO `$prefix$rules` VALUES (NULL, 'allume la lumière de la salle a manger', 'allume la lumière de la salle a manger');
+INSERT INTO `$prefix$rules` VALUES (NULL, 'allume la lampe la cuisine', 'allume la lampe la cuisine');
+INSERT INTO `$prefix$rules` VALUES (NULL, 'allume la lampe du salon', 'allume la lampe du salon');
+INSERT INTO `$prefix$rules` VALUES (NULL, 'allume la lampe de la salle a manger', 'allume la lampe de la salle a manger');
+INSERT INTO `$prefix$rules` VALUES (NULL, 'allume l ampoule la cuisine', 'allume l ampoule la cuisine');
+INSERT INTO `$prefix$rules` VALUES (NULL, 'allume l ampoule du salon', 'allume l ampoule du salon');
+INSERT INTO `$prefix$rules` VALUES (NULL, 'allume l ampoule de la salle a manger', 'allume l ampoule de la salle a manger');
+INSERT INTO `$prefix$rules` VALUES (NULL, 'éteint la lumière la cuisine', 'éteint la lumière la cuisine');
+INSERT INTO `$prefix$rules` VALUES (NULL, 'éteint la lumière du salon', 'éteint la lumière du salon');
+INSERT INTO `$prefix$rules` VALUES (NULL, 'éteint la lumière de la salle a manger', 'éteint la lumière de la salle a manger');
+INSERT INTO `$prefix$rules` VALUES (NULL, 'éteint la lampe la cuisine', 'éteint la lampe la cuisine');
+INSERT INTO `$prefix$rules` VALUES (NULL, 'éteint la lampe du salon', 'éteint la lampe du salon');
+INSERT INTO `$prefix$rules` VALUES (NULL, 'éteint la lampe de la salle a manger', 'éteint la lampe de la salle a manger');
+INSERT INTO `$prefix$rules` VALUES (NULL, 'éteint l ampoule la cuisine', 'éteint l ampoule la cuisine');
+INSERT INTO `$prefix$rules` VALUES (NULL, 'éteint l ampoule du salon', 'éteint l ampoule du salon');
+INSERT INTO `$prefix$rules` VALUES (NULL, 'éteint l ampoule de la salle a manger', 'éteint l ampoule de la salle a manger');
+INSERT INTO `$prefix$rules` VALUES (NULL, 'comment ca va', 'comment ca va');
 
 CREATE TABLE IF NOT EXISTS `$prefix$actions` (
   `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,

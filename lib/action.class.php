@@ -53,12 +53,43 @@ class action extends dbLmondo {
       case 'type':
         $return = '<select class="form-control" id="' . $colonne . '" name="' . $colonne . '">';
         foreach ($config['actions'] as $key => $value) {
-          $return .='<option value="'.$key.'">'.htmlentities($value).'</option> ';
+          $return .='<option value="' . $key . '">' . htmlentities($value) . '</option> ';
         }
         $return .="</select>";
         break;
       default:
         break;
+    }
+    return $return;
+  }
+
+  /**
+   * Exécution d'une action
+   * @param int $id id de l'action
+   * @param Array $param paramètres de l'action, si il s'agit d'une chaine de caractères, ce sera traité comme Array(0=> $param)
+   * @return bool Résultat de l'exécution
+   */
+  public function run($id, $param = NULL) {
+    $return = FALSE;
+    $res = $this->getFromID($id);
+    if ($res !== FALSE) {
+      if (!is_array($param)) {
+        $param = array($param);
+      }
+      foreach ($param as $key => $value) {
+        $res['args'] = str_replace("\$$key\$", $value, $res['args']);
+      }
+      switch ($res['type']) {
+        case 'commande':
+          $commande = $res['command'] . ' ' . $res['args'];
+          exec($commande, $output, $ret);
+          if($ret !== 0){
+            $return = FALSE;
+          }  else {
+            $return = TRUE;
+          }
+          break;
+      }
     }
     return $return;
   }

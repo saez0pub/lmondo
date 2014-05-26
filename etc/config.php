@@ -25,7 +25,7 @@ foreach ($_COOKIE as $key => $value) {
   $_POST[$key] = $value;
 }
 foreach ($_POST as $key => $value) {
-  $_GET[$key] = $value;
+  $_GET[$key] = trim(strip_tags($value));
 }
 //Versionapplicative
 $config['version'] = '0.1';
@@ -94,7 +94,8 @@ $config['js'][] = '../../js/main.js';
 
 
 //Liste des types de triggers
-$config['triggers']['reco']='Reconnaissance vocale';
+$config['triggers']['reco']['name']='Reconnaissance vocale';
+$config['triggers']['reco']['class']='rule';
 
 //Liste des types d'actions
 $config['actions']['commande']='Commande';

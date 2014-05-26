@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * Copyright (C) 2014 saez0pub
  *
  * This program is free software; you can redistribute it and/or
@@ -18,3 +18,18 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+
+include_once dirname(__FILE__) . '/../../../lib/common.php';
+
+$target = $_GET['type'];
+$content = $_GET['content'];
+
+if (isset($config['triggers'][$target]['class'])) {
+  eval("\$action = new " . $config['triggers'][$target]['class'] . ";");
+  var_dump($action->run($content));
+  
+  echo "\nfin\n";
+}
+  	$command = "/usr/bin/espeak -g0 -ven+m3 -p22 -s170 'Hallo Toofie'";
+  	
+  	exec($command);

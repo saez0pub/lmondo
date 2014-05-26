@@ -36,4 +36,24 @@ class rule extends dbLmondo {
     $this->bindParam('id', $id);
     return $this->execute();
   }
+
+  public function run($content) {
+    global $config;
+    $res = FALSE;
+    $return = FALSE;
+    $this->sql = 'SELECT scenarios.action FROM ' . $this->table . ' rules INNER JOIN ' .
+      $config['db']['prefix'] . 'triggers triggers on triggers.args = rules.id' .
+      ' INNER JOIN ' . $config['db']['prefix'] . 'scenarios scenarios ON scenarios.id = triggers.scenario_id' .
+      ' WHERE triggers.type = :type AND rules.content = :content';
+    $this->prepare();
+    $this->bindParam('type', 'reco');
+    $this->bindParam('content', $content);
+    $res = $this->executeAndFetch();
+    if ($res !== FALSE) {
+      $action = new action();
+      $return = $action->run($res['action'], Array(1 => $content));
+    }
+    return $return;
+  }
+
 }
