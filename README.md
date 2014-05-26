@@ -18,3 +18,11 @@ Les murs ont des oreilles
 Appel d'un webservice
 Exécution du'un commande prédéfinie sur l'hote (Ex : espeak)
 ```
+
+## Installation ##
+* Vous avez besoin d'un serveur web (Ex: apache) qui est configuré pour exécuter du php.
+* Une base de données MariaDB.
+* sur debian, pour exécuter espeak : sudo usermod -a -G audio www-data
+* ajouter l'utilisateur et la base de données lmondo, un script exemple est sité dans var/DB/createLmondoUser.sql (pensez à changer le mot de passe !
+* Exécuter bin/install.php
+* Ouvrir l'interface
