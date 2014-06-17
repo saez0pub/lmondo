@@ -21,10 +21,10 @@
 /**
  * Class Utilisateur
  */
-class rule extends dbLmondo {
+class reco extends dbLmondo {
 
   function __construct() {
-    parent::__construct('rules');
+    parent::__construct('reco');
     $this->column['nom'] = 'Nom de règle';
     $this->column['content'] = 'Contenu de la règle';
   }
@@ -41,10 +41,10 @@ class rule extends dbLmondo {
     global $config;
     $res = FALSE;
     $return = FALSE;
-    $this->sql = 'SELECT scenarios.action FROM ' . $this->table . ' rules INNER JOIN ' .
-      $config['db']['prefix'] . 'triggers triggers on triggers.args = rules.id' .
+    $this->sql = 'SELECT scenarios.action FROM ' . $this->table . ' reco INNER JOIN ' .
+      $config['db']['prefix'] . 'triggers triggers on triggers.args = reco.id' .
       ' INNER JOIN ' . $config['db']['prefix'] . 'scenarios scenarios ON scenarios.id = triggers.scenario_id' .
-      ' WHERE triggers.type = :type AND rules.content = :content';
+      ' WHERE triggers.type = :type AND reco.content = :content';
     $this->prepare();
     $this->bindParam('type', 'reco');
     $this->bindParam('content', $content);

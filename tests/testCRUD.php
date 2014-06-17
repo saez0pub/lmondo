@@ -25,26 +25,26 @@
 class testCRUD extends PHPUnit_Framework_TestCase {
 
   public function testJePeuxFaireUnInsertSelectUpdateDelete() {
-    $rule = new rule();
+    $reco = new reco();
     $columns=array(
         'nom' => 'testJePeuxFaireUnInsert',
         'content' => 'testJePeuxFaireUnInsert'
     );
     $template = $columns;
-    $id = $rule->insert($columns);
+    $id = $reco->insert($columns);
     $this->assertNotEquals(FALSE, $id);
     $this->assertGreaterThan(0, $id);
-    $ligne = $rule->getFromID($id);
+    $ligne = $reco->getFromID($id);
     $template['id'] = $id;
     $this->assertEquals($template, $ligne);
     $columns['nom'] = 'testJePeuxFaireUnUpdate';
-    $rule->update($id, $columns);
-    $ligne = $rule->getFromID($id);
+    $reco->update($id, $columns);
+    $ligne = $reco->getFromID($id);
     $this->assertNotEquals($template, $ligne);
     $template['nom'] = $columns['nom'];
     $this->assertEquals($template, $ligne);
-    $rule->delete($id);
-    $ligne = $rule->getFromID($id);
+    $reco->delete($id);
+    $ligne = $reco->getFromID($id);
     $this->assertEquals(FALSE, $ligne);
     }
 }

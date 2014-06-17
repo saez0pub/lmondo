@@ -81,7 +81,7 @@ $config['securite']['valeur'] = 'ascii';
 $config['securite']['inputscenario_id'] = 'alphanum-_';
 
 $config['allowed_modals'][] = 'action';
-$config['allowed_modals'][] = 'rule';
+$config['allowed_modals'][] = 'reco';
 $config['allowed_modals'][] = 'scenario';
 $config['allowed_modals'][] = 'trigger';
 $config['allowed_modals'][] = 'user';
@@ -95,7 +95,7 @@ $config['js'][] = '../../js/main.js';
 
 //Liste des types de triggers
 $config['triggers']['reco']['name']='Reconnaissance vocale';
-$config['triggers']['reco']['class']='rule';
+$config['triggers']['reco']['class']='reco';
 
 //Liste des types d'actions
 $config['actions']['commande']='Commande';

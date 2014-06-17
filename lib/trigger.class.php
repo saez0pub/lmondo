@@ -53,17 +53,17 @@ class trigger extends dbLmondo {
       case 'args':
         if ($but == 'new') {
           $select = 'selected';
-          $sql = 'select lmondo_rules.id, lmondo_rules.nom from lmondo_rules left join lmondo_triggers' .
-            ' on lmondo_rules.id = lmondo_triggers.args where lmondo_triggers.scenario_id IS NULL OR lmondo_triggers.scenario_id <> ' . $ligneOriginale['scenario_id'];
+          $sql = 'select lmondo_reco.id, lmondo_reco.nom from lmondo_reco left join lmondo_triggers' .
+            ' on lmondo_reco.id = lmondo_triggers.args where lmondo_triggers.scenario_id IS NULL OR lmondo_triggers.scenario_id <> ' . $ligneOriginale['scenario_id'];
         } else {
           $select = '';
-          $sql = 'select lmondo_rules.id, lmondo_rules.nom from lmondo_rules left join lmondo_triggers' .
-            ' on lmondo_rules.id = lmondo_triggers.args where lmondo_triggers.scenario_id IS NULL OR lmondo_triggers.id = ' . $ligneOriginale['id'];
+          $sql = 'select lmondo_reco.id, lmondo_reco.nom from lmondo_reco left join lmondo_triggers' .
+            ' on lmondo_reco.id = lmondo_triggers.args where lmondo_triggers.scenario_id IS NULL OR lmondo_triggers.id = ' . $ligneOriginale['id'];
         }
         switch ($ligneOriginale['type']) {
           case 'reco':
-            $rule = new rule();
-            $res = $rule->fetchAll($sql);
+            $reco = new reco();
+            $res = $reco->fetchAll($sql);
             $return = '<select class="form-control" id="args" name="args"><option value="" ' . $select . '>Veuillez sélectionner</option>';
             foreach ($res as $key => $value) {
               if ($valeur == $value['id']) {
@@ -96,8 +96,8 @@ class trigger extends dbLmondo {
       $ligne = $trigger->getFromID($id);
       switch ($ligne['type']) {
         case 'reco':
-          $rule = new rule();
-          $res = $rule->getFromID($value);
+          $reco = new reco();
+          $res = $reco->getFromID($value);
           if ($res !== FALSE) {
             $return = $res['nom'];
           }
