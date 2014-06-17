@@ -26,6 +26,7 @@ class setting extends dbLmondo {
   function __construct() {
     parent::__construct('config');
     $this->setChampId('cle');
+    $this->readOnlyKey = array('version');
   }
 
 }

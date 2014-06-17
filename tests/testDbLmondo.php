@@ -138,5 +138,22 @@ class dbTest extends PHPUnit_Framework_TestCase {
     $db->setEdit(false);
     $this->assertEquals($expected, $db->getTable());
   }
+  
+  public function testJePeuxBloquerLaModificationDEntrees() {
+    $db = new testTable;
+    initTestTable();
+    $expected = file_get_contents(dirname(__FILE__) . '/templates/table_test_locked.html');
+    $this->assertEquals($expected, $db->getTable());
+  }
+
+}
+
+class testTable extends dbLmondo {
+
+  function __construct() {
+    parent::__construct('requete_test');
+    $this->setChampId('id');
+    $this->readOnlyKey = array('1',15);
+  }
 
 }

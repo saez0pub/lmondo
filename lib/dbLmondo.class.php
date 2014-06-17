@@ -35,12 +35,13 @@ class dbLmondo {
   protected $canEdit;
   protected $additionalColumns;
   protected $hideColumns;
+  protected $readOnlyKey;
 
   function __construct($table = NULL) {
     global $config;
     $this->dbError['code'] = 0;
     $this->dbConnect();
-//Placer la table après la connexion car la connexion initialise le champs table à NULL
+    //Placer la table après la connexion car la connexion initialise le champs table à NULL
     $this->table = $config['db']['prefix'] . $table;
     $this->select = '*';
     $this->champId = 'id';
@@ -57,6 +58,7 @@ class dbLmondo {
     $this->additionalColumns = array();
     $this->hideColumn('id');
     $this->prepare($this->sql);
+    $this->readOnlyKey = array();
   }
 
   public function updateModalTarget($target = NULL) {
@@ -519,11 +521,13 @@ class dbLmondo {
     //$this->prepare($this->sql);
     foreach ($this->executeAndFetchAll() as $value) {
       $res.='<tr>';
-      if ($this->canEdit()) {
+      if ($this->canEdit() && !in_array($value[$this->champId], $this->readOnlyKey)) {
         $res.= '<td><a type="button" class="btn btn-default" data-toggle="modal" href="' .
           $this->modalTarget . '&' . $this->champId . '=' . $value[$this->champId] .
           '" data-target="#myModal"><span class="glyphicon glyphicon-pencil"></span></a>
 </td>' . "\n";
+      }elseif ($this->canEdit() && in_array($value[$this->champId], $this->readOnlyKey)) {
+        $res.= '<td>&nbsp;</td>' . "\n";
       }
       foreach ($columns as $col) {
         $res.= '<td>' . $this->getAdditionalColumn($col, $value[$this->champId], $value[$col]) . '</td>';
