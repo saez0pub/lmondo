@@ -15,6 +15,8 @@ CREATE TABLE IF NOT EXISTS `$prefix$config` (
 INSERT INTO `$prefix$config` VALUES ('version', '0.1');
 INSERT INTO `$prefix$config` VALUES ('reco_name', 'marvin');
 INSERT INTO `$prefix$config` VALUES ('reco_spell', 'mm aa rr vv ii nn ee');
+INSERT INTO `$prefix$config` VALUES ('reco_settings_db', '0');
+INSERT INTO `$prefix$config` VALUES ('reco_settings_disk', '0');
 CREATE TABLE IF NOT EXISTS `$prefix$menu` (
   `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `nom` varchar(100) NOT NULL,

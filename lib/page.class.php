@@ -52,10 +52,30 @@ class page {
       $this->overrideContent = "<div class='alert alert-critical maintenance'>Une installation ou mise à jour doit être faite, veuillez consulter les notes de mise à jour</div>";
       $this->showMaintenancePage();
     }
+    $this->checkRecoReload();
     $this->prepareHeader();
     $this->prepareFooter();
   }
 
+  /**
+   * Vérifie si un reload de la reco est necessaire et ajoute un message
+   */
+  public function checkRecoReload() {
+    global $db, $config;
+    if($this->canShowPage){
+      $res = $db->fetchAll("SELECT * FROM " . $config['db']['prefix'] . "config WHERE cle = 'reco_settings_db' OR cle = 'reco_settings_disk'");
+      foreach ($res as $value) {
+        if($value['cle'] === 'reco_settings_db'){
+          $recoDb = $value['valeur'];
+        }elseif($value['cle'] === 'reco_settings_disk'){
+          $recoDisk = $value['valeur'];
+        }
+      }
+      if(isset($recoDb) && isset($recoDisk) && $recoDb > $recoDisk){
+        addMessageAfterRedirect('Une mise à jour de la configuration de reconnaissance vocale est necessaire.');
+      }
+    }
+  }
   /**
    * Ajoute dans la page du contenu
    * @param string $content Texte a ajouter dans la page

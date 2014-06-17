@@ -19,14 +19,19 @@
  */
 
 /**
- * Class Utilisateur
+ * @backupGlobals disabled
+ * @backupStaticAttributes disabled
  */
-class setting extends dbLmondo {
+class testRecoSettingTrigger extends PHPUnit_Framework_TestCase {
 
-  function __construct() {
-    parent::__construct('config');
-    $this->setChampId('cle');
-    $this->readOnlyKey = array('version','reco_settings_db', 'reco_settings_disk');
+  public function testSiJAiUnMessageEnAttenteAlorsUnMessageApparaitSurLaPage() {
+    global $db, $config;
+    $db->query("UPDATE " . $config['db']['prefix'] . "config SET valeur=1 where cle = 'reco_settings_db';");
+    $page = new page(TRUE);
+    $message = $page->addRedirectMessage();
+    $template = '<div class="alert alert-info">Une mise à jour de la configuration de reconnaissance vocale est necessaire.</div>';
+    $db->query("UPDATE " . $config['db']['prefix'] . "config SET valeur=0, where cle = reco_settings_db';");
+    $this->assertEquals($template, $message);
   }
 
 }
