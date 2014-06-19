@@ -10,13 +10,18 @@ CREATE TABLE IF NOT EXISTS `$prefix$users` (
 INSERT INTO `$prefix$users` VALUES (NULL, 'adminlmondo', '', NULL, 1);
 CREATE TABLE IF NOT EXISTS `$prefix$config` (
   `cle` varchar(100) PRIMARY KEY,
-  `valeur` varchar(100) NOT NULL
+  `valeur` varchar(100) NOT NULL,
+  `dump_to_listener` tinyint(1) DEFAULT 0  
   ) ;
-INSERT INTO `$prefix$config` VALUES ('version', '0.1');
-INSERT INTO `$prefix$config` VALUES ('reco_name', 'marvin');
-INSERT INTO `$prefix$config` VALUES ('reco_spell', 'mm aa rr vv ii nn ee');
-INSERT INTO `$prefix$config` VALUES ('reco_settings_db', '0');
-INSERT INTO `$prefix$config` VALUES ('reco_settings_disk', '0');
+INSERT INTO `$prefix$config` VALUES ('version', '0.1',0);
+INSERT INTO `$prefix$config` VALUES ('reco_name', 'marvin',1);
+INSERT INTO `$prefix$config` VALUES ('reco_spell', 'mm aa rr vv ii nn ee',1);
+INSERT INTO `$prefix$config` VALUES ('reco_settings_db', '0',0);
+INSERT INTO `$prefix$config` VALUES ('reco_settings_disk', '0',0);
+INSERT INTO `$prefix$config` VALUES ('dict_orig', '/usr/local/share/pocketsphinx/model/lm/fr_FR/frenchWords62K.dic',1);
+INSERT INTO `$prefix$config` VALUES ('hmm', '/usr/local/share/pocketsphinx/model/hmm/fr_FR/french_f2/',1);
+INSERT INTO `$prefix$config` VALUES ('fsg', '../etc/grammar.fsg',1);
+INSERT INTO `$prefix$config` VALUES ('dict', '../etc/dict',1);
 CREATE TABLE IF NOT EXISTS `$prefix$menu` (
   `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `nom` varchar(100) NOT NULL,

@@ -31,7 +31,36 @@ class testRecoSettingTrigger extends PHPUnit_Framework_TestCase {
     $message = $page->addRedirectMessage();
     $template = '<div class="alert alert-info">Une mise à jour de la configuration de reconnaissance vocale est necessaire.</div>';
     $db->query("UPDATE " . $config['db']['prefix'] . "config SET valeur=0, where cle = reco_settings_db';");
+    reinitDB();
     $this->assertEquals($template, $message);
   }
 
+  public function testSijeModifieUnParametreAlorsLaVersionEnBddEstIncrementee() {
+    $settings = new setting();
+    reinitDB();
+    $vers = $settings->getFromID('reco_settings_db');
+    $old = $settings->getFromID('reco_name');
+    $settings->update('reco_name', array('valeur' => $old['valeur'].'test'));
+    $newVers = $settings->getFromID('reco_settings_db');
+    $template = $vers['valeur'] + 1;
+    reinitDB();
+    $this->assertEquals($template, $newVers['valeur']);
+  }
+
+  
+  public function testSilMaSessionEstFalseEtQueJeModifiUnParameter_AlorsJeNAiPasDeMessageSurLaPageDeLogin() {
+    global $config, $db;
+
+    $settings = new setting();
+    $old = $settings->getFromID('reco_name');
+    $oldSession = $_SESSION[$config['sessionName']];
+    $_SESSION[$config['sessionName']] = FALSE;
+    $settings->update('reco_name', array('valeur' => $old['valeur'].'test'));
+    $page = new page(TRUE);
+    $result = $page->showPage();
+    $template = file_get_contents(dirname(__FILE__) . '/templates/login.html');
+    $_SESSION[$config['sessionName']] = $oldSession;
+    $settings->update('reco_name', array('valeur' => $old['valeur']));
+    $this->assertEquals($template, $result);
+  }
 }

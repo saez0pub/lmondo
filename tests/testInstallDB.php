@@ -39,7 +39,7 @@ class dbInstallTest extends PHPUnit_Framework_TestCase {
   public function testSiUneInsertionOuUneDeletionSePasseBien_AlorsLeRetourDeQueryNEstPasFalse() {
     global $config, $db;
     $prefix = $config['db']['prefix'];
-    $resInsert = $db->query("INSERT INTO `" . $prefix . "config` VALUES ('testDbQuery', '0.1');");
+    $resInsert = $db->query("INSERT INTO `" . $prefix . "config` VALUES ('testDbQuery', '0.1',0);");
     $this->assertNotEquals(FALSE, $resInsert);
     $resDelete = $db->query("DELETE FROM `" . $prefix . "config` where cle = 'testDbQuery';");
     $this->assertNotEquals(FALSE, $resDelete);

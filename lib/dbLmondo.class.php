@@ -526,7 +526,7 @@ class dbLmondo {
           $this->modalTarget . '&' . $this->champId . '=' . $value[$this->champId] .
           '" data-target="#myModal"><span class="glyphicon glyphicon-pencil"></span></a>
 </td>' . "\n";
-      }elseif ($this->canEdit() && in_array($value[$this->champId], $this->readOnlyKey)) {
+      } elseif ($this->canEdit() && in_array($value[$this->champId], $this->readOnlyKey)) {
         $res.= '<td>&nbsp;</td>' . "\n";
       }
       foreach ($columns as $col) {
@@ -640,27 +640,30 @@ class dbLmondo {
    * @return string|bool false si cela se passe mal
    */
   public function update($id, $columns) {
-    if ($this->updateHook($id, $columns) !== FALSE) {
-      $sql = 'UPDATE ' . $this->table . ' SET ';
-      $sep = '';
-      foreach ($columns as $key => $value) {
-        if ($key !== $this->champId) {
-          $sql.="$sep $key=:$key";
-          $sep = ', ';
+    $return = FALSE;
+    $ligne = $this->getFromID($id);
+    if ($ligne !== FALSE) {
+      if ($this->updateHook($id, $columns,$ligne) !== FALSE) {
+        $sql = 'UPDATE ' . $this->table . ' SET ';
+        $sep = '';
+        foreach ($columns as $key => $value) {
+          if ($key !== $this->champId) {
+            $sql.="$sep $key=:$key";
+            $sep = ', ';
+          }
         }
-      }
-      $sql .= " WHERE " . $this->champId . "=:id";
-      $this->prepare($sql);
-      $this->bindParam('id', $id);
-      foreach ($columns as $key => $value) {
-        if ($key !== $this->champId) {
-          $this->bindParam("$key", $value);
+        $sql .= " WHERE " . $this->champId . "=:id";
+        $this->prepare($sql);
+        $this->bindParam('id', $id);
+        foreach ($columns as $key => $value) {
+          if ($key !== $this->champId) {
+            $this->bindParam("$key", $value);
+          }
         }
+        $return = $this->execute();
       }
-      return $this->execute();
-    } else {
-      return FALSE;
     }
+    return $return;
   }
 
   /**

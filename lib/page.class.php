@@ -62,7 +62,7 @@ class page {
    */
   public function checkRecoReload() {
     global $db, $config;
-    if($this->canShowPage){
+    if (isset($_SESSION[$config['sessionName']]['user']) && $this->canShowPage === TRUE) {
       $res = $db->fetchAll("SELECT * FROM " . $config['db']['prefix'] . "config WHERE cle = 'reco_settings_db' OR cle = 'reco_settings_disk'");
       foreach ($res as $value) {
         if($value['cle'] === 'reco_settings_db'){

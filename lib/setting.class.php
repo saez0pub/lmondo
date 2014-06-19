@@ -26,7 +26,30 @@ class setting extends dbLmondo {
   function __construct() {
     parent::__construct('config');
     $this->setChampId('cle');
-    $this->readOnlyKey = array('version','reco_settings_db', 'reco_settings_disk');
+    $this->readOnlyKey = array('version', 'reco_settings_db', 'reco_settings_disk');
+    $this->hideColumns = array('dump_to_listener');
+  }
+
+  public function updateHook($id, $columns, $ligne) {
+    $dump = FALSE;
+    foreach ($columns as $key => $value) {
+      if ($ligne['dump_to_listener'] == 1 && $ligne[$key] != $value) {
+        $dump = TRUE;
+      }
+    }
+    if ($dump) {
+      $cur = $this->getFromID('reco_settings_db');
+      if ($cur !== FALSE) {
+        $cur['valeur'] ++;
+        if ($this->update('reco_settings_db', array('valeur' => $cur['valeur'])) !== FALSE) {
+          $return = TRUE;
+        }
+      }
+    } else {
+      $return = TRUE;
+    }
+
+    return TRUE;
   }
 
 }
