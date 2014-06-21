@@ -16,15 +16,28 @@ pygst.require('0.10')
 gobject.threads_init()
 import gst
 import os
+import ConfigParser
 
-updateFsg = os.popen("sphinx_jsgf2fsg -jsgf grammar.jsgf -fsg grammar.fsg 2>&1")
+
+
+updateFsg = os.popen('sphinx_jsgf2fsg -jsgf  '+os.getcwd()+'../etc/grammar.jsgf -fsg  '+os.getcwd()+'../etc/grammar.fsg 2>&1')
 print updateFsg.read()
-class DemoApp(object):
+
+def add_path(target):
+    if target.find('/', 0, 0):
+        return target
+    else:
+        return os.getcwd()+target
+
+class LmondoListener(object):
     """GStreamer/PocketSphinx Demo Application"""
     def __init__(self):
         """Initialize a DemoApp object"""
+        self.read_config()
         self.init_gst()
-
+    def read_config(self):
+        self.config = ConfigParser.ConfigParser()
+        self.config.read(os.getcwd()+'../etc/lmondoListener.cfg')
     def init_gst(self):
         """Initialize the speech components"""
         self.pipeline = gst.parse_launch('gconfaudiosrc ! audioconvert ! audioresample '
@@ -35,8 +48,7 @@ class DemoApp(object):
         asr.connect('result', self.asr_result)
         asr.set_property('hmm', '/usr/local/share/pocketsphinx/model/hmm/fr_FR/french_f2/')
         asr.set_property('dict', '/usr/local/share/pocketsphinx/model/lm/fr_FR/frenchWords62K.dic')
-        #asr.set_property('lm', '/usr/local/share/pocketsphinx/model/lm/fr_FR/french3g62K.lm.dmp')
-        asr.set_property('fsg', os.getcwd()+'/grammar.fsg')
+        asr.set_property('fsg', os.getcwd()+'../etc/grammar.fsg')
         asr.set_property('bestpath', 'yes')
         asr.set_property('configured', True)
 
@@ -80,5 +92,5 @@ class DemoApp(object):
         os.popen('espeak -v mb/mb-fr4 -s 150 -p 40 " vous avez dit '+hyp+'"')
         self.pipeline.set_state(gst.STATE_PLAYING)
 
-app = DemoApp()
+app = LmondoListener()
 gtk.main()
