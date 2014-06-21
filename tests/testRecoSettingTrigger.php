@@ -47,7 +47,7 @@ class testRecoSettingTrigger extends PHPUnit_Framework_TestCase {
   }
 
   
-  public function testSilMaSessionEstFalseEtQueJeModifiUnParameter_AlorsJeNAiPasDeMessageSurLaPageDeLogin() {
+  public function testSiMaSessionEstFalseEtQueJeModifiUnParameter_AlorsJeNAiPasDeMessageSurLaPageDeLogin() {
     global $config, $db;
 
     $settings = new setting();
