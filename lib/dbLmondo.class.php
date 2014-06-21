@@ -378,6 +378,15 @@ class dbLmondo {
   }
 
   /**
+   * AJoute un WHERE dans le sql encours de préparation
+   * @param string contenu de la clause where
+   */
+  public function where($where) {
+    $this->sql .= " WHERE " . $where;
+    return $this;
+  }
+
+  /**
    * Ajoute une clause Where a la requête en cours de préparation
    * @param string $column partie gauche de la clause where
    * @param string $operator opérator (défaut =)
@@ -643,7 +652,7 @@ class dbLmondo {
     $return = FALSE;
     $ligne = $this->getFromID($id);
     if ($ligne !== FALSE) {
-      if ($this->updateHook($id, $columns,$ligne) !== FALSE) {
+      if ($this->updateHook($id, $columns, $ligne) !== FALSE) {
         $sql = 'UPDATE ' . $this->table . ' SET ';
         $sep = '';
         foreach ($columns as $key => $value) {

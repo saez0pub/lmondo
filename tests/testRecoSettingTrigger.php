@@ -29,7 +29,8 @@ class testRecoSettingTrigger extends PHPUnit_Framework_TestCase {
     $db->query("UPDATE " . $config['db']['prefix'] . "config SET valeur=1 where cle = 'reco_settings_db';");
     $page = new page(TRUE);
     $message = $page->addRedirectMessage();
-    $template = '<div class="alert alert-info">Une mise à jour de la configuration de reconnaissance vocale est necessaire.</div>';
+    $template = '<div class="alert alert-info"><a class="btn btn-default" data-target="#myModal" href="../ajax/recoReload.php" data-toggle="modal" type="button">'
+      . 'Une mise à jour de la configuration de reconnaissance vocale est necessaire.</a></div>';
     $db->query("UPDATE " . $config['db']['prefix'] . "config SET valeur=0, where cle = reco_settings_db';");
     $this->assertEquals($template, $message);
   }
@@ -38,7 +39,7 @@ class testRecoSettingTrigger extends PHPUnit_Framework_TestCase {
     $settings = new setting();
     $vers = $settings->getFromID('reco_settings_db');
     $old = $settings->getFromID('reco_name');
-    $settings->update('reco_name', array('valeur' => $old['valeur'].'test'));
+    $settings->update('reco_name', array('valeur' => $old['valeur'] . 'test'));
     $newVers = $settings->getFromID('reco_settings_db');
     $template = $vers['valeur'] + 1;
     $settings->update('reco_name', array('valeur' => $old['valeur']));
@@ -46,7 +47,6 @@ class testRecoSettingTrigger extends PHPUnit_Framework_TestCase {
     $this->assertEquals($template, $newVers['valeur']);
   }
 
-  
   public function testSiMaSessionEstFalseEtQueJeModifiUnParameter_AlorsJeNAiPasDeMessageSurLaPageDeLogin() {
     global $config, $db;
 
@@ -54,7 +54,7 @@ class testRecoSettingTrigger extends PHPUnit_Framework_TestCase {
     $old = $settings->getFromID('reco_name');
     $oldSession = $_SESSION[$config['sessionName']];
     $_SESSION[$config['sessionName']] = FALSE;
-    $settings->update('reco_name', array('valeur' => $old['valeur'].'test'));
+    $settings->update('reco_name', array('valeur' => $old['valeur'] . 'test'));
     $page = new page(TRUE);
     $result = $page->showPage();
     $template = file_get_contents(dirname(__FILE__) . '/templates/login.html');
@@ -62,4 +62,18 @@ class testRecoSettingTrigger extends PHPUnit_Framework_TestCase {
     $settings->update('reco_name', array('valeur' => $old['valeur']));
     $this->assertEquals($template, $result);
   }
+
+  public function testJeJeDemandeUneEcritureDeFichierDeConfigRecoEtDeGrammaireAlorsJAiDesFichiersCoherents() {
+    global $config;
+    include_once '../lib/listener.function.php';
+    writeToListenerFile();
+    $template = file_get_contents(dirname(__FILE__) . '/templates/lmondoListener.cfg.sample');
+    $this->assertEquals($template, file_get_contents($config['input']['config']));
+    $template = file_get_contents(dirname(__FILE__) . '/templates/grammar.jsgf.sample');
+    /**
+     * @todo generer la grammaire vocale
+     */
+    //$this->assertEquals($template, file_get_contents($config['input']['grammar']));
+  }
+
 }

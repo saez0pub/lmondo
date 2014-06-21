@@ -28,7 +28,7 @@ global $cookieTest;
 //Pour que les tests fonctionnent, il faut l'applicatif qui tourne et 
 //l'utilisateur adminlmondo ainsi que son mot de passe valide
 //$_GET["password"] = time() + rand(0, 2000);
-$_GET["password"]= 'adminlmondo';
+$_GET["password"] = 'adminlmondo';
 $adminPassword = md5($_GET["password"]);
 $_GET["login"] = "adminlmondo";
 
@@ -37,14 +37,16 @@ include_once dirname(__FILE__) . '/../lib/dbInstall.function.php';
 $config['serverUrl'] = 'http://localhost:8000/';
 $config['db']['prefix'] = 'tests_todelete_' . $config['db']['prefix'];
 
+//On va éviter d'écraser ou supprimer la conf en place
+$config['input']['config'] = tempnam("/tmp", "listenerLmondo");
+$config['input']['grammar'] = tempnam("/tmp", "grammar");
+
 //Les tests ne doivent pas être interompus
 //$config['stopOnExec'] = FALSE;
-
-
 //Utilisé pour redirections ou autres
 //Ne doit pas être positionné avant car il planterait l'installation de base 
 //de données
-$_SERVER['HTTP_HOST']='localhost';
+$_SERVER['HTTP_HOST'] = 'localhost';
 
 reinitDB();
 initLogin();
@@ -82,17 +84,17 @@ function initLogin() {
   $_SESSION[$config['sessionName']]['user'] = $user->getFromLogin($_GET["login"], $_GET["password"]);
 }
 
-function initTestTable(){
-  global $db,$config;
-    $db->query("DROP TABLE IF EXISTS " . $config['db']['prefix'] . "requete_test ");
-    $db->query("CREATE TABLE " . $config['db']['prefix'] . "requete_test (
+function initTestTable() {
+  global $db, $config;
+  $db->query("DROP TABLE IF EXISTS " . $config['db']['prefix'] . "requete_test ");
+  $db->query("CREATE TABLE " . $config['db']['prefix'] . "requete_test (
       `id` int(11) NOT NULL AUTO_INCREMENT,      
       `a1` varchar(100) NOT NULL,
       `a2` varchar(100) NOT NULL,
       `a3` varchar(100) NOT NULL,
       `a4` varchar(100) NOT NULL,
       PRIMARY KEY (`id`))");
-    $db->query("INSERT INTO " . $config['db']['prefix'] . "requete_test VALUES
+  $db->query("INSERT INTO " . $config['db']['prefix'] . "requete_test VALUES
       (NULL,1,1,1,1),
       (NULL,2,2,2,2),
       (NULL,3,3,3,3),
@@ -112,7 +114,9 @@ function initTestTable(){
 }
 
 register_shutdown_function(function() {
-  global $cookieTest;
+  global $cookieTest, $config;
   dropDB();
   unlink($cookieTest);
+  unlink($config['input']['config']);
+  unlink($config['input']['grammar']);
 });

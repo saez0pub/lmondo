@@ -1,0 +1,7 @@
+[config]
+dict = ../etc/dict
+dict_orig = /usr/local/share/pocketsphinx/model/lm/fr_FR/frenchWords62K.dic
+fsg = ../etc/grammar.fsg
+hmm = /usr/local/share/pocketsphinx/model/hmm/fr_FR/french_f2/
+reco_name = marvin
+reco_spell = mm aa rr vv ii nn ee

@@ -99,3 +99,7 @@ $config['triggers']['reco']['class']='reco';
 
 //Liste des types d'actions
 $config['actions']['commande']='Commande';
+
+//Emplacement de la configuration du listener python
+$config['input']['config']=dirname(__FILE__)+'../etc/lmondoListener.cfg';
+$config['input']['grammar']=dirname(__FILE__)+'../etc/grammar.jsgf';

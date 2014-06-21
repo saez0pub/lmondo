@@ -72,7 +72,9 @@ class page {
         }
       }
       if(isset($recoDb) && isset($recoDisk) && $recoDb > $recoDisk){
-        addMessageAfterRedirect('Une mise à jour de la configuration de reconnaissance vocale est necessaire.');
+        addMessageAfterRedirect('<a class="btn btn-default" data-target="#myModal" href="../ajax/recoReload.php" data-toggle="modal" type="button">'
+          . 'Une mise à jour de la configuration de reconnaissance vocale est necessaire.'
+          . '</a>');
       }
     }
   }
