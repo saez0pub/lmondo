@@ -71,10 +71,16 @@ class scenario extends dbLmondo {
 
   public function deleteHook($id) {
     global $config;
-    $sql = 'DELETE FROM ' . $config['db']['prefix'] . 'triggers WHERE scenario_id=:id';
-    $this->prepare($sql);
-    $this->bindParam('id', $id);
-    return $this->execute();
+    $return = FALSE;
+    $triggers = new trigger();
+    foreach ($triggers->getFromScenarioID($id) as $value) {
+      if ($value['type'] == 'reco') {
+        if ($triggers->delete($value['args']) === FALSE) {
+          $return = FALSE;
+        }
+      }
+    }
+    return $return;
   }
 
   public function getColumnInput($colonne, $valeur = '') {
@@ -89,7 +95,7 @@ class scenario extends dbLmondo {
         } else {
           $select = '';
         }
-        $return = '<select class="form-control" id="' . $colonne. '" name="' . $colonne. '"><option value="" ' . $select . '>Veuillez sélectionner</option>';
+        $return = '<select class="form-control" id="' . $colonne . '" name="' . $colonne . '"><option value="" ' . $select . '>Veuillez sélectionner</option>';
         foreach ($res as $key => $value) {
           if ($valeur == $value['id']) {
             $select = 'selected';

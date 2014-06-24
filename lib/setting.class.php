@@ -33,18 +33,12 @@ class setting extends dbLmondo {
   public function updateHook($id, $columns, $ligne) {
     $dump = FALSE;
     foreach ($columns as $key => $value) {
-      if ($ligne['dump_to_listener'] == 1 && $ligne[$key] != $value) {
+      if ($ligne['dump_to_listener'] == 1 && $ligne[$key] !== $value) {
         $dump = TRUE;
       }
     }
     if ($dump) {
-      $cur = $this->getFromID('reco_settings_db');
-      if ($cur !== FALSE) {
-        $cur['valeur'] ++;
-        if ($this->update('reco_settings_db', array('valeur' => $cur['valeur'])) !== FALSE) {
-          $return = TRUE;
-        }
-      }
+      $return = updateRecoSettingDbIfNeeded();
     } else {
       $return = TRUE;
     }

@@ -24,6 +24,7 @@ require dirname(__FILE__) . '/../etc/constants.php';
 
 
 include_once dirname(__FILE__) . '/../lib/login.function.php';
+include_once dirname(__FILE__) . '/../lib/listener.function.php';
 //Les tests de securite necessitent la fonction stopSession
 require dirname(__FILE__) . '/../lib/securite.function.php';
 doSecurityCheck();

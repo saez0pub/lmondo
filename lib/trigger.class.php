@@ -107,4 +107,55 @@ class trigger extends dbLmondo {
     return $return;
   }
 
+  public function insertHook($columns) {
+    $return = FALSE;
+    if ($columns['type'] == 'reco') {
+      $return = updateRecoSettingDbIfNeeded();
+    } else {
+      $return = TRUE;
+    }
+    return $return;
+  }
+
+  public function updateHook($id, $columns, $ligne) {
+    $return = FALSE;
+    if ($columns['type'] == 'reco') {
+      foreach ($columns as $key => $value) {
+        if ($ligne[$key] !== $value) {
+          $dump = TRUE;
+        }
+      }
+      if ($dump) {
+        $return = updateRecoSettingDbIfNeeded();
+      } else {
+        $return = TRUE;
+      }
+    } else {
+      $return = TRUE;
+    }
+    return $return;
+  }
+
+  public function deleteHook($id) {
+    $return = FALSE;
+    $setting = new setting();
+    $toDelete = $this->getFromID($id);
+    if ($toDelete['type'] == 'reco') {
+      $return = updateRecoSettingDbIfNeeded();
+    } else {
+      $return = TRUE;
+    }
+    return $return;
+  }
+
+  public function getFromScenarioID($id) {
+    $return = FALSE;
+    if ($this->table !== NULL) {
+      $this->prepare("SELECT " . $this->select . " from " . $this->table . " where scenario_id = :id");
+      $this->bindParam('id', $id);
+      $return = $this->executeAndFetchAll();
+    }
+    return $return;
+  }
+
 }

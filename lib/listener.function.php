@@ -46,5 +46,23 @@ function writeToListenerFile() {
   $key++;
   $grammar .= "$sep <gramm$key> ;\n";
   $grammar_end .= "<gramm$key> = $recoName;\n";
-  file_put_contents($config['input']['grammar'], $grammar . $grammar_end."\n");
+  file_put_contents($config['input']['grammar'], $grammar . $grammar_end . "\n");
+}
+
+function updateRecoSettingDbIfNeeded() {
+  $return = FALSE;
+  $setting = new setting();
+  $cur = $setting->getFromID('reco_settings_db');
+  $disk = $setting->getFromID('reco_settings_disk');
+  if ($cur !== FALSE && $disk !== FALSE) {
+    if ($cur['valeur'] <= $disk['valeur']) {
+      $disk['valeur'] ++;
+      if ($setting->update('reco_settings_db', array('valeur' => $disk['valeur'])) !== FALSE) {
+        $return = TRUE;
+      }
+    } else {
+      $return = TRUE;
+    }
+  }
+  return $return;
 }

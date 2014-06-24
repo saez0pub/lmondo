@@ -35,19 +35,70 @@ class testRecoSettingTrigger extends PHPUnit_Framework_TestCase {
     $this->assertEquals($template, $message);
   }
 
-  public function testSijeModifieUnParametreAlorsLaVersionEnBddEstIncrementee() {
+  public function testSijeModifieUnParametrePlusieursAlorsLaVersionEnBddEstIncrementeeUnseullefois() {
     $settings = new setting();
+    reinitDB();
     $vers = $settings->getFromID('reco_settings_db');
     $old = $settings->getFromID('reco_name');
     $settings->update('reco_name', array('valeur' => $old['valeur'] . 'test'));
+    $settings->update('reco_name', array('valeur' => $old['valeur'] . 'test2'));
     $newVers = $settings->getFromID('reco_settings_db');
     $template = $vers['valeur'] + 1;
-    $settings->update('reco_name', array('valeur' => $old['valeur']));
-    $settings->update('reco_settings_db', array('valeur' => $vers['valeur']));
+    reinitDB();
     $this->assertEquals($template, $newVers['valeur']);
   }
 
-  public function testSiMaSessionEstFalseEtQueJeModifiUnParameter_AlorsJeNAiPasDeMessageSurLaPageDeLogin() {
+  public function testSiJAjouteUnTriggerDeRecoAlorsLaVersionEnBddEstIncrementee() {
+    $settings = new setting();
+    reinitDB();
+    $vers = $settings->getFromID('reco_settings_db');
+    $trigger = new trigger();
+    $id = $trigger->insert(array('type' => 'reco', 'args' => '999999', 'scenario_id' => 1));
+    $template = $vers['valeur'] + 1;
+    $newVers = $settings->getFromID('reco_settings_db');
+    reinitDB();
+    $this->assertEquals($template, $newVers['valeur']);
+  }
+
+  public function testSiJeModifieUnTriggerDeRecoAlorsLaVersionEnBddEstIncrementee() {
+    $settings = new setting();
+    reinitDB();
+    $vers = $settings->getFromID('reco_settings_db');
+    $trigger = new trigger();
+    $template = $vers['valeur'] + 1;
+    $trigger->update(1, array('type' => 'reco', 'args' => '9999999', 'scenario_id' => 1));
+    $newVers = $settings->getFromID('reco_settings_db');
+    reinitDB();
+    $this->assertEquals($template, $newVers['valeur']);
+  }
+
+  public function testSiJeSupprimeUnTriggerDeRecoAlorsLaVersionEnBddEstIncrementee() {
+    $settings = new setting();
+    reinitDB();
+    $vers = $settings->getFromID('reco_settings_db');
+    $trigger = new trigger();
+    $template = $vers['valeur'] + 1;
+    $trigger->delete(1);
+    $newVers = $settings->getFromID('reco_settings_db');
+    reinitDB();
+    $this->assertEquals($template, $newVers['valeur']);
+  }
+
+  public function testSiJeSupprimeUnScenarioDeRecoAlorsLaVersionEnBddEstIncrementee() {
+    $settings = new setting();
+    $vers = $settings->getFromID('reco_settings_db');
+    $scenario = new scenario();
+    $scenario->delete('1');
+    $template = $vers['valeur'] + 1;
+    $newVers = $settings->getFromID('reco_settings_db');
+    reinitDB();
+    $this->assertEquals($template, $newVers['valeur']);
+  }
+
+  /**
+   * @todo Tester : modif content reco non activée sur un trigger
+   */
+  public function testSiMaSessionEstFalseEtQueJeModifiUnParametre_AlorsJeNAiPasDeMessageSurLaPageDeLogin() {
     global $config, $db;
 
     $settings = new setting();
@@ -65,7 +116,6 @@ class testRecoSettingTrigger extends PHPUnit_Framework_TestCase {
 
   public function testJeJeDemandeUneEcritureDeFichierDeConfigRecoEtDeGrammaireAlorsJAiDesFichiersCoherents() {
     global $config;
-    include_once '../lib/listener.function.php';
     writeToListenerFile();
     $template = file_get_contents(dirname(__FILE__) . '/templates/lmondoListener.cfg.sample');
     $this->assertEquals($template, file_get_contents($config['input']['config']));

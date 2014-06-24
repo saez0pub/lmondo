@@ -19,7 +19,6 @@
  */
 
 include_once dirname(__FILE__) . '/../../lib/common.php';
-include_once dirname(__FILE__) . '/../../lib/listener.function.php';
 
 writeToListenerFile();
   echo '
