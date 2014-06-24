@@ -25,6 +25,9 @@ $(document).on('hidden.bs.modal', function(e) {
     $(e.target).removeData('bs.modal');
 })
 $('#myModal').on('shown.bs.modal', function() {
+    $("#myModal button.reload").click(function(ev) {
+        window.location.reload()
+    });
     $("#myModal button.save").click(function(ev) {
         $.ajax({
             type: "POST",
