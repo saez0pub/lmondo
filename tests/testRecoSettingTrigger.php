@@ -70,10 +70,7 @@ class testRecoSettingTrigger extends PHPUnit_Framework_TestCase {
     $template = file_get_contents(dirname(__FILE__) . '/templates/lmondoListener.cfg.sample');
     $this->assertEquals($template, file_get_contents($config['input']['config']));
     $template = file_get_contents(dirname(__FILE__) . '/templates/grammar.jsgf.sample');
-    /**
-     * @todo generer la grammaire vocale
-     */
-    //$this->assertEquals($template, file_get_contents($config['input']['grammar']));
+    $this->assertEquals($template, file_get_contents($config['input']['grammar']));
   }
 
 }

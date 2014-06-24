@@ -19,14 +19,32 @@
  */
 
 function writeToListenerFile() {
-  global $config;
+  global $config, $db;
   $setting = new setting();
   $setting->select(Array('cle', 'valeur'))
     ->where('dump_to_listener = 1')
     ->prepare();
-  $configSection="[config]\n";
-  foreach ( $setting->executeAndFetchAll() as $value) {
-    $configSection .= $value['cle'] . " = " . $value['valeur']."\n";
+  $configSection = "[config]\n";
+  foreach ($setting->executeAndFetchAll() as $value) {
+    if ($value['cle'] == 'reco_name') {
+      $recoName = $value['valeur'];
+    }
+    $configSection .= $value['cle'] . " = " . $value['valeur'] . "\n";
   }
   file_put_contents($config['input']['config'], $configSection);
+  $grammar = "#JSGF V1.0 latin-1;\n";
+  $grammar .= "grammar robot;\n";
+  $grammar .= "public <question> =";
+  $sep = "";
+  $grammar_end = "";
+  $res = $db->fetchAll("select reco.content from lmondo_triggers triggers INNER JOIN lmondo_reco reco on triggers.args = reco.id where type='reco' ;");
+  foreach ($res as $key => $value) {
+    $grammar .= "$sep <gramm$key>";
+    $grammar_end .= "<gramm$key> = " . $value['content'] . ";\n";
+    $sep = " |";
+  }
+  $key++;
+  $grammar .= "$sep <gramm$key> ;\n";
+  $grammar_end .= "<gramm$key> = $recoName;\n";
+  file_put_contents($config['input']['grammar'], $grammar . $grammar_end."\n");
 }

@@ -87,6 +87,22 @@ CREATE TABLE IF NOT EXISTS `$prefix$triggers` (
   `args` varchar(100) NOT NULL,
   `scenario_id` INT NOT NULL
   ) ;
+INSERT INTO `$prefix$triggers` VALUES (NULL, 'reco','1',1);
 INSERT INTO `$prefix$triggers` VALUES (NULL, 'reco','2',1);
-INSERT INTO `$prefix$triggers` VALUES (NULL, 'reco','19',1);
+INSERT INTO `$prefix$triggers` VALUES (NULL, 'reco','3',1);
+INSERT INTO `$prefix$triggers` VALUES (NULL, 'reco','4',1);
+INSERT INTO `$prefix$triggers` VALUES (NULL, 'reco','5',1);
+INSERT INTO `$prefix$triggers` VALUES (NULL, 'reco','6',1);
+INSERT INTO `$prefix$triggers` VALUES (NULL, 'reco','7',1);
+INSERT INTO `$prefix$triggers` VALUES (NULL, 'reco','8',1);
+INSERT INTO `$prefix$triggers` VALUES (NULL, 'reco','9',1);
 INSERT INTO `$prefix$triggers` VALUES (NULL, 'reco','10',1);
+INSERT INTO `$prefix$triggers` VALUES (NULL, 'reco','11',1);
+INSERT INTO `$prefix$triggers` VALUES (NULL, 'reco','12',1);
+INSERT INTO `$prefix$triggers` VALUES (NULL, 'reco','13',1);
+INSERT INTO `$prefix$triggers` VALUES (NULL, 'reco','14',1);
+INSERT INTO `$prefix$triggers` VALUES (NULL, 'reco','15',1);
+INSERT INTO `$prefix$triggers` VALUES (NULL, 'reco','16',1);
+INSERT INTO `$prefix$triggers` VALUES (NULL, 'reco','17',1);
+INSERT INTO `$prefix$triggers` VALUES (NULL, 'reco','18',1);
+INSERT INTO `$prefix$triggers` VALUES (NULL, 'reco','19',1);
