@@ -95,9 +95,50 @@ class testRecoSettingTrigger extends PHPUnit_Framework_TestCase {
     $this->assertEquals($template, $newVers['valeur']);
   }
 
-  /**
-   * @todo Tester : modif content reco non activée sur un trigger
-   */
+   public function testSiJeSupprimeUnMotifDeRecoActifAlorsLaVersionEnBddEstIncrementee() {
+    $settings = new setting();
+    $vers = $settings->getFromID('reco_settings_db');
+    $reco = new reco();
+    $reco->delete(1);
+    $template = $vers['valeur'] + 1;
+    $newVers = $settings->getFromID('reco_settings_db');
+    reinitDB();
+    $this->assertEquals($template, $newVers['valeur']);
+  }
+
+   public function testSiJeModifieUnMotifDeRecoInactifAlorsLaVersionEnBddNEstPasIncrementee() {
+    $settings = new setting();
+    $vers = $settings->getFromID('reco_settings_db');
+    $reco = new reco();
+    $reco->insert(array('id'=>99999, 'nom'=>'test', 'content'=>'test'));
+    $reco->update(99999, Array('content'=>"testUnit"));
+    $newVers = $settings->getFromID('reco_settings_db');
+    reinitDB();
+    $this->assertEquals( $vers['valeur'], $newVers['valeur']);
+  }
+
+   public function testSiJeModifieUnMotifDeRecoActifAlorsLaVersionEnBddEstIncrementee() {
+    $settings = new setting();
+    $vers = $settings->getFromID('reco_settings_db');
+    $reco = new reco();
+    $reco->update(1, Array('content'=>"testUnit"));
+    $template = $vers['valeur'] + 1;
+    $newVers = $settings->getFromID('reco_settings_db');
+    reinitDB();
+    $this->assertEquals($template, $newVers['valeur']);
+  }
+
+   public function testSiJeSupprimeUnMotifDeRecoInactifAlorsLaVersionEnBddNEstPasIncrementee() {
+    $settings = new setting();
+    $vers = $settings->getFromID('reco_settings_db');
+    $reco = new reco();
+    $reco->insert(array('id'=>99999, 'nom'=>'test', 'content'=>'test'));
+    $reco->delete(99999);
+    $newVers = $settings->getFromID('reco_settings_db');
+    reinitDB();
+    $this->assertEquals( $vers['valeur'], $newVers['valeur']);
+  }
+  
   public function testSiMaSessionEstFalseEtQueJeModifiUnParametre_AlorsJeNAiPasDeMessageSurLaPageDeLogin() {
     global $config, $db;
 

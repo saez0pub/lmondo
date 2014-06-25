@@ -705,7 +705,7 @@ class dbLmondo {
    * @param string $id id de la ligne à mettre à jour
    * @return string résultat de la mise à jour
    */
-  public function updateHook($id, $columns) {
+  public function updateHook($id, $columns, $ligne) {
     return TRUE;
   }
 

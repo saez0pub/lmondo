@@ -29,12 +29,37 @@ class reco extends dbLmondo {
     $this->column['content'] = 'Contenu de la règle';
   }
 
+  public function updateHook($id, $columns, $ligne) {
+    global $config;
+    foreach ($columns as $key => $value) {
+      if ($ligne[$key] !== $value) {
+        $dump = TRUE;
+      }
+    }
+    if ($dump) {
+      $return = updateRecoSettingDbIfNeeded();
+    } else {
+      $return = TRUE;
+    }
+    return $return;
+  }
+
   public function deleteHook($id) {
     global $config;
-    $sql = 'DELETE FROM ' . $config['db']['prefix'] . 'triggers WHERE type=\'reco\' and args=:id';
-    $this->prepare($sql);
-    $this->bindParam('id', $id);
-    return $this->execute();
+    $return = TRUE;
+    $res = $this->getFromID($id);
+    if ($res !== FALSE && $res !== array()) {
+      $trigger = new trigger();
+      $result = $trigger->getFromArgs('reco', $id);
+      if ($result !== FALSE && $result !== array()) {
+        updateRecoSettingDbIfNeeded();
+      }
+      $sql = 'DELETE FROM ' . $config['db']['prefix'] . 'triggers WHERE type=\'reco\' and args=:id';
+      $this->prepare($sql);
+      $this->bindParam('id', $id);
+      $return = $this->execute();
+    }
+    return $return;
   }
 
   public function run($content) {

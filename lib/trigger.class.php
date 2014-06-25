@@ -149,13 +149,16 @@ class trigger extends dbLmondo {
   }
 
   public function getFromScenarioID($id) {
-    $return = FALSE;
-    if ($this->table !== NULL) {
-      $this->prepare("SELECT " . $this->select . " from " . $this->table . " where scenario_id = :id");
-      $this->bindParam('id', $id);
-      $return = $this->executeAndFetchAll();
-    }
-    return $return;
+    $this->prepare("SELECT " . $this->select . " from " . $this->table . " where scenario_id = :id");
+    $this->bindParam('id', $id);
+    return $this->executeAndFetchAll();
+  }
+
+  public function getFromArgs($type, $args) {
+    $this->prepare("SELECT " . $this->select . " from " . $this->table . " where args = :args and type = :type");
+    $this->bindParam('args', $args);
+    $this->bindParam('type', $type);
+    return $this->executeAndFetchAll();
   }
 
 }
