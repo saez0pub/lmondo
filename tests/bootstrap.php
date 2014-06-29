@@ -51,9 +51,6 @@ $_SERVER['HTTP_HOST'] = 'localhost';
 reinitDB();
 initLogin();
 startSession();
-/**
- * @todo faire un drop des tables tests
- */
 foreach (scandir('.') as $file) {
   if (preg_match('/^test.*.php$/', $file)) {
     include dirname(__FILE__) . '/' . $file;
