@@ -20,24 +20,24 @@ import ConfigParser
 
 
 
-updateFsg = os.popen('sphinx_jsgf2fsg -jsgf  '+os.getcwd()+'../etc/grammar.jsgf -fsg  '+os.getcwd()+'../etc/grammar.fsg 2>&1')
-print updateFsg.read()
 
 def add_path(target):
     if target.find('/', 0, 0):
         return target
     else:
-        return os.getcwd()+target
+        return os.getcwd()+'/'+target
 
 class LmondoListener(object):
     """GStreamer/PocketSphinx Demo Application"""
     def __init__(self):
         """Initialize a DemoApp object"""
+        updateFsg = os.popen('sphinx_jsgf2fsg -jsgf  '+os.getcwd()+'/../etc/grammar.jsgf -fsg  '+os.getcwd()+'/../etc/grammar.fsg 2>&1')
+        print updateFsg.read()
         self.read_config()
         self.init_gst()
     def read_config(self):
         self.config = ConfigParser.ConfigParser()
-        self.config.read(os.getcwd()+'../etc/lmondoListener.cfg')
+        self.config.read(os.getcwd()+'/../etc/lmondoListener.cfg')
     def init_gst(self):
         """Initialize the speech components"""
         self.pipeline = gst.parse_launch('gconfaudiosrc ! audioconvert ! audioresample '
@@ -48,8 +48,8 @@ class LmondoListener(object):
         asr.connect('result', self.asr_result)
         asr.set_property('hmm', '/usr/local/share/pocketsphinx/model/hmm/fr_FR/french_f2/')
         asr.set_property('dict', '/usr/local/share/pocketsphinx/model/lm/fr_FR/frenchWords62K.dic')
-        asr.set_property('fsg', os.getcwd()+'../etc/grammar.fsg')
-        asr.set_property('bestpath', 'yes')
+        asr.set_property('fsg', os.getcwd()+'/../etc/grammar.fsg')
+        "asr.set_property('bestpath', 'yes')"
         asr.set_property('configured', True)
 
         bus = self.pipeline.get_bus()
@@ -89,8 +89,12 @@ class LmondoListener(object):
         # All this stuff appears as one single action)
         self.pipeline.set_state(gst.STATE_PAUSED)
         print 'final_result: ' + hyp
+        "gtk.main_quit()"
         os.popen('espeak -v mb/mb-fr4 -s 150 -p 40 " vous avez dit '+hyp+'"')
         self.pipeline.set_state(gst.STATE_PLAYING)
 
 app = LmondoListener()
 gtk.main()
+"while (True):
+  gtk.main()
+  print 'restart App'"
