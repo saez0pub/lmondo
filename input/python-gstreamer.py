@@ -17,6 +17,7 @@ gobject.threads_init()
 import gst
 import os
 import ConfigParser
+import shutil
 
 
 
@@ -34,10 +35,35 @@ class LmondoListener(object):
         updateFsg = os.popen('sphinx_jsgf2fsg -jsgf  '+os.getcwd()+'/../etc/grammar.jsgf -fsg  '+os.getcwd()+'/../etc/grammar.fsg 2>&1')
         print updateFsg.read()
         self.read_config()
+        self.generate_dictionary()
         self.init_gst()
     def read_config(self):
         self.config = ConfigParser.ConfigParser()
         self.config.read(os.getcwd()+'/../etc/lmondoListener.cfg')
+        self.recoName = self.config.get('config','reco_name')
+        self.recoSpell = self.config.get('config','reco_spell')
+        self.hmm = add_path(self.config.get('config','hmm'))
+        self.dico = add_path(self.config.get('config','dict'))
+        self.dictOrig = add_path(self.config.get('config','dict_orig'))
+        self.fsg = add_path(self.config.get('config','fsg'))
+        print vars(self)
+    def generate_dictionary(self):
+      trouve = False
+      shutil.copyfile(self.dictOrig, self.dico)
+      i = 0
+      trouve = False
+      for line in open(self.dico):
+        if self.recoName in line:
+          i += 1
+          print line + " : " + self.recoSpell + " ?"
+          if self.recoSpell in line:
+            trouve = True
+      if trouve is False:
+        dico = open(self.dico, 'a')
+        print "Ajout " + self.recoName+"("+str(i)+") "+self.recoSpell + " dans " + self.dico
+        dico.write(self.recoName+"("+str(i)+") "+self.recoSpell)
+        dico.close()
+      print self.dico + " " + str(trouve) + " " + str(i ) + "======================================"
     def init_gst(self):
         """Initialize the speech components"""
         self.pipeline = gst.parse_launch('gconfaudiosrc ! audioconvert ! audioresample '
@@ -46,9 +72,9 @@ class LmondoListener(object):
         asr = self.pipeline.get_by_name('asr')
         asr.connect('partial_result', self.asr_partial_result)
         asr.connect('result', self.asr_result)
-        asr.set_property('hmm', '/usr/local/share/pocketsphinx/model/hmm/fr_FR/french_f2/')
-        asr.set_property('dict', '/usr/local/share/pocketsphinx/model/lm/fr_FR/frenchWords62K.dic')
-        asr.set_property('fsg', os.getcwd()+'/../etc/grammar.fsg')
+        asr.set_property('hmm', self.hmm)
+        asr.set_property('dict', self.dico)
+        asr.set_property('fsg', self.fsg)
         "asr.set_property('bestpath', 'yes')"
         asr.set_property('configured', True)
 
@@ -89,12 +115,11 @@ class LmondoListener(object):
         # All this stuff appears as one single action)
         self.pipeline.set_state(gst.STATE_PAUSED)
         print 'final_result: ' + hyp
-        "gtk.main_quit()"
         os.popen('espeak -v mb/mb-fr4 -s 150 -p 40 " vous avez dit '+hyp+'"')
         self.pipeline.set_state(gst.STATE_PLAYING)
 
 app = LmondoListener()
 gtk.main()
-"while (True):
-  gtk.main()
-  print 'restart App'"
+"while (True):"
+"  gtk.main()"
+"  print 'restart App'"
