@@ -152,6 +152,3 @@ class LmondoListener(object):
 
 app = LmondoListener()
 gtk.main()
-"while (True):"
-"  gtk.main()"
-"  print 'restart App'"
