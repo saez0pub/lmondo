@@ -1,4 +1,5 @@
 [config]
+api_url = http://localhost/api/v1/
 dict = ../etc/dict
 dict_orig = /usr/local/share/pocketsphinx/model/lm/fr_FR/frenchWords62K.dic
 fsg = ../etc/grammar.fsg

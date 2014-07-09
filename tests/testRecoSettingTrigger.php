@@ -155,7 +155,7 @@ class testRecoSettingTrigger extends PHPUnit_Framework_TestCase {
     $this->assertEquals($template, $result);
   }
 
-  public function testJeJeDemandeUneEcritureDeFichierDeConfigRecoEtDeGrammaireAlorsJAiDesFichiersCoherents() {
+  public function testJeDemandeUneEcritureDeFichierDeConfigRecoEtDeGrammaireAlorsJAiDesFichiersCoherents() {
     global $config;
     writeToListenerFile();
     $template = file_get_contents(dirname(__FILE__) . '/templates/lmondoListener.cfg.sample');
@@ -164,4 +164,15 @@ class testRecoSettingTrigger extends PHPUnit_Framework_TestCase {
     $this->assertEquals($template, file_get_contents($config['input']['grammar']));
   }
 
+  
+  public function testSiJEcrisLaConfSurDisqueAlorsUnUpdateNEstPlusNecessaire() {
+    global $db, $config;
+    $db->query("UPDATE " . $config['db']['prefix'] . "config SET valeur=9999 where cle = 'reco_settings_db';");
+    writeToListenerFile();
+    $page = new page(TRUE);
+    $message = $page->addRedirectMessage();
+    $template = '';
+    $db->query("UPDATE " . $config['db']['prefix'] . "config SET valeur=0, where cle = reco_settings_db';");
+    $this->assertEquals($template, $message);
+  }
 }

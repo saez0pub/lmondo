@@ -22,6 +22,7 @@ INSERT INTO `$prefix$config` VALUES ('dict_orig', '/usr/local/share/pocketsphinx
 INSERT INTO `$prefix$config` VALUES ('hmm', '/usr/local/share/pocketsphinx/model/hmm/fr_FR/french_f2/',1);
 INSERT INTO `$prefix$config` VALUES ('fsg', '../etc/grammar.fsg',1);
 INSERT INTO `$prefix$config` VALUES ('dict', '../etc/dict',1);
+INSERT INTO `$prefix$config` VALUES ('api_url', 'http://localhost/api/v1/',1);
 CREATE TABLE IF NOT EXISTS `$prefix$menu` (
   `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `nom` varchar(100) NOT NULL,

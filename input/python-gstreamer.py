@@ -21,6 +21,7 @@ import shutil
 import time
 import threading
 import hashlib    
+import urllib
 
 def hash_get(file_name):
     # Open,close, read file and calculate MD5 on its contents 
@@ -43,6 +44,7 @@ class LmondoListener(object):
         """Initialize a DemoApp object"""
         self.md5ConfOriginal = hash_get(os.getcwd()+'/../etc/lmondoListener.cfg')
         self.md5GrammOriginal = hash_get(os.getcwd()+'/../etc/grammar.jsgf')
+        self.nextIsCurl = False
         self.init_gst()
         self.timer = threading.Timer(10, self.check_config)
         self.timer.start()
@@ -51,6 +53,7 @@ class LmondoListener(object):
         print updateFsg.read()
         self.config = ConfigParser.ConfigParser()
         self.config.read(os.getcwd()+'/../etc/lmondoListener.cfg')
+        self.apiUrl = self.config.get('config','api_url')
         self.recoName = self.config.get('config','reco_name')
         self.recoSpell = self.config.get('config','reco_spell')
         self.hmm = add_path(self.config.get('config','hmm'))
@@ -77,16 +80,13 @@ class LmondoListener(object):
     def check_config(self):
         self.md5Conf = hash_get(os.getcwd()+'/../etc/lmondoListener.cfg')
         self.md5Gramm = hash_get(os.getcwd()+'/../etc/grammar.jsgf')
-        print 'Test if '+self.md5Conf+' != '+self.md5ConfOriginal
-        print ' or '+self.md5Gramm+' != '+self.md5GrammOriginal
         self.timer = threading.Timer(10, self.check_config)
         self.timer.start()
         if self.md5Conf != self.md5ConfOriginal or self.md5Gramm != self.md5GrammOriginal:
           print 'restart'
-          self.md5Conf=self.md5ConfOriginal
-          self.md5Gramm=self.md5GrammOriginal
+          self.md5ConfOriginal=self.md5Conf
+          self.md5GrammOriginal=self.md5Gramm
           self.restart_listener()
-
     def init_gst(self):
         """Initialize the speech components"""
         self.read_config()
@@ -106,21 +106,19 @@ class LmondoListener(object):
         self.bus_id =  self.bus.connect('message::application', self.application_message)
         self.pipeline.set_state(gst.STATE_PLAYING)
         self.started = True
-
+        self.nextIsCurl = False
     def asr_partial_result(self, asr, text, uttid):                                                                 
        """Forward partial result signals on the bus to the main thread."""                                         
        struct = gst.Structure('partial_result')                                                                    
        struct.set_value('hyp', text)                                                                               
        struct.set_value('uttid', uttid)                                                                            
        asr.post_message(gst.message_new_application(self.asr, struct))
-
     def asr_result(self, asr, text, uttid):
         """Forward result signals on the bus to the main thread."""
         struct = gst.Structure('result')
         struct.set_value('hyp', text)
         struct.set_value('uttid', uttid)
         asr.post_message(gst.message_new_application(self.asr, struct))
-
     def application_message(self, bus, msg):
         """Receive application messages from the bus."""
         msgtype = msg.structure.get_name()
@@ -128,18 +126,25 @@ class LmondoListener(object):
             self.partial_result(msg.structure['hyp'], msg.structure['uttid'])
         elif msgtype == 'result':
             self.final_result(msg.structure['hyp'], msg.structure['uttid'])
-
     def partial_result(self, hyp, uttid):
         """Insert the final result."""
         # All this stuff appears as one single action
         print 'partial_result: ' + hyp
-
     def final_result(self, hyp, uttid):
         """Insert the final result."""
         # All this stuff appears as one single action)
         self.pipeline.set_state(gst.STATE_PAUSED)
         print 'final_result: ' + hyp
-        os.popen('espeak -v mb/mb-fr4 -s 150 -p 40 " vous avez dit '+hyp+'"')
+        if  self.nextIsCurl == True:
+            os.popen('curl '+self.urlApi+'?type=reco&content='+)
+            params = urllib.urlencode({'type': 'reco', 'content': hyp})
+            urllib.urlopen(self.urlApi+'?%s' % params)
+            self.nextIsCurl = False
+         elif hyp == self.recoName:
+            self.nextIsCurl = True
+            self.say('oui')
+         else:
+            self.nextIsCurl = False
         self.pipeline.set_state(gst.STATE_PLAYING)
     def restart_listener(self):
         if self.started:
@@ -149,6 +154,8 @@ class LmondoListener(object):
             self.started = False
         print "restart"
         self.init_gst()
+    def say(phrase):
+        os.popen('espeak -v mb/mb-fr4 -s 150 -p 40 " '+phrase+'"')
 
 app = LmondoListener()
 gtk.main()

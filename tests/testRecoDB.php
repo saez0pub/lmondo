@@ -43,5 +43,5 @@ class testRecoDB extends PHPUnit_Framework_TestCase {
     reinitDB();
     $this->assertEquals($template, $result);
   }
-
+  
 }

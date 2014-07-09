@@ -47,6 +47,9 @@ function writeToListenerFile() {
   $grammar .= "$sep <gramm$key> ;\n";
   $grammar_end .= "<gramm$key> = $recoName;\n";
   file_put_contents($config['input']['grammar'], $grammar . $grammar_end . "\n");
+  $setting->select('*');
+  $cur = $setting->getFromID('reco_settings_db');
+  $setting->update('reco_settings_disk', array('valeur' => $cur['valeur']));
 }
 
 function updateRecoSettingDbIfNeeded() {
