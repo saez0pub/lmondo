@@ -23,6 +23,7 @@
  */
 global $adminPassword;
 global $cookieTest;
+global $pid;
 
 //Sur une installation fraiche, il faut un mot de passe pour l'admin
 //Pour que les tests fonctionnent, il faut l'applicatif qui tourne et 
@@ -34,8 +35,23 @@ $_GET["login"] = "adminlmondo";
 
 include dirname(__FILE__) . '/../lib/common.php';
 include_once dirname(__FILE__) . '/../lib/dbInstall.function.php';
-$config['serverUrl'] = 'http://localhost:8000/';
+$host = "localhost";
+$port = 8000;
+$docRoot = "../public/";
+$config['serverUrl'] = "http://$host:$port/";
 $config['db']['prefix'] = 'tests_todelete_' . $config['db']['prefix'];
+
+$command = sprintf(
+  'php -S %s:%d -t %s >/dev/null 2>&1 & echo $!', $host, $port, $docRoot
+);
+
+$output = array();
+exec($command, $output);
+$pid = (int) $output[0];
+
+echo sprintf(
+  '%s - Web server started on %s:%d with PID %d', date('r'), $host, $port, $pid
+) . PHP_EOL;
 
 //On va éviter d'écraser ou supprimer la conf en place
 $config['input']['config'] = tempnam("/tmp", "listenerLmondo");
@@ -111,9 +127,11 @@ function initTestTable() {
 }
 
 register_shutdown_function(function() {
-  global $cookieTest, $config;
+  global $cookieTest, $config, $pid;
   dropDB();
   unlink($cookieTest);
   unlink($config['input']['config']);
   unlink($config['input']['grammar']);
+  echo sprintf('%s - Killing process with ID %d', date('r'), $pid) . PHP_EOL;
+  exec('kill ' . $pid);
 });
